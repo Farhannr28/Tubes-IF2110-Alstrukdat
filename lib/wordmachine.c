@@ -61,3 +61,16 @@ void CopyWord() {
           currentChar = BLANK atau currentChar = MARK;
           currentChar adalah karakter sesudah karakter terakhir yang diakuisisi.
           Jika panjang kata melebihi NMax, maka sisa kata "dipotong" */
+
+boolean WordCmp(Word word, const char compare[]) {
+  int i = 0;
+
+  while (word.TabWord[i] != '\0' && compare[i] != '\0') {
+    if (word.TabWord[i] != compare[i]) {
+      return false;
+    }
+    i++;
+  }
+
+  return (word.TabWord[i] == '\0' && compare[i] == '\0');
+}

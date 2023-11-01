@@ -46,4 +46,6 @@ void CopyWord();
           currentChar adalah karakter sesudah karakter terakhir yang diakuisisi.
           Jika panjang kata melebihi NMax, maka sisa kata "dipotong" */
 
+boolean WordCmp(Word word, const char compare[]);
+
 #endif
