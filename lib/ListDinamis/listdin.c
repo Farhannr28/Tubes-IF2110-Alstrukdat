@@ -168,65 +168,13 @@ void printList(ListDin l){
     }
 }
 
-/* ********** OPERATOR ARITMATIKA ********** */
-/* *** Aritmatika list : Penjumlahan, pengurangan, perkalian, ... *** */
-ListDin plusMinusList(ListDin l1, ListDin l2, boolean plus){
-/* Prekondisi : l1 dan l2 memiliki Neff sama dan tidak kosong */
-/* Jika plus = true, mengirimkan  l1+l2, yaitu setiap elemen l1 dan l2 pada indeks yang sama dijumlahkan */
-/* Jika plus = false, mengirimkan l1-l2, yaitu setiap elemen l1 dikurangi elemen l2 pada indeks yang sama */
-
-    /* KAMUS */
-    IdxType i;
-    ListDin l3;
-    int len;
-    /* ALGORITMA */
-    len = listLength(l1);
-    CreateListDin(&l3, CAPACITY(l1));
-    if(plus){
-        for (i = 0; i < len; i++){
-            ELMT(l3, i) = ELMT(l1, i) + ELMT(l2, i);
-        }
-    } else {
-        for (i = 0; i < len; i++){
-            ELMT(l3, i) = ELMT(l1, i) - ELMT(l2, i);
-        }
-    }
-    NEFF(l3) = len;
-    return l3;
-}
-
-
-/* ********** OPERATOR RELASIONAL ********** */
-/* *** Operasi pembandingan list : < =, > *** */
-boolean isListEqual(ListDin l1, ListDin l2){
-/* Mengirimkan true jika l1 sama dengan l2 yaitu jika nEff l1 = l2 dan semua elemennya sama */
-
-    /* KAMUS */
-    IdxType i;
-    int len;
-    boolean ans;
-    /* ALGORITMA */
-    ans = true;
-    if (NEFF(l1) != NEFF(l2)){
-        return false;
-    }
-    len = NEFF(l1);
-    for(i=0; i<len; i++){
-        if (ELMT(l1,i) != ELMT(l2,i)){
-            ans = false;
-        }
-    }
-    return ans;
-}
-
 /* ********** SEARCHING ********** */
 /* ***  Perhatian : list boleh kosong!! *** */
-IdxType indexOf(ListDin l, ElType val){
-/* Search apakah ada elemen List l yang bernilai val */
+IdxType indexOf(ListDin l, int x){
+/* Search apakah ada kicauan di List l yang memiliki id x */
 /* Jika ada, menghasilkan indeks i terkecil, dengan elemen ke-i = val */
 /* Jika tidak ada, mengirimkan IDX_UNDEF */
 /* Menghasilkan indeks tak terdefinisi (IDX_UNDEF) jika List l kosong */
-/* Skema Searching yang digunakan bebas */
     
     /* KAMUS */
     IdxType i;
@@ -237,38 +185,13 @@ IdxType indexOf(ListDin l, ElType val){
         return ans;
     }
     for (i=NEFF(l)-1; i>-1; i--){
-        if(ELMT(l,i) == val){
+        if((ELMT(l,i)).id == x){
             ans = i;
         }
     }
     return ans;
 }
 
-
-/* ********** NILAI EKSTREM ********** */
-void extremeValues(ListDin l, ElType *max, ElType *min){
-/* I.S. List l tidak kosong */
-/* F.S. max berisi nilai maksimum l;
-        min berisi nilai minimum l */
-    
-    /* KAMUS */
-    IdxType i;
-    ElType maximum;
-    ElType minimum;
-    /* ALGORITMA */
-    maximum = ELMT(l,0);
-    minimum = ELMT(l,0);
-    for(i=1; i<NEFF(l); i++){
-        if (ELMT(l,i) < minimum){
-            minimum = ELMT(l,i);
-        }
-        if (ELMT(l,i) > maximum){
-            maximum = ELMT(l,i);
-        }
-        *max = maximum;
-        *min = minimum;
-    }
-}
 
 /* ********** OPERASI LAIN ********** */
 void copyList(ListDin lIn, ListDin *lOut){
@@ -283,78 +206,6 @@ void copyList(ListDin lIn, ListDin *lOut){
     NEFF(*lOut) = NEFF(lIn);
     for(i=0; i<NEFF(lIn); i++){
         ELMT(*lOut, i) = ELMT(lIn, i);
-    }
-}
-
-ElType sumList(ListDin l){
-/* Menghasilkan hasil penjumlahan semua elemen l */
-/* Jika l kosong menghasilkan 0 */
-    
-    /* KAMUS */
-    IdxType i;
-    ElType ans;
-    /* ALGORITMA */
-    ans = 0;
-    for(i=0; i<listLength(l); i++){
-        ans = ans + ELMT(l,i);
-    }
-    return ans;
-}
-
-int countVal(ListDin l, ElType val){
-/* Menghasilkan berapa banyak kemunculan val di l */
-/* Jika l kosong menghasilkan 0 */
-    
-    /* KAMUS */
-    IdxType i;
-    int ans;
-    /* ALGORITMA */
-    if (isEmpty(l)){
-        return 0;
-    }
-    ans = 0;
-    for (i=0; i<listLength(l); i++){
-        if (ELMT(l,i)==val){
-            ans = ans + 1;
-        }
-    }
-    return ans;
-}
-
-/* ********** SORTING ********** */
-void sort(ListDin *l, boolean asc){
-/* I.S. l boleh kosong */
-/* F.S. Jika asc = true, l terurut membesar */
-/*      Jika asc = false, l terurut mengecil */
-/* Proses : Mengurutkan l dengan salah satu algoritma sorting,
-   algoritma bebas */
-    
-    /* KAMUS */
-    IdxType i;
-    IdxType j;
-    ElType temp;
-    ElType ex;
-    IdxType idx;
-    /* ALGORITMA */
-    for (i=0; i<listLength(*l); i++){
-        ex = ELMT(*l, i);
-        idx = i;
-        for (j=i+1; j<listLength(*l); j++){
-            if (asc){
-                if (ELMT(*l,j)<ex){
-                    ex = ELMT(*l,j);
-                    idx = j;
-                }
-            } else {
-                if (ELMT(*l,j)>ex){
-                    ex = ELMT(*l,j);
-                    idx = j;
-                }
-            }
-        }
-        temp = ELMT(*l,i);
-        ELMT(*l, i) = ex;
-        ELMT(*l, idx) = temp;
     }
 }
 

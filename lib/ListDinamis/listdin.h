@@ -8,6 +8,7 @@
 #define LISTDIN_H
 
 #include "../utility/boolean.h"
+#include "../Kicauan/kicauan.h"
 
 /*  Kamus Umum */
 #define IDX_MIN 0
@@ -16,7 +17,7 @@
 /* Indeks tak terdefinisi*/
 
 /* Definisi elemen dan koleksi objek */
-typedef int ElType; /* type elemen list */
+typedef Kicauan ElType; /* type elemen list */
 typedef int IdxType;
 typedef struct
 {
@@ -104,66 +105,20 @@ void printList(ListDin l);
 /* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
 /* Jika list kosong : menulis [] */
 
-/* ********** OPERATOR ARITMATIKA ********** */
-/* *** Aritmatika list : Penjumlahan, pengurangan, perkalian, ... *** */
-ListDin plusMinusList(ListDin l1, ListDin l2, boolean plus);
-/* Prekondisi : l1 dan l2 memiliki Neff sama dan tidak kosong */
-/* Jika plus = true, mengirimkan  l1+l2, yaitu setiap elemen l1 dan l2 pada indeks yang sama dijumlahkan */
-/* Jika plus = false, mengirimkan l1-l2, yaitu setiap elemen l1 dikurangi elemen l2 pada indeks yang sama */
-
-/* ********** OPERATOR RELASIONAL ********** */
-/* *** Operasi pembandingan list : < =, > *** */
-boolean isListEqual(ListDin l1, ListDin l2);
-/* Mengirimkan true jika l1 sama dengan l2 yaitu jika nEff l1 = l2 dan semua elemennya sama */
-
 /* ********** SEARCHING ********** */
 /* ***  Perhatian : list boleh kosong!! *** */
-IdxType indexOf(ListDin l, ElType val);
+IdxType indexOf(ListDin l, int x);
 /* Search apakah ada elemen List l yang bernilai val */
 /* Jika ada, menghasilkan indeks i terkecil, dengan elemen ke-i = val */
 /* Jika tidak ada, mengirimkan IDX_UNDEF */
 /* Menghasilkan indeks tak terdefinisi (IDX_UNDEF) jika List l kosong */
 /* Skema Searching yang digunakan bebas */
 
-/* ********** NILAI EKSTREM ********** */
-void extremeValues(ListDin l, ElType *max, ElType *min);
-/* I.S. List l tidak kosong */
-/* F.S. max berisi nilai maksimum l;
-        min berisi nilai minimum l */
-
 /* ********** OPERASI LAIN ********** */
 void copyList(ListDin lIn, ListDin *lOut);
 /* I.S. lIn terdefinisi tidak kosong, lOut sembarang */
 /* F.S. lOut berisi salinan dari lIn (identik, nEff dan capacity sama) */
 /* Proses : Menyalin isi lIn ke lOut */ 
-ElType sumList(ListDin l);
-/* Menghasilkan hasil penjumlahan semua elemen l */
-/* Jika l kosong menghasilkan 0 */
-int countVal(ListDin l, ElType val);
-/* Menghasilkan berapa banyak kemunculan val di l */
-/* Jika l kosong menghasilkan 0 */
-
-/* ********** SORTING ********** */
-void sort(ListDin *l, boolean asc);
-/* I.S. l boleh kosong */
-/* F.S. Jika asc = true, l terurut membesar */
-/*      Jika asc = false, l terurut mengecil */
-/* Proses : Mengurutkan l dengan salah satu algoritma sorting,
-   algoritma bebas */
-
-/* ********** MENAMBAH DAN MENGHAPUS ELEMEN DI AKHIR ********** */
-/* *** Menambahkan elemen terakhir *** */
-void insertLast(ListDin *l, ElType val);
-/* Proses: Menambahkan val sebagai elemen terakhir list */
-/* I.S. List l boleh kosong, tetapi tidak penuh */
-/* F.S. val adalah elemen terakhir l yang baru */
-/* ********** MENGHAPUS ELEMEN ********** */
-void deleteLast(ListDin *l, ElType *val);
-/* Proses : Menghapus elemen terakhir list */
-/* I.S. List tidak kosong */
-/* F.S. val adalah nilai elemen terakhir l sebelum penghapusan, */
-/*      Banyaknya elemen list berkurang satu */
-/*      List l mungkin menjadi kosong */
 
 /* ********* MENGUBAH UKURAN ARRAY ********* */
 void expandList(ListDin *l, int num);
@@ -180,5 +135,33 @@ void compressList(ListDin *l);
 /* Proses : Mengubah capacity sehingga capacity = nEff */
 /* I.S. List tidak kosong */
 /* F.S. Ukuran capacity = nEff */
+
+/* ********** MENAMBAH DAN MENGHAPUS ELEMEN DI AKHIR ********** */
+/* *** Menambahkan elemen *** */
+void insertAt(ListDin *l, ElType val, IdxType idx);
+/* Proses: Menambahkan val sebagai elemen list pada posisi idx, menggeser elemen setelahnya*/
+/* I.S. List l tidak kosong, mungkin penuh, idx effektif */
+/* F.S. Jika l penuh, kapasitas l menjadi 2 kalinya. Val adalah elemen terakhir l yang baru */
+
+void insertLast(ListDin *l, ElType val);
+/* Proses: Menambahkan val sebagai elemen terakhir list */
+/* I.S. List l boleh kosong, tetapi tidak penuh */
+/* F.S. val adalah elemen terakhir l yang baru */
+
+/* ********** MENGHAPUS ELEMEN ********** */
+void deleteAt(ListDin *l, ElType *val, IdxType idx);
+/* Proses : Menghapus elemen list pada posisi idx, menggeser elemen setelahnya*/
+/* I.S. List tidak kosong, idx valid */
+/* F.S. val adalah nilai elemen terakhir l sebelum penghapusan, */
+/*      Banyaknya elemen list berkurang satu */
+/*      Jika l <25% terisi, kapasitas menjadi setengahnya */
+/*      List l mungkin menjadi kosong */
+
+void deleteLast(ListDin *l, ElType *val);
+/* Proses : Menghapus elemen terakhir list */
+/* I.S. List tidak kosong */
+/* F.S. val adalah nilai elemen terakhir l sebelum penghapusan, */
+/*      Banyaknya elemen list berkurang satu */
+/*      List l mungkin menjadi kosong */
 
 #endif
