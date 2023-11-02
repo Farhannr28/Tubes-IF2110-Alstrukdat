@@ -12,8 +12,8 @@
 
 /* Selektor */
 #define SIMPUL(p) (p).simpul
-#define ELMT(p, i, j) (p).adjMatrix[i][j] // Baris = user asal, kolom = user tujuan
-#define NAME(p) (p).name
+#define ELMT_GRAPH(p, i, j) (p).adjMatrix[i][j] // Baris = user asal, kolom = user tujuan
+#define NAME_USER(p) (p).name
 #define INDEX_USER(p) (p).userIndex
 #define FOLLOWER(p) (p).follower
 #define REQUEST(p, i) (p).request[i]
@@ -38,6 +38,7 @@ typedef struct user
 
 /* Define array of user index ( 0 berarti masih belum keisi ) */
 char nameOfUser[MAX_SIMPUL][20]; // Baris = user asal, kolom = panjang kata max
+User listOfUser[MAX_SIMPUL];
 
 /* Fungsi untuk membuat graph baru */
 void createGraph(Graph *graph, int jumlahUser);
