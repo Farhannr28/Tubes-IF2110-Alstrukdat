@@ -53,7 +53,7 @@ void cancelRequest(User *user_asal, User *user_tujuan);
 int jumlahPendingRequest(User user);
 
 /* Fungsi buat print daftar teman yang ada */
-void daftarPermintaanTeman(User user, Graph graph);
+void daftarPermintaanTeman(User user);
 
 /* Fungsi buat menerima request pertemanan */
 void acceptRequest(Graph *graph, User *user_asal, User *user_tujuan);

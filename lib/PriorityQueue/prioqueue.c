@@ -194,7 +194,7 @@ int jumlahPendingRequest(User user)
 }
 
 /* Fungsi buat print daftar teman yang ada */
-void daftarPermintaanTeman(User user, Graph graph)
+void daftarPermintaanTeman(User user)
 {
     List listRequest;
     CreateList(&listRequest);
