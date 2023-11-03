@@ -1,6 +1,6 @@
 #include "wordmachine.h"
-#include "boolean.h"
-#include "charmachine.h"
+#include "../utility/boolean.h"
+#include "../MesinKarakter/charmachine.h"
 
 boolean EndWord;
 Word currentWord;

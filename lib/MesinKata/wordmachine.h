@@ -4,8 +4,8 @@
 #ifndef __WORDMACHINE_H__
 #define __WORDMACHINE_H__
 
-#include "boolean.h"
-#include "charmachine.h"
+#include "../utility/boolean.h"
+#include "../MesinKarakter/charmachine.h"
 
 #define NMax 50
 #define BLANK ' '
