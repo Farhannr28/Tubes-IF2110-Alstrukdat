@@ -4,11 +4,12 @@
 #define STACK_H
 
 #include "../utility/boolean.h"
+#include "../Kicauan/kicauan.h"
 
 #define Nil -1 /* Nil adalah stack dengan elemen kosong */
 #define MaxEl 100
 
-typedef int infotype;
+typedef Kicauan infotype;
 typedef int address;
 typedef struct { 
   infotype T[MaxEl]; /* tabel penyimpan elemen */
