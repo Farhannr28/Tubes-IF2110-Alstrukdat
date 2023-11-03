@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "listlinier.h"
-Address newNode(Ulasan val){
+#include "../MesinKata/wordmachine.h"
+#include "../MesinKarakter/charmachine.h"
+Address newNode(Utasan val){
 /* Definisi ListLinearUtas : */
 /* ListLinearUtas kosong : FIRST(l) = NULL */
 /* Setiap elemen dengan Address p dapat diacu INFO(p), NEXT(p) */
@@ -14,24 +16,36 @@ Address newNode(Ulasan val){
     return p;
 }
 
+Paragraph* newParagraph( Word currentWord) {
+    Paragraph* p = (Paragraph*)malloc(sizeof(Paragraph));  
+    if (p != NULL) {
+        p->text = currentWord;  
+        p->next = NULL;  
+    }
+    return p;
+}
+
+
 void CreateListLinearUtas(ListLinearUtas *l){
 /* I.S. sembarang             */
 /* F.S. Terbentuk ListLinearUtas kosong */
     *l= NULL;
 }
-
+void CreateParagraphList(ListLinearUtas *l1){
+    *l1 = NULL;
+}
 boolean isEmptyListLinearUtas(ListLinearUtas l){
 /* Mengirim true jika ListLinearUtas kosong */
     return FIRST(l) == NULL;
 }
 
-int indexOfListLinearUtas(ListLinearUtas l, int IdxUlasan){
-    //Pakai ini untuk cek IDXulasan itu ada apa tidak
+int indexOfListLinearUtas(ListLinearUtas l, int IdxUtasan){
+    //Pakai ini untuk cek IDXUtasan itu ada apa tidak
     int i = 0;
     int pos = IDX_UNDEF;
     Address p = l;
     while(p != NULL && pos == IDX_UNDEF){
-        if(IDUlasan(p) == IdxUlasan){
+        if(IDUtasan(p) == IdxUtasan){
             pos = i;
         }else{
             i++;
@@ -42,7 +56,7 @@ int indexOfListLinearUtas(ListLinearUtas l, int IdxUlasan){
 }
 
 
-void insertFirstListLinearUtas(ListLinearUtas *l, Ulasan val){
+void insertFirstListLinearUtas(ListLinearUtas *l, Utasan val){
 /* I.S. l mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */
 /* menambahkan elemen pertama dengan nilai val jika alokasi berhasil. */
@@ -54,7 +68,8 @@ void insertFirstListLinearUtas(ListLinearUtas *l, Ulasan val){
     }
 }
 
-void insertLastListLinearUtas(ListLinearUtas *l, Ulasan val){
+
+void insertLastListLinearUtas(ListLinearUtas *l, Utasan val){
     Address p = newNode(val);
     if (p != NULL){
         if(isEmptyListLinearUtas(*l)){
@@ -70,7 +85,7 @@ void insertLastListLinearUtas(ListLinearUtas *l, Ulasan val){
     }
 }
 
-void insertAtListLinearUtas(ListLinearUtas *l, Ulasan val, int idx){
+void insertAtListLinearUtas(ListLinearUtas *l, Utasan val, int idx){
     int i = 0;
     if (idx== 0){
         insertFirstListLinearUtas(l,val);
@@ -90,6 +105,8 @@ void insertAtListLinearUtas(ListLinearUtas *l, Ulasan val, int idx){
         }
     }
 }
+
+
 
 void deleteFirstListLinearUtas(ListLinearUtas *l){
     Address p = *l;
@@ -135,25 +152,24 @@ void deleteAtListLinearUtas(ListLinearUtas *l, int idx){
     }
 }
 
-void displayListLinearUtas(ListLinearUtas l){
-// void printInfo(ListLinearUtas l);
-/* I.S. ListLinearUtas mungkin kosong */
-/* F.S. Jika ListLinearUtas tidak kosong, iai ListLinearUtas dicetak ke kanan: [e1,e2,...,en] */
-/* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
-/* Jika ListLinearUtas kosong : menulis [] */
-/* Tidak ada tambahan karakter apa pun di awal, akhir, atau di tengah */
-    Address p = l;
-    // printf("[");
-    while (p != NULL){
-        printf("Indexnya:%d\n",IDUlasan(p));
-        printf("Variabelnya:%d\n",Variable(p));
-        p = NEXT(p);
-        if(p != NULL){
+void displayListLinearUtas(ListLinearUtas l) {
+    Address p = l; 
+    while (p != NULL) {
+        printf("IDKicau:%d\n", IDKicauan(p));
+        printf("IDUtas:%d\n", IDUtasan(p));
+        Paragraph* paragraph = TEXT(p);
+        while (paragraph != NULL) {
+            printWord(KONTEN(paragraph));
+            paragraph = paragraph->next;   
+        }
+
+        p = NEXT(p); 
+        if (p != NULL) {
             printf("==============================\n");
         }
     }
-    // printf("]");
 }
+
 
 
 int lengthListLinearUtas(ListLinearUtas l){
@@ -168,8 +184,33 @@ int lengthListLinearUtas(ListLinearUtas l){
     return count;
 }
 
-void createUlasan(int IDUlasan, int variable, Ulasan *u) {
-    u->IDUlasan = IDUlasan;
-    // Set other fields here
-    u->variable = variable;
+void insertLastParagraph(Utasan *u, Word text) {
+    Paragraph* InputParagraph = newParagraph(text); 
+    if (InputParagraph != NULL) {
+        if (u->TextList == NULL) {
+            u->TextList = InputParagraph;
+        } 
+        else {
+            Paragraph* last = u->TextList;
+            while (NEXT(last) != NULL) {
+                last = NEXT(last);
+            }
+            NEXT(last) = InputParagraph;
+        }
+    }
 }
+
+void createUtasan(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,Word Penulis) {
+    u->IDUtasan = IDUtasan;
+    u-> IDKicauan =IDKicauan;
+    u->Penulis = Penulis;
+    insertLastParagraph(u,Utasan);
+}
+
+void printWord(Word word) {
+   int i;
+   for (i = 0; i < word.Length; i++) {
+      printf("%c", word.TabWord[i]);
+   }
+}
+

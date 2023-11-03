@@ -1,36 +1,39 @@
-/* File : ListLinearUtaslinier.h */
-/* contoh ADT ListLinearUtas berkait dengan representasi fisik pointer  */
-/* Representasi address dengan pointer */
-/* ElType adalah integer */
-
 #ifndef ListLinearUtaslinier_H
 #define ListLinearUtaslinier_H
 
-#include "boolean.h"
-#include "wordmachine.h"
-#include "charmachine.h"
-/* Definisi Node : */
-// typedef int ElType;
+#include "../utility/boolean.h"
+#include "../MesinKata/wordmachine.h"
+#include "../MesinKarakter/charmachine.h"
 typedef struct node* Address;
-typedef struct ulasan{
-    int IDUlasan;
+
+typedef struct paragraph{
+    Word text;
+    struct paragraph* next;
+} Paragraph;
+
+typedef struct utasan{
+    int IDKicauan;
+    int IDUtasan;
     Word Penulis;
-    //Ada datetime;
+    Paragraph* TextList;
     int variable; 
-} Ulasan;
+} Utasan;
 
 typedef struct node {
-    Ulasan info;
+    Utasan info;
     Address next;
 } Node;
 
-
 #define INFO(p) (p)->info
 #define NEXT(p) (p)->next
-#define IDUlasan(p) (p)->info.IDUlasan
+#define IDUtasan(p) (p)->info.IDUtasan
 #define Variable(p) (p)->info.variable
+#define IDKicauan(p) (p)->info.IDKicauan
+#define TEXT(p) (p)->info.TextList
+#define KONTEN(p) (p)->text
 
-Address newNode(Ulasan val);
+Address newNode(Utasan val);
+Paragraph* newParagraph(Word currentWord);
 
 /* Definisi ListLinearUtas : */
 /* ListLinearUtas kosong : FIRST(l) = NULL */
@@ -38,6 +41,7 @@ Address newNode(Ulasan val);
 /* Elemen terakhir ListLinearUtas: jika addressnya Last, maka NEXT(Last)=NULL */
 
 typedef Address ListLinearUtas;
+// typedef Address ListParagraf;
 
 #define IDX_UNDEF (-1)
 #define FIRST(l) (l)
@@ -47,12 +51,13 @@ typedef Address ListLinearUtas;
 void CreateListLinearUtas(ListLinearUtas *l);
 /* I.S. sembarang             */
 /* F.S. Terbentuk ListLinearUtas kosong */
+// void CreateListParagraf(ListParagraf *l1);
 
 /****************** TEST ListLinearUtas KOSONG ******************/
 boolean isEmptyListLinearUtas(ListLinearUtas l);
 /* Mengirim true jika ListLinearUtas kosong */
 
-int indexOfListLinearUtas(ListLinearUtas l, int IdxUlasan);
+int indexOfListLinearUtas(ListLinearUtas l, int IdxUtasan);
 /* I.S. l, val terdefinisi */
 /* F.S. Mencari apakah ada elemen ListLinearUtas l yang bernilai val */
 /* Jika ada, mengembalikan indeks elemen pertama l yang bernilai val */
@@ -60,19 +65,19 @@ int indexOfListLinearUtas(ListLinearUtas l, int IdxUlasan);
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
 /*** PENAMBAHAN ELEMEN ***/
-void insertFirstListLinearUtas(ListLinearUtas *l, Ulasan val);
+void insertFirstListLinearUtas(ListLinearUtas *l, Utasan val);
 /* I.S. l mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */
 /* menambahkan elemen pertama dengan nilai val jika alokasi berhasil. */
 /* Jika alokasi gagal: I.S.= F.S. */
 
-void insertLastListLinearUtas(ListLinearUtas *l, Ulasan val);
+void insertLastListLinearUtas(ListLinearUtas *l, Utasan val);
 /* I.S. l mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */
 /* menambahkan elemen ListLinearUtas di akhir: elemen terakhir yang baru */
 /* bernilai val jika alokasi berhasil. Jika alokasi gagal: I.S.= F.S. */
 
-void insertAtListLinearUtas(ListLinearUtas *l, Ulasan val, int idx);
+void insertAtListLinearUtas(ListLinearUtas *l, Utasan val, int idx);
 /* I.S. l tidak mungkin kosong, idx indeks yang valid dalam l, yaitu 0..length(l) */
 /* F.S. Melakukan alokasi sebuah elemen dan */
 /* menyisipkan elemen dalam ListLinearUtas pada indeks ke-idx (bukan menimpa elemen di i) */
@@ -106,6 +111,10 @@ void displayListLinearUtas(ListLinearUtas l);
 int lengthListLinearUtas(ListLinearUtas l);
 /* Mengirimkan banyaknya elemen ListLinearUtas; mengirimkan 0 jika ListLinearUtas kosong */
 
-void createUlasan(int IDUlasan, int variable, Ulasan *u);
+void createUtasan(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan, Word Penulis);
+
+void readParagraph(Word *input);
+
+void printWord(Word word);
 
 #endif
