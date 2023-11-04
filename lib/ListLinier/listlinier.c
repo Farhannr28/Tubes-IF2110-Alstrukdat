@@ -16,16 +16,6 @@ Address newNode(Utasan val){
     return p;
 }
 
-Paragraph* newParagraph( Word currentWord) {
-    Paragraph* p = (Paragraph*)malloc(sizeof(Paragraph));  
-    if (p != NULL) {
-        p->text = currentWord;  
-        p->next = NULL;  
-    }
-    return p;
-}
-
-
 void CreateListLinearUtas(ListLinearUtas *l){
 /* I.S. sembarang             */
 /* F.S. Terbentuk ListLinearUtas kosong */
@@ -131,7 +121,6 @@ void deleteLastListLinearUtas(ListLinearUtas *l){
     free(p);
 }
 
-
 void deleteAtListLinearUtas(ListLinearUtas *l, int idx){
     if(idx == 0){
         deleteFirstListLinearUtas(l);
@@ -152,26 +141,6 @@ void deleteAtListLinearUtas(ListLinearUtas *l, int idx){
     }
 }
 
-void displayListLinearUtas(ListLinearUtas l) {
-    Address p = l; 
-    while (p != NULL) {
-        printf("IDKicau:%d\n", IDKicauan(p));
-        printf("IDUtas:%d\n", IDUtasan(p));
-        Paragraph* paragraph = TEXT(p);
-        while (paragraph != NULL) {
-            printWord(KONTEN(paragraph));
-            paragraph = paragraph->next;   
-        }
-
-        p = NEXT(p); 
-        if (p != NULL) {
-            printf("==============================\n");
-        }
-    }
-}
-
-
-
 int lengthListLinearUtas(ListLinearUtas l){
 /* Mengirimkan banyaknya elemen ListLinearUtas; mengirimkan 0 jika ListLinearUtas kosong */
     int i;
@@ -184,33 +153,6 @@ int lengthListLinearUtas(ListLinearUtas l){
     return count;
 }
 
-void insertLastParagraph(Utasan *u, Word text) {
-    Paragraph* InputParagraph = newParagraph(text); 
-    if (InputParagraph != NULL) {
-        if (u->TextList == NULL) {
-            u->TextList = InputParagraph;
-        } 
-        else {
-            Paragraph* last = u->TextList;
-            while (NEXT(last) != NULL) {
-                last = NEXT(last);
-            }
-            NEXT(last) = InputParagraph;
-        }
-    }
-}
 
-void createUtasan(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,Word Penulis) {
-    u->IDUtasan = IDUtasan;
-    u-> IDKicauan =IDKicauan;
-    u->Penulis = Penulis;
-    insertLastParagraph(u,Utasan);
-}
 
-void printWord(Word word) {
-   int i;
-   for (i = 0; i < word.Length; i++) {
-      printf("%c", word.TabWord[i]);
-   }
-}
 

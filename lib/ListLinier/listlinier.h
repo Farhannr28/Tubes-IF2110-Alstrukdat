@@ -5,7 +5,6 @@
 #include "../MesinKata/wordmachine.h"
 #include "../MesinKarakter/charmachine.h"
 typedef struct node* Address;
-
 typedef struct paragraph{
     Word text;
     struct paragraph* next;
@@ -100,21 +99,8 @@ void deleteAtListLinearUtas(ListLinearUtas *l, int idx);
 
 
 /****************** PROSES SEMUA ELEMEN ListLinearUtas ******************/
-void displayListLinearUtas(ListLinearUtas l);
-// void printInfo(ListLinearUtas l);
-/* I.S. ListLinearUtas mungkin kosong */
-/* F.S. Jika ListLinearUtas tidak kosong, iai ListLinearUtas dicetak ke kanan: [e1,e2,...,en] */
-/* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
-/* Jika ListLinearUtas kosong : menulis [] */
-/* Tidak ada tambahan karakter apa pun di awal, akhir, atau di tengah */
 
 int lengthListLinearUtas(ListLinearUtas l);
 /* Mengirimkan banyaknya elemen ListLinearUtas; mengirimkan 0 jika ListLinearUtas kosong */
-
-void createUtasan(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan, Word Penulis);
-
-void readParagraph(Word *input);
-
-void printWord(Word word);
 
 #endif
