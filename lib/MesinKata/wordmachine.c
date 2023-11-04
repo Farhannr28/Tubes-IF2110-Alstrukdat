@@ -1,27 +1,27 @@
 #include "wordmachine.h"
-#include "../utility/boolean.h"
 #include "../MesinKarakter/charmachine.h"
+#include "../utility/boolean.h"
 
 boolean EndWord;
 Word currentWord;
 
-void IgnoreBlanks() {
-  while (currentChar == BLANK) {
-    ADV();
+void IgnoreBlanks(char *currentChar) {
+  while (*currentChar == BLANK) {
+    ADV(currentChar);
   }
 }
 /* Mengabaikan satu atau beberapa BLANK
    I.S. : currentChar sembarang
    F.S. : currentChar ≠ BLANK atau currentChar = MARK */
 
-void STARTWORD() {
-  IgnoreBlanks();
-  if (currentChar == MARK) {
+void STARTWORD(char *currentChar, Word *currentWord) {
+  IgnoreBlanks(currentChar);
+  if (*currentChar == MARK) {
     EndWord = true;
   } else {
     EndWord = false;
-    CopyWord();
-    ADV();
+    CopyWord(currentChar, currentWord);
+    ADV(currentChar);
   }
 }
 /* I.S. : currentChar sembarang
@@ -29,14 +29,14 @@ void STARTWORD() {
           atau EndWord = false, currentWord adalah kata yang sudah diakuisisi,
           currentChar karakter pertama sesudah karakter terakhir kata */
 
-void ADVWORD() {
-  IgnoreBlanks();
-  if (currentChar == MARK) {
+void ADVWORD(char *currentChar, Word *currentWord) {
+  IgnoreBlanks(currentChar);
+  if (*currentChar == MARK) {
     EndWord = true;
   } else {
     EndWord = false;
-    CopyWord();
-    IgnoreBlanks();
+    CopyWord(currentChar, currentWord);
+    IgnoreBlanks(currentChar);
   }
 }
 /* I.S. : currentChar adalah karakter pertama kata yang akan diakuisisi
@@ -45,14 +45,14 @@ void ADVWORD() {
           Jika currentChar = MARK, EndWord = true.
    Proses : Akuisisi kata menggunakan procedure SalinWord */
 
-void CopyWord() {
+void CopyWord(char *currentChar, Word *currentWord) {
   int i = 0;
-  while (currentChar != BLANK && currentChar != MARK && !EOP &&
-         currentWord.Length < NMax) {
-    currentWord.TabWord[i] = currentChar;
-    ADV();
+  while (*currentChar != BLANK && *currentChar != MARK && !EOP &&
+         currentWord->Length < NMax) {
+    currentWord->TabWord[i] = *currentChar;
+    ADV(currentChar);
     i++;
-    currentWord.Length++;
+    currentWord->Length++;
   }
 }
 /* Mengakuisisi kata, menyimpan dalam currentWord
@@ -75,23 +75,4 @@ boolean WordCmp(Word word, const char compare[]) {
   return (word.TabWord[i] == '\0' && compare[i] == '\0');
 }
 
-void readParagraph(Word *input){
-    int i;
-    START();
-
-    (*input).Length = 0;
-    i = 0;
-
-    while ((currentChar != MARK) && (i < NMax)) {
-        if (i<=280){
-            (*input).TabWord[i] = currentChar;
-        }
-        if(i==280){
-            (*input).TabWord[i] = '\0';
-        }
-        ADV();
-        i++;
-    }
-
-    (*input).Length = i;
-}
+void getInput(char currentChar, Word *input) {}

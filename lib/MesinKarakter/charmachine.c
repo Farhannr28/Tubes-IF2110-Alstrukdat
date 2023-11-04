@@ -10,7 +10,7 @@ boolean EOP;
 static FILE *pita;
 static int retval;
 
-void START() {
+void START(char *currentChar) {
   /* Mesin siap dioperasikan. Pita disiapkan untuk dibaca.
      Karakter pertama yang ada pada pita posisinya adalah pada jendela.
      I.S. : sembarang
@@ -20,10 +20,10 @@ void START() {
 
   /* Algoritma */
   pita = stdin;
-  ADV();
+  ADV(currentChar);
 }
 
-void ADV() {
+void ADV(char *currentChar) {
   /* Pita dimajukan satu karakter.
      I.S. : Karakter pada jendela =
             currentChar, currentChar != MARK
@@ -32,10 +32,9 @@ void ADV() {
                   Jika  currentChar = MARK maka EOP akan menyala (true) */
 
   /* Algoritma */
-  retval = fscanf(pita, "%c", &currentChar);
-  EOP = (currentChar == MARK);
+  retval = fscanf(pita, "%c", currentChar);
+  EOP = (*currentChar == MARK);
   if (EOP) {
     fclose(pita);
   }
 }
-

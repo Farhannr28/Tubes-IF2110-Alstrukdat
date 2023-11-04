@@ -4,8 +4,8 @@
 #ifndef __WORDMACHINE_H__
 #define __WORDMACHINE_H__
 
-#include "../utility/boolean.h"
 #include "../MesinKarakter/charmachine.h"
+#include "../utility/boolean.h"
 
 #define NMax 50
 #define BLANK ' '
@@ -16,29 +16,25 @@ typedef struct {
   int Length;
 } Word;
 
-/* State Mesin Word */
-extern boolean EndWord;
-extern Word currentWord;
-
-void IgnoreBlanks();
+void IgnoreBlanks(char *currentChar);
 /* Mengabaikan satu atau beberapa BLANK
    I.S. : currentChar sembarang
    F.S. : currentChar ≠ BLANK atau currentChar = MARK */
 
-void STARTWORD();
+void STARTWORD(char *currentChar, Word *currentWord);
 /* I.S. : currentChar sembarang
    F.S. : EndWord = true, dan currentChar = MARK;
           atau EndWord = false, currentWord adalah kata yang sudah diakuisisi,
           currentChar karakter pertama sesudah karakter terakhir kata */
 
-void ADVWORD();
+void ADVWORD(char *currentChar, Word *currentWord);
 /* I.S. : currentChar adalah karakter pertama kata yang akan diakuisisi
    F.S. : currentWord adalah kata terakhir yang sudah diakuisisi,
           currentChar adalah karakter pertama dari kata berikutnya, mungkin MARK
           Jika currentChar = MARK, EndWord = true.
    Proses : Akuisisi kata menggunakan procedure SalinWord */
 
-void CopyWord();
+void CopyWord(char *currentChar, Word *inputWord);
 /* Mengakuisisi kata, menyimpan dalam currentWord
    I.S. : currentChar adalah karakter pertama dari kata
    F.S. : currentWord berisi kata yang sudah diakuisisi;
