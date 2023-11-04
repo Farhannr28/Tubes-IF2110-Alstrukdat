@@ -74,3 +74,24 @@ boolean WordCmp(Word word, const char compare[]) {
 
   return (word.TabWord[i] == '\0' && compare[i] == '\0');
 }
+
+void readParagraph(Word *input){
+    int i;
+    START();
+
+    (*input).Length = 0;
+    i = 0;
+
+    while ((currentChar != MARK) && (i < NMax)) {
+        if (i<=280){
+            (*input).TabWord[i] = currentChar;
+        }
+        if(i==280){
+            (*input).TabWord[i] = '\0';
+        }
+        ADV();
+        i++;
+    }
+
+    (*input).Length = i;
+}

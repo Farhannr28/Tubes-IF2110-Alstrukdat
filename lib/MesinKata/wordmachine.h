@@ -47,5 +47,5 @@ void CopyWord();
           Jika panjang kata melebihi NMax, maka sisa kata "dipotong" */
 
 boolean WordCmp(Word word, const char compare[]);
-
+void readParagraph(Word *input);
 #endif
