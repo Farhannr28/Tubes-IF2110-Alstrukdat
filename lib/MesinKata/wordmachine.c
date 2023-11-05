@@ -92,6 +92,7 @@ void readParagraph(Word *input){
         ADV();
         i++;
     }
+    ADV();
 
     (*input).Length = i;
 }
