@@ -8,6 +8,9 @@
 boolean EndWord;
 
 void GetWord(Word *w) {
+  if (w->Length != 0)
+    w->Length = 0;
+
   char currentChar;
   ADV(&currentChar);
   if (currentChar == MARK) {
