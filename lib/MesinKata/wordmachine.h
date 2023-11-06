@@ -25,4 +25,5 @@ void CopyWord(char *currentChar, Word *w);
 void PrintWord(Word w);
 boolean WordCmp(Word word, const char compare[]);
 void readParagraph(Word *input);
+void ParseWord(Word *source, char delimiter, ...);
 #endif
