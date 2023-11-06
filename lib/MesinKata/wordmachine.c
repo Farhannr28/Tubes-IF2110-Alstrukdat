@@ -25,9 +25,7 @@ void PrintWord(Word w) {
 
 void CopyWord(char *currentChar, Word *w) {
   int i = 0;
-  boolean isAscii = (*currentChar >= 0) && (*currentChar <= 127);
-  while (*currentChar != BLANK && *currentChar != MARK && w->Length < NMax &&
-         isAscii) {
+  while (*currentChar != BLANK && *currentChar != MARK && w->Length < NMax) {
     w->TabWord[i] = *currentChar;
     ADV(currentChar);
     i++;
