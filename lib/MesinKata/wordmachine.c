@@ -1,66 +1,39 @@
 #include "wordmachine.h"
-#include "../utility/boolean.h"
 #include "../MesinKarakter/charmachine.h"
+#include "../utility/boolean.h"
+#include <stdio.h>
 
 boolean EndWord;
-Word currentWord;
 
-void IgnoreBlanks() {
-  while (currentChar == BLANK) {
-    ADV();
-  }
-}
-/* Mengabaikan satu atau beberapa BLANK
-   I.S. : currentChar sembarang
-   F.S. : currentChar ≠ BLANK atau currentChar = MARK */
-
-void STARTWORD() {
-  IgnoreBlanks();
+void GetWord(Word *w) {
+  char currentChar;
+  ADV(&currentChar);
   if (currentChar == MARK) {
     EndWord = true;
   } else {
     EndWord = false;
-    CopyWord();
-    ADV();
+    CopyWord(&currentChar, w);
+    ADV(&currentChar);
   }
 }
-/* I.S. : currentChar sembarang
-   F.S. : EndWord = true, dan currentChar = MARK;
-          atau EndWord = false, currentWord adalah kata yang sudah diakuisisi,
-          currentChar karakter pertama sesudah karakter terakhir kata */
 
-void ADVWORD() {
-  IgnoreBlanks();
-  if (currentChar == MARK) {
-    EndWord = true;
-  } else {
-    EndWord = false;
-    CopyWord();
-    IgnoreBlanks();
+void PrintWord(Word w) {
+  for (int i = 0; i < w.Length; i++) {
+    printf("%c", w.TabWord[i]);
   }
 }
-/* I.S. : currentChar adalah karakter pertama kata yang akan diakuisisi
-   F.S. : currentWord adalah kata terakhir yang sudah diakuisisi,
-          currentChar adalah karakter pertama dari kata berikutnya, mungkin MARK
-          Jika currentChar = MARK, EndWord = true.
-   Proses : Akuisisi kata menggunakan procedure SalinWord */
 
-void CopyWord() {
+void CopyWord(char *currentChar, Word *w) {
   int i = 0;
-  while (currentChar != BLANK && currentChar != MARK && !EOP &&
-         currentWord.Length < NMax) {
-    currentWord.TabWord[i] = currentChar;
-    ADV();
+  boolean isAscii = (*currentChar >= 0) && (*currentChar <= 127);
+  while (*currentChar != BLANK && *currentChar != MARK && w->Length < NMax &&
+         isAscii) {
+    w->TabWord[i] = *currentChar;
+    ADV(currentChar);
     i++;
-    currentWord.Length++;
+    w->Length++;
   }
 }
-/* Mengakuisisi kata, menyimpan dalam currentWord
-   I.S. : currentChar adalah karakter pertama dari kata
-   F.S. : currentWord berisi kata yang sudah diakuisisi;
-          currentChar = BLANK atau currentChar = MARK;
-          currentChar adalah karakter sesudah karakter terakhir yang diakuisisi.
-          Jika panjang kata melebihi NMax, maka sisa kata "dipotong" */
 
 boolean WordCmp(Word word, const char compare[]) {
   int i = 0;
@@ -73,26 +46,4 @@ boolean WordCmp(Word word, const char compare[]) {
   }
 
   return (word.TabWord[i] == '\0' && compare[i] == '\0');
-}
-
-void readParagraph(Word *input){
-    int i;
-    START();
-
-    (*input).Length = 0;
-    i = 0;
-
-    while ((currentChar != MARK) && (i < NMax)) {
-        if (i<=280){
-            (*input).TabWord[i] = currentChar;
-        }
-        if(i==280){
-            (*input).TabWord[i] = '\0';
-        }
-        ADV();
-        i++;
-    }
-    ADV();
-
-    (*input).Length = i;
 }
