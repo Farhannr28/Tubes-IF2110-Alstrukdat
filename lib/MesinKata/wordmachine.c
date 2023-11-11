@@ -51,6 +51,16 @@ boolean WordCmp(Word word, const char compare[]) {
   return (word.TabWord[i] == '\0' && compare[i] == '\0');
 }
 
+void AssignWord(Word *word, const char chars[]) {
+  int i = 0;
+  while (chars[i] != '\0') {
+    printf("%c\n", chars[i]);
+    word->TabWord[i] = chars[i];
+    word->Length++;
+    i++;
+  }
+}
+
 void ParseWord(Word *source, char delimiter, ...) {
   va_list args;
   va_start(args, delimiter);
