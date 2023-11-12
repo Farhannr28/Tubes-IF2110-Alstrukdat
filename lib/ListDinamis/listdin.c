@@ -277,7 +277,7 @@ void insertKicauanAt(ListDin *l, ElType val, IdxType idx){
     /* KAMUS */
     IdxType i;
     /* ALGORITMA */
-    if (isFull(*l)){
+    if (isListKicauanFull(*l)){
         expandListKicauan(l, CAPACITY(*l));
     }
     NEFF(*l) = NEFF(*l) + 1;
@@ -295,7 +295,7 @@ void insertKicauanLast(ListDin *l, ElType val){
     /* KAMUS */
     
     /* ALGORITMA */
-    if (isFull(*l)){
+    if (isListKicauanFull(*l)){
         expandListKicauan(l, CAPACITY(*l));
     }
     NEFF(*l) = NEFF(*l) + 1;
