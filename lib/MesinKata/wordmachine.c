@@ -54,7 +54,6 @@ boolean WordCmp(Word word, const char compare[]) {
 void AssignWord(Word *word, const char chars[]) {
   int i = 0;
   while (chars[i] != '\0') {
-    printf("%c\n", chars[i]);
     word->TabWord[i] = chars[i];
     word->Length++;
     i++;
