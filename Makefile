@@ -22,7 +22,7 @@ test:
 	echo $(DIRECTORY)
 
 main: $(LIB_FILES)
-	$(CC) $(CFLAGS) $(INCLUDES) -o main $(filter-out %_driver.c,$(LIB_FILES)) $(SRC_DIR)/main.c
+	$(CC) $(CFLAGS) $(INCLUDES) -o tubes $(filter-out %_driver.c,$(LIB_FILES)) $(SRC_DIR)/main.c
 
 clean:
 	rm -f $(OBJ_FILES) $(TARGET)
