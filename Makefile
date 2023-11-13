@@ -1,31 +1,28 @@
 # Compiler and compiler flags
 CC = gcc
-CFLAGS = -Wall 
+CFLAGS = -Wall
 
-# Directories
 SRC_DIR = src
 LIB_DIR = lib
 
-# Source files
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
 LIB_FILES = $(wildcard $(LIB_DIR)/**/*.c)
 
-# Object files
-OBJ_FILES = $(SRC_FILES:.c=.o) $(LIB_FILES:.c=.o)
+OBJ_FILES = $(LIB_FILES:.c=.o)
 
-# Header files
-INCLUDES = -I$(LIB_DIR)
+INCLUDES = $(addprefix -I, $(dir $(wildcard lib/*/)))
 
-# Output binary
-TARGET = tubes
-
-all: $(TARGET)
-
-$(TARGET): $(OBJ_FILES)
+all: $(OBJ_FILES)
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ 
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
+
+test:
+	echo $(DIRECTORY)
+
+main: $(LIB_FILES)
+	$(CC) $(CFLAGS) $(INCLUDES) -o main $(filter-out %_driver.c,$(LIB_FILES)) $(SRC_DIR)/main.c
 
 clean:
 	rm -f $(OBJ_FILES) $(TARGET)
