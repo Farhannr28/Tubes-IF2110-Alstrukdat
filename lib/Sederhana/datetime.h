@@ -11,8 +11,8 @@ typedef struct
     int DD;   /* integer [1..31] */
     int MM;   /* integer [1..12] */
     int YYYY; /* integer [1900..2030] */
-    Time T;
-} DateTime;
+    TIME T;
+} DATETIME;
 
 /* SELEKTOR */
 #define Day(D) (D).DD
@@ -25,21 +25,23 @@ typedef struct
 /* Mengirimkan jumlah hari maksimum pada bulan M dan tahun Y */
 int GetMaxDay(int M, int Y);
 
-/* Mengirim true jika D,M,Y,h,m,s dapat membentuk D yang valid */
-boolean IsDATETIMEValid(int D, int M, int Y, int h, int m, int s);
-
 /* Membentuk sebuah DATETIME dari komponen-komponennya yang valid */
-void CreateDateTime(DateTime *D, int DD, int MM, int YYYY, int hh, int mm, int ss);
+void CreateDateTime(DATETIME *D, int DD, int MM, int YYYY, int hh, int mm, int ss);
 /* Prekondisi : DD, MM, YYYY, h, m, s valid untuk membentuk DATETIME */
 
-/* Baca DateTime */
-void BacaDateTime(DateTime *D);
-/* I.S. : D tidak terdefinisi */
-/* F.S. : D terdefinisi dan merupakan DATETIME yang valid */
-
 /* Tulis DateTime */
-void TulisDateTime(DateTime D);
+void TulisDateTime(DATETIME D);
 /* I.S. : D sembarang */
 /* F.S. : Nilai D ditulis dg format DD/MM/YYYY HH:MM:SS */
+
+/* Mengirimkan true jika D1=D2, false jika tidak */
+boolean DEQ(DATETIME D1, DATETIME D2);
+/* Mengirimkan true jika D1 tidak sama dengan D2 */
+boolean DNEQ(DATETIME D1, DATETIME D2);
+/* Mengirimkan true jika D1<D2, false jika tidak */
+boolean DLT(DATETIME D1, DATETIME D2);
+/* Mengirimkan true jika D1>D2, false jika tidak */
+boolean DGT(DATETIME D1, DATETIME D2);
+
 
 #endif

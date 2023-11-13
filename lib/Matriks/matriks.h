@@ -36,7 +36,7 @@ IdxType getLastIdxCol(Matriks m);
 boolean isIdxEff(Matriks m, IdxType i, IdxType j);
 
 /* Melakukan pembacaan masukan Matriks */
-void readMatrix(Matriks *m, int nRow, int nCol);
+void readMatriks(Matriks *m, int nRow, int nCol);
 
 /* Menampilkan Matriks */
 void displayMatrix(Matriks m);
