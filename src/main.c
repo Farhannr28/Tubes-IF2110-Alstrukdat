@@ -43,11 +43,14 @@ void DoPerintah() {
   if (WordCmp(perintah, "KELUAR")) {
   } else if (WordCmp(perintah, "DAFTAR")) {
     Word nama, password;
-    PromptUser("Masukkan nama:\n", &nama);
-    if(UsernameTaken(listUser, nama)) {
-      printf("Wah, sayang sekali nama tersebut telah diambil.\n");
-      return;
-    } 
+    while(true) {
+      PromptUser("Masukkan nama:\n", &nama);
+      if (UsernameTaken(listUser, nama)) {
+        printf("Wah, sayang sekali nama tersebut telah diambil.\n");
+      } else {
+        break;
+      }
+    }
     PromptUser("Masukkan kata sandi:\n", &password);
     Pengguna newUser;
     CreatePengguna(&newUser, nama, password);
