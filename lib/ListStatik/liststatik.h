@@ -16,13 +16,11 @@
 /* Nilai elemen tak terdefinisi*/
 
 /* Definisi elemen dan koleksi objek */
-typedef int ElType; 
-typedef int IdxType;
-typedef struct {
-   Pengguna UserList[CAPACITYListPengguna]; 
-} ListPengguna;
+typedef int PenggunaElType; 
+typedef int PenggunaIdxType;
 
 typedef struct pengguna{
+   boolean isValid;
    Word Nama;  
    Word KataSandi;
    int NoHP;
@@ -30,6 +28,11 @@ typedef struct pengguna{
    Word JenisAkun;
    Matriks FotoProfil;
 } Pengguna;
+
+typedef struct {
+   Pengguna UserList[CAPACITYListPengguna]; 
+} ListPengguna;
+
 /* ********** SELEKTOR ********** */
 #define ELMTStatik(l, i) (l).UserList[(i)]
 
@@ -47,18 +50,18 @@ int ListPenggunaLength(ListPengguna l);
 /* Mengirimkan nol jika List kosong */  
 
 /* *** Selektor INDEKS *** */
-IdxType getFirstIdxListPengguna(ListPengguna l);
+PenggunaIdxType getFirstIdxListPengguna(ListPengguna l);
 /* Prekondisi : List l tidak kosong */
 /* Mengirimkan indeks elemen l pertama */
-IdxType getLastIdxListPengguna(ListPengguna l);
+PenggunaIdxType getLastIdxListPengguna(ListPengguna l);
 /* Prekondisi : List l tidak kosong */
 /* Mengirimkan indeks elemen l terakhir */
 
 /* ********** Test Indeks yang valid ********** */
-boolean isIdxValidListPengguna(ListPengguna l, IdxType i);
+boolean isIdxValidListPengguna(ListPengguna l, PenggunaIdxType i);
 /* Mengirimkan true jika i adalah indeks yang valid utk kapasitas List l */
 /* yaitu antara indeks yang terdefinisi utk container*/
-boolean isIdxEffListPengguna(ListPengguna l, IdxType i);
+boolean isIdxEffListPengguna(ListPengguna l, PenggunaIdxType i);
 /* Mengirimkan true jika i adalah indeks yang terdefinisi utk List l */
 /* yaitu antara 0..length(l)-1 */
 
@@ -94,7 +97,7 @@ void printListPengguna(ListPengguna l);
 /* ********** OPERATOR ARITMATIKA ********** */
 /* *** Aritmatika List : Penjumlahan, pengurangan, perkalian, ... *** */
 /* ***  Perhatian : List boleh kosong!! *** */
-int indexOfListPengguna(ListPengguna l, ElType val);
+int indexOfListPengguna(ListPengguna l, PenggunaElType val);
 /* Search apakah ada elemen List l yang bernilai val */
 /* Jika ada, menghasilkan indeks i terkecil, dengan ELMTStatik(l,i) = val */
 /* Jika tidak ada atau jika l kosong, mengirimkan IDX_UNDEFListPengguna */
@@ -106,7 +109,7 @@ void insertFirstListPengguna(ListPengguna *l, Pengguna user);
 /* I.S. List l boleh kosong, tetapi tidak penuh */
 /* F.S. val adalah elemen pertama l yang baru */
 /* *** Menambahkan elemen pada index tertentu *** */
-void insertAtListPengguna(ListPengguna *l, Pengguna user, IdxType idx);
+void insertAtListPengguna(ListPengguna *l, Pengguna user, PenggunaIdxType idx);
 /* Proses: Menambahkan val sebagai elemen pada index idx List */
 /* I.S. List l tidak kosong dan tidak penuh, idx merupakan index yang valid di l */
 /* F.S. val adalah elemen yang disisipkan pada index idx l */
@@ -125,7 +128,7 @@ void deleteFirstListPengguna(ListPengguna *l);
 /*      Banyaknya elemen List berkurang satu */
 /*      List l mungkin menjadi kosong */
 /* *** Menghapus elemen pada index tertentu *** */
-void deleteAtListPengguna(ListPengguna *l, IdxType idx);
+void deleteAtListPengguna(ListPengguna *l, PenggunaIdxType idx);
 /* Proses : Menghapus elemen pada index idx List */
 /* I.S. List tidak kosong, idx adalah index yang valid di l */
 /* F.S. val adalah nilai elemen pada index idx l sebelum penghapusan, */

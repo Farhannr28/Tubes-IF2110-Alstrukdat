@@ -1,6 +1,12 @@
 #include <boolean.h>
 #include <stdio.h>
 #include <wordmachine.h>
+#include <liststatik.h>
+
+Word perintah;
+boolean isStop = false;
+Pengguna currentUser;
+ListPengguna listUser;
 
 void greetings() {
   Word configFile;
@@ -17,22 +23,30 @@ void greetings() {
          "Silahkan masukan folder konfigurasi untuk dimuat: ");
   GetWord(&configFile);
   // TODO: load config
+  // WARN: this should be ifNotLoaded
+  CreateListPengguna(&listUser);
   printf("File konfigurasi berhasil dimuat! Selamat berkicau!\n");
 }
 
-Word perintah;
-boolean isStop = false;
-boolean currentUser = false;
 
-void getPerintah() {
+void GetPerintah() {
   printf(">> ");
   GetWord(&perintah);
+}
+
+void PromptUser(const char* c,Word *w) {
+  printf("%s", c);
+  GetWord(w);
 }
 
 void DoPerintah() {
   if (WordCmp(perintah, "KELUAR")) {
   } else if (WordCmp(perintah, "DAFTAR")) {
-
+    Word nama, password;
+    PromptUser("Masukkan nama:\n", &nama);
+    PromptUser("Masukkan kata sandi:\n", &password);
+    // TODO: validate user and password
+    printf("Pengguna telah berhasil terdaftar. Masuk untuk menikmati fitur-fitur BurBir.\n");
   } else if (WordCmp(perintah, "MASUK")) {
 
   } else if (WordCmp(perintah, "TUTUP_PROGRAM")) {
@@ -47,7 +61,7 @@ void DoPerintah() {
 int main() {
   greetings();
   while (!isStop) {
-    getPerintah();
+    GetPerintah();
     DoPerintah();
   }
   return 0;

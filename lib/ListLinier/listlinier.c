@@ -3,7 +3,8 @@
 #include "listlinier.h"
 #include "../MesinKata/wordmachine.h"
 #include "../MesinKarakter/charmachine.h"
-Address newNode(Utasan val){
+
+Address newListLinearNode(Utasan val){
 /* Definisi ListLinearUtas : */
 /* ListLinearUtas kosong : FIRST(l) = NULL */
 /* Setiap elemen dengan Address p dapat diacu INFO(p), NEXT(p) */
@@ -51,7 +52,7 @@ void insertFirstListLinearUtas(ListLinearUtas *l, Utasan val){
 /* F.S. Melakukan alokasi sebuah elemen dan */
 /* menambahkan elemen pertama dengan nilai val jika alokasi berhasil. */
 /* Jika alokasi gagal: I.S.= F.S. */
-    Address p = newNode(val);
+    Address p = newListLinearNode(val);
     if(p!= NULL){
         NEXT(p) = *l;
         *l = p;
@@ -60,7 +61,7 @@ void insertFirstListLinearUtas(ListLinearUtas *l, Utasan val){
 
 
 void insertLastListLinearUtas(ListLinearUtas *l, Utasan val){
-    Address p = newNode(val);
+    Address p = newListLinearNode(val);
     if (p != NULL){
         if(isEmptyListLinearUtas(*l)){
             insertFirstListLinearUtas(l,val);
@@ -80,7 +81,7 @@ void insertAtListLinearUtas(ListLinearUtas *l, Utasan val, int idx){
     if (idx== 0){
         insertFirstListLinearUtas(l,val);
     }else{
-        Address p= newNode(val);
+        Address p= newListLinearNode(val);
         if(p!= NULL){
             Address insert = *l;
             while (insert != NULL && i < idx -1)

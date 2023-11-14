@@ -37,8 +37,8 @@ typedef struct user
 } User;
 
 /* Define array of user index ( 0 berarti masih belum keisi ) */
-char nameOfUser[MAX_SIMPUL][20]; // Baris = user asal, kolom = panjang kata max
-User listOfUser[MAX_SIMPUL];
+extern char nameOfUser[MAX_SIMPUL][20]; // Baris = user asal, kolom = panjang kata max
+extern User listOfUser[MAX_SIMPUL];
 
 /* Fungsi untuk membuat graph baru */
 void createGraph(Graph *graph, int jumlahUser);
