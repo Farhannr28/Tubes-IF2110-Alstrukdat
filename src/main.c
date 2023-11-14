@@ -1,3 +1,4 @@
+#include <boolean.h>
 #include <stdio.h>
 #include <wordmachine.h>
 
@@ -20,21 +21,34 @@ void greetings() {
 }
 
 Word perintah;
+boolean isStop = false;
+boolean currentUser = false;
 
 void getPerintah() {
   printf(">> ");
   GetWord(&perintah);
 }
 
+void DoPerintah() {
+  if (WordCmp(perintah, "KELUAR")) {
+  } else if (WordCmp(perintah, "DAFTAR")) {
+
+  } else if (WordCmp(perintah, "MASUK")) {
+
+  } else if (WordCmp(perintah, "TUTUP_PROGRAM")) {
+    isStop = true;
+    printf("Anda telah keluar dari program BurBir.\n Sampai jumpa di "
+           "penjelajahan berikutnya.\n");
+  } else {
+    printf("Perintah tidak valid!\n");
+  }
+}
+
 int main() {
   greetings();
-  while (true) {
+  while (!isStop) {
     getPerintah();
-    PrintWord(perintah);
-    printf("\n");
-    if (WordCmp(perintah, "KELUAR")) {
-      break;
-    }
+    DoPerintah();
   }
   return 0;
 }
