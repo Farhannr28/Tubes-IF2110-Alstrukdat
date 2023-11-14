@@ -4,6 +4,7 @@
 #define MATRIKS_H
 
 #include "../utility/boolean.h"
+#include "../MesinKata/wordmachine.h"
 
 /* Baris maksimum Matriks */
 #define ROW_CAP 100
@@ -44,5 +45,6 @@ void displayMatrix(Matriks m);
 /* F.S. Nilai m(i,j) ditulis ke layar per baris per kolom, masing-masing elemen per baris 
    dipisahkan sebuah spasi. Baris terakhir tidak diakhiri dengan newline */
 
+void MatriksFromWord(Matriks *m, Word w);
 
 #endif

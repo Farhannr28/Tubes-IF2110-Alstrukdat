@@ -38,3 +38,21 @@ void displayMatrix(Matriks m) {
         printf("\n");
     }
 }
+
+void MatriksFromWord(Matriks *m, Word w) {
+    // I.S assuming kalau misalnya m ini fixed size dan input selalu bener
+    createMatriks(5, 10, m);
+    int i = 0;
+    int j = 0;
+
+    int wordIdx = 0;
+    while (wordIdx < w.Length) {
+        if(w.TabWord[wordIdx] == '\n') {
+            j = 0;
+            i++;
+        } else {
+            ELMT(*m, i, j) = w.TabWord[wordIdx];
+            j++;
+        } wordIdx++;
+    }
+}

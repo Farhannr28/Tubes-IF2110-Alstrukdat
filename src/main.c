@@ -2,6 +2,7 @@
 #include <liststatik.h>
 #include <stdio.h>
 #include <wordmachine.h>
+#include <matriks.h>
 
 Word perintah;
 boolean isStop = false;
@@ -97,15 +98,137 @@ void DoTutupProgram() {
          "penjelajahan berikutnya.\n");
 }
 
+void DoGantiProfil() {
+  printf("| Nama: ");
+  PrintWord(currentUser.Nama);
+  printf("\n");
+  printf("| Bio Akun: ");
+  PrintWord(currentUser.BioAkun);
+  printf("\n");
+  printf("| No HP: ");
+  PrintWord(currentUser.NoHP);
+  printf("\n");
+  printf("| Weton: ");
+  PrintWord(currentUser.Weton);
+  printf("\n");
+  Word newBioAkun, newNoHP, newWeton;
+  PromptUser("Masukkan Bio Akun:", &newBioAkun);
+  // TODO: validation
+  PromptUser("Masukkan No HP:", &newNoHP);
+  // TODO: validation
+  PromptUser("Masukkan Weton:", &newWeton);
+
+  ChangeUserInfo(&currentUser, currentUser.isValid, currentUser.Nama,
+                 currentUser.KataSandi, newNoHP, newBioAkun, newWeton,
+                 currentUser.JenisAkun, currentUser.FotoProfil);
+
+  Pengguna currentUserInDatabase;
+  GetUserByName(listUser, &currentUserInDatabase, currentUser.Nama);
+  ChangeUserInfo(&currentUserInDatabase, currentUserInDatabase.isValid,
+                 currentUserInDatabase.Nama, currentUserInDatabase.KataSandi,
+                 newNoHP, newBioAkun, newWeton, currentUserInDatabase.JenisAkun,
+                 currentUserInDatabase.FotoProfil);
+}
+
+void DoLihatProfil(Word nama) {
+  Pengguna theUser;
+  GetUserByName(listUser, &theUser, nama);
+  if (UserIsPrivate(theUser) || !WordCmpWord(theUser.Nama, currentUser.Nama)) {
+    printf("Wah, akun");
+    PrintWord(theUser.Nama);
+    printf(
+        " diprivat nih. Ikuti dulu yuk untuk bisa melihat profil ");
+    PrintWord(theUser.Nama);
+  } else {
+    printf("| Nama: ");
+    PrintWord(theUser.Nama);
+    printf("\n");
+    printf("| Bio Akun: ");
+    PrintWord(theUser.BioAkun);
+    printf("\n");
+    printf("| No HP: ");
+    PrintWord(theUser.NoHP);
+    printf("\n");
+    printf("| Weton: ");
+    PrintWord(theUser.Weton);
+    printf("\n");
+    printf("Foto Profil:\n");
+    DisplayProfile(theUser);
+    printf("\n");
+  }
+}
+
+void DoAturJenisAkun() {
+  Word choice;
+
+  if (UserIsPrivate(currentUser)) {
+    PromptUser("Saat ini, akun Anda adalah akun Privat.\n Ingin "
+               "mengubah ke akun "
+               "Publik? (YA/TIDAK) ",
+               &choice);
+  } else {
+    PromptUser("Saat ini, akun Anda adalah akun Publik.\n Ingin "
+               "mengubah ke akun "
+               "Privat? (YA/TIDAK) ",
+               &choice);
+  }
+
+  /* while (!WordCmp(choice, "YA") || !WordCmp(choice, "TIDAK")) { */
+  /*   printf("Jawaban tidak valid\n"); */
+  /*   PromptUser( */
+  /*       "Saat ini, akun Anda adalah akun Publik.\nIngin mengubah ke akun " */
+  /*       "Privat? (YA/TIDAK) ", */
+  /*       &choice); */
+  /* } */
+
+  if (WordCmp(choice, "YA")) {
+    ChangePrivacy(&currentUser, true);
+    printf("Akun anda sudah diubah menjadi akun Privat.\n");
+  } else {
+    ChangePrivacy(&currentUser, false);
+    printf("Akun anda sudah diubah menjadi akun Publik.\n");
+  }
+}
+
+void DoUbahFotoProfil() {
+  printf("Foto profil Anda saat ini adalah\n");
+  DisplayProfile(currentUser);
+  printf("\n");
+  printf("Masukkan foto profil yang baru\n");
+  Word inputProfile;
+  GetWordButTrim(&inputProfile, ' ');
+  Matriks m;
+  MatriksFromWord(&m, inputProfile);
+  Pengguna currentUserInDatabase;
+  GetUserByName(listUser, &currentUserInDatabase, currentUser.Nama);
+  UpdateProfil(&currentUser, m);
+  UpdateProfil(&currentUserInDatabase, m);
+  printf("\n");
+  printf("Foto profil anda sudah berhasil diganti!\n");
+}
+
 void DoPerintah() {
-  if (WordCmp(perintah, "KELUAR")) {
+  Word action, args1;
+  ParseWord(&perintah, ' ', &action, &args1);
+  if (WordCmp(action, "KELUAR")) {
     DoKeluar();
-  } else if (WordCmp(perintah, "DAFTAR")) {
+  } else if (WordCmp(action, "DAFTAR")) {
     DoDaftar();
-  } else if (WordCmp(perintah, "MASUK")) {
+  } else if (WordCmp(action, "MASUK")) {
     DoMasuk();
-  } else if (WordCmp(perintah, "TUTUP_PROGRAM")) {
+  } else if (WordCmp(action, "TUTUP_PROGRAM")) {
     DoTutupProgram();
+  } else if (WordCmp(action, "GANTI_PROFIL")) {
+    DoGantiProfil();
+  } else if (WordCmp(action, "LIHAT_PROFIL")) {
+    // TODO: still buggy, ga ngeliatin profilnya, namanya ga muncul
+    // possible cause: namanya ngga ke assign dari awal masuk list
+    // or GetUserByName salah implementasi
+    DoLihatProfil(args1);
+  } else if (WordCmp(action, "ATUR_JENIS_AKUN")) {
+    DoAturJenisAkun();
+  } else if (WordCmp(action, "UBAH_FOTO_PROFIL")) {
+    DoUbahFotoProfil();
   } else {
     printf("Perintah tidak valid!\n");
   }

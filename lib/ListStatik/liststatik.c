@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "liststatik.h"
+#include "../pcolor/pcolor.h"
 
 void CreateListPengguna(ListPengguna *l){
     int i;
@@ -141,7 +142,7 @@ void insertFirstListPengguna(ListPengguna *l, Pengguna user){
     for (i = ListPenggunaLength(*l); i>IDXMINListPengguna; i--){
         ELMTStatik(*l, i)= ELMTStatik(*l, i-1);
     }
-    ELMTStatik(*l, IDXMINListPengguna)= user;
+    ELMTStatik(*l, IDXMINListPengguna) = user;
 }
 
 void insertAtListPengguna(ListPengguna *l,Pengguna user, PenggunaIdxType idx){
@@ -239,9 +240,11 @@ boolean UserAndPasswordMatch(ListPengguna l, Word nama, Word password) {
 }
 
 void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi) {
+    AssignWord(&p->JenisAkun, "PUBLIK");
     p->isValid = true;
     p->Nama = Nama;
     p->KataSandi = KataSandi;
+    CreateProfil(&p->FotoProfil);
 }
 
 void InvalidateUser(Pengguna *p) {
@@ -250,4 +253,85 @@ void InvalidateUser(Pengguna *p) {
 
 boolean IsUserValid(Pengguna p) {
     return p.isValid;
+}
+
+void GetUserByName(ListPengguna l, Pengguna *p, Word nama) {
+    int length = ListPenggunaLength(l);
+    for (int i = 0; i < length; i++) {
+        Pengguna currentPengguna = ELMTStatik(l, i);
+        PrintWord(currentPengguna.Nama);
+        printf(" ?? ");
+        PrintWord(nama);
+        printf("\n");
+        if(WordCmpWord(currentPengguna.Nama, nama)) {
+            printf("HERE\n");
+            p = &currentPengguna;
+        }
+    }
+}
+
+void DisplayProfile(Pengguna p) {
+    Matriks m = p.FotoProfil;
+    for (int i=0; i<ROW_EFF(m); i++) {
+        for (int j=0; j<COL_EFF(m); j++) {
+            boolean isR = ELMT(m, i, j) == 'R';
+            boolean isG = ELMT(m, i, j) == 'G';
+            boolean isB = ELMT(m, i, j) == 'B';
+            if(isR) {
+                print_red(ELMT(m, i, j+1));
+            } 
+            if(isG) {
+                print_green(ELMT(m, i, j+1));
+            } 
+            if(isB) {
+                print_blue(ELMT(m, i, j+1));
+            } 
+        }
+        printf("\n");
+    }
+}
+
+void ChangeUserInfo(Pengguna *p, boolean isValid, Word Nama, Word KataSandi,
+                    Word NoHP, Word BioAkun, Word Weton, Word JenisAkun,
+                    Matriks FotoProfil) {
+    p->isValid = isValid;
+    p->Nama = Nama;
+    p->KataSandi = KataSandi;
+    p->NoHP = NoHP;
+    p->BioAkun = BioAkun;
+    p->Weton = Weton;
+    p->FotoProfil = FotoProfil;
+}
+
+void ChangePrivacy(Pengguna *p, boolean private_) {
+    if(!private_) {
+        AssignWord(&p->JenisAkun, "PUBLIK");
+    } else {
+        AssignWord(&p->JenisAkun, "PRIVATE");
+    }
+}
+
+boolean UserIsPrivate(Pengguna p) {
+    return WordCmp(p.JenisAkun, "PRIVATE");
+}
+
+void CreateProfil(Matriks *m) {
+    createMatriks(5, 10, m);
+    for (int i=0; i<5; i++) {
+        for (int j=0; j<10; j++) {
+            if(j % 2 == 0) 
+                ELMT(*m, i, j) = 'R';
+            else
+                ELMT(*m, i, j) = '*';
+        }
+    }
+}
+
+void UpdateProfil(Pengguna *p, Matriks m) {
+    Matriks *pm = &p->FotoProfil;
+    for (int i=0; i<5; i++) {
+        for (int j=0; j<10; j++) {
+            ELMT(*pm, i, j) = ELMT(m, i, j);
+        }
+    }
 }

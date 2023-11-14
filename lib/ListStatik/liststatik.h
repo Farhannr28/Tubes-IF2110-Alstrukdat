@@ -1,10 +1,10 @@
 #ifndef ListPengguna_H
 #define ListPengguna_H
 
-#include "../utility/boolean.h"
-#include "../MesinKata/wordmachine.h"
-#include "../MesinKarakter/charmachine.h"
 #include "../Matriks/matriks.h"
+#include "../MesinKarakter/charmachine.h"
+#include "../MesinKata/wordmachine.h"
+#include "../utility/boolean.h"
 /*  Kamus Umum */
 #define CAPACITYListPengguna 20
 /* Kapasitas penyimpanan */
@@ -16,21 +16,22 @@
 /* Nilai elemen tak terdefinisi*/
 
 /* Definisi elemen dan koleksi objek */
-typedef int PenggunaElType; 
+typedef int PenggunaElType;
 typedef int PenggunaIdxType;
 
-typedef struct pengguna{
-   boolean isValid;
-   Word Nama;  
-   Word KataSandi;
-   int NoHP;
-   Word Weton;
-   Word JenisAkun;
-   Matriks FotoProfil;
+typedef struct pengguna {
+  boolean isValid;
+  Word Nama;
+  Word KataSandi;
+  Word NoHP;
+  Word BioAkun;
+  Word Weton;
+  Word JenisAkun;
+  Matriks FotoProfil;
 } Pengguna;
 
 typedef struct {
-   Pengguna UserList[CAPACITYListPengguna]; 
+  Pengguna UserList[CAPACITYListPengguna];
 } ListPengguna;
 
 /* ********** SELEKTOR ********** */
@@ -47,7 +48,7 @@ void CreateListPengguna(ListPengguna *l);
 /* *** Banyaknya elemen *** */
 int ListPenggunaLength(ListPengguna l);
 /* Mengirimkan banyaknya elemen efektif List */
-/* Mengirimkan nol jika List kosong */  
+/* Mengirimkan nol jika List kosong */
 
 /* *** Selektor INDEKS *** */
 PenggunaIdxType getFirstIdxListPengguna(ListPengguna l);
@@ -80,14 +81,15 @@ void readListListPengguna(ListPengguna *l);
 /* F.S. List l terdefinisi */
 /* Proses: membaca banyaknya elemen l dan mengisi nilainya */
 /* 1. Baca banyaknya elemen diakhiri enter, misalnya n */
-/*    Pembacaan diulangi sampai didapat n yang benar yaitu 0 <= n <= CAPACITYListPengguna */
+/*    Pembacaan diulangi sampai didapat n yang benar yaitu 0 <= n <=
+ * CAPACITYListPengguna */
 /*    Jika n tidak valid, tidak diberikan pesan kesalahan */
-/* 2. Jika 0 < n <= CAPACITYListPengguna; Lakukan n kali: 
+/* 2. Jika 0 < n <= CAPACITYListPengguna; Lakukan n kali:
           Baca elemen mulai dari indeks 0 satu per satu diakhiri enter */
 /*    Jika n = 0; hanya terbentuk List kosong */
 void printListPengguna(ListPengguna l);
-/* Proses : Menuliskan isi List dengan traversal, List ditulis di antara kurung 
-   siku; antara dua elemen dipisahkan dengan separator "koma", tanpa tambahan 
+/* Proses : Menuliskan isi List dengan traversal, List ditulis di antara kurung
+   siku; antara dua elemen dipisahkan dengan separator "koma", tanpa tambahan
    karakter di depan, di tengah, atau di belakang, termasuk spasi dan enter */
 /* I.S. l boleh kosong */
 /* F.S. Jika l tidak kosong: [e1,e2,...,en] */
@@ -111,7 +113,8 @@ void insertFirstListPengguna(ListPengguna *l, Pengguna user);
 /* *** Menambahkan elemen pada index tertentu *** */
 void insertAtListPengguna(ListPengguna *l, Pengguna user, PenggunaIdxType idx);
 /* Proses: Menambahkan val sebagai elemen pada index idx List */
-/* I.S. List l tidak kosong dan tidak penuh, idx merupakan index yang valid di l */
+/* I.S. List l tidak kosong dan tidak penuh, idx merupakan index yang valid di l
+ */
 /* F.S. val adalah elemen yang disisipkan pada index idx l */
 /* *** Menambahkan elemen terakhir *** */
 void insertLastListPengguna(ListPengguna *l, Pengguna user);
@@ -147,4 +150,13 @@ boolean UserAndPasswordMatch(ListPengguna l, Word nama, Word password);
 void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi);
 void InvalidateUser(Pengguna *p);
 boolean IsUserValid(Pengguna p);
+void GetUserByName(ListPengguna l, Pengguna *p, Word nama);
+void DisplayProfile(Pengguna p);
+void ChangeUserInfo(Pengguna *p, boolean isValid, Word Nama, Word KataSandi,
+                    Word NoHP, Word BioAkun, Word Weton, Word JenisAkun,
+                    Matriks FotoProfil);
+void ChangePrivacy(Pengguna *p, boolean private_);
+boolean UserIsPrivate(Pengguna p);
+void CreateProfil(Matriks *m);
+void UpdateProfil(Pengguna *p, Matriks m);
 #endif
