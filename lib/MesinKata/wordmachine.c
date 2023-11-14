@@ -48,7 +48,7 @@ boolean WordCmp(Word word, const char compare[]) {
     i++;
   }
 
-  return (word.TabWord[i] == '\0' && compare[i] == '\0');
+  return true;
 }
 
 void AssignWord(Word *word, const char chars[]) {
@@ -58,6 +58,15 @@ void AssignWord(Word *word, const char chars[]) {
     word->Length++;
     i++;
   }
+}
+
+void GetCharsFromWord(Word word, char *chars) {
+  int i = 0;
+  while (i < word.Length) {
+    chars[i] = word.TabWord[i];
+    i++;
+  }
+  chars[i] = '\0';
 }
 
 void ParseWord(Word *source, char delimiter, ...) {
