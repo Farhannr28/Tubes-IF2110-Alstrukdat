@@ -143,6 +143,8 @@ void deleteLastListPengguna(ListPengguna *l);
 /*      List l mungkin menjadi kosong */
 
 boolean UsernameTaken(ListPengguna l, Word nama);
-boolean PasswordTaken(ListPengguna l, Word password);
+boolean UserAndPasswordMatch(ListPengguna l, Word nama, Word password);
 void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi);
+void InvalidateUser(Pengguna *p);
+boolean IsUserValid(Pengguna p);
 #endif

@@ -243,3 +243,11 @@ void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi) {
     p->Nama = Nama;
     p->KataSandi = KataSandi;
 }
+
+void InvalidateUser(Pengguna *p) {
+    p->isValid = false;
+}
+
+boolean IsUserValid(Pengguna p) {
+    return p.isValid;
+}
