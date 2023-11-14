@@ -51,6 +51,21 @@ boolean WordCmp(Word word, const char compare[]) {
   return true;
 }
 
+boolean WordCmpWord(Word w1, Word w2) {
+  int i = 0;
+
+  if(w1.Length != w2.Length) return false;
+
+  while (w1.Length != i && w2.Length != i) {
+    if (w1.TabWord[i] != w2.TabWord[i]) {
+      return false;
+    }
+    i++;
+  }
+
+  return true;
+}
+
 void AssignWord(Word *word, const char chars[]) {
   int i = 0;
   while (chars[i] != '\0') {

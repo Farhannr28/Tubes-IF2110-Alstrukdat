@@ -131,6 +131,7 @@ int indexOfListPengguna(ListPengguna l, PenggunaElType val){
         return IDX_UNDEFListPengguna;
     }
 }
+
 void insertFirstListPengguna(ListPengguna *l, Pengguna user){
 /* Proses: Menambahkan val sebagai elemen pertama List */
 /* I.S. List l boleh kosong, tetapi tidak penuh */
@@ -212,4 +213,33 @@ void deleteLastListPengguna(ListPengguna *l){
         // WARN: sementara dicomment dulu, ganggu compilation
         /* ELMTStatik(*l,getLastIdx(*l)) = MARK; */
     }
+}
+
+boolean UsernameTaken(ListPengguna l, Word nama) {
+    int length = ListPenggunaLength(l);
+    for (int i = 0; i < length; i++) {
+        Pengguna currentPengguna = ELMTStatik(l, i);
+        if(WordCmpWord(currentPengguna.Nama, nama)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+boolean UserAndPasswordMatch(ListPengguna l, Word nama, Word password) {
+    int length = ListPenggunaLength(l);
+    for (int i = 0; i < length; i++) {
+        Pengguna currentPengguna = ELMTStatik(l, i);
+        // TODO: add hash
+        if(WordCmpWord(currentPengguna.KataSandi, password) && WordCmpWord(currentPengguna.Nama, nama)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi) {
+    p->isValid = true;
+    p->Nama = Nama;
+    p->KataSandi = KataSandi;
 }

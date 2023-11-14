@@ -141,4 +141,8 @@ void deleteLastListPengguna(ListPengguna *l);
 /* F.S. val adalah nilai elemen terakhir l sebelum penghapusan, */
 /*      Banyaknya elemen List berkurang satu */
 /*      List l mungkin menjadi kosong */
+
+boolean UsernameTaken(ListPengguna l, Word nama);
+boolean PasswordTaken(ListPengguna l, Word password);
+void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi);
 #endif

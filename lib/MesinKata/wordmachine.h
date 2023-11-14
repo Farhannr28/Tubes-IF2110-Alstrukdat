@@ -28,4 +28,5 @@ void readParagraph(Word *input);
 void AssignWord(Word *word, const char chars[]);
 void GetCharsFromWord(Word word, char *chars);
 void ParseWord(Word *source, char delimiter, ...);
+boolean WordCmpWord(Word w1, Word w2);
 #endif
