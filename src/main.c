@@ -30,6 +30,8 @@ void greetings() {
   // WARN: this should be ifNotLoaded
   CreateListPengguna(&listUser);
   InvalidateUser(&currentUser);
+  // WARN: max user asumsi 20
+  createGraph(&networkPertemanan, 20);
   printf("File konfigurasi berhasil dimuat! Selamat berkicau!\n");
 }
 
@@ -250,9 +252,10 @@ void DoDaftarPermintaanPertemanan() {
 void DoSetujuiPertemanan() {
   int banyakTeman = length_queue(currentUser.PermintaanBerteman);
   if (banyakTeman) {
-    Address penggunaTeratas = GetPermintaanTeratas(currentUser);
-    Word namaPengguna = DATA(penggunaTeratas);
-    int jumlahTemanPengguna = PRIORITY(penggunaTeratas);
+    Address addressPenggunaTeratas = GetPermintaanTeratas(currentUser);
+    Word namaPengguna = DATA(addressPenggunaTeratas);
+    int jumlahTemanPengguna = PRIORITY(addressPenggunaTeratas);
+
     printf("| ");
     PrintWord(namaPengguna);
     printf("\n");
@@ -263,14 +266,16 @@ void DoSetujuiPertemanan() {
         "Apakah Anda ingin menyetujui permintaan pertemanan ini? (YA/TIDAK) ",
         &response);
     if (WordCmp(response, "YA")) {
-      // TODO: add accepts
-
+      Pengguna penggunaTeratas;
+      GetUserByName(listUser, &penggunaTeratas, namaPengguna);
+      addTeman(&networkPertemanan, currentUser.id, penggunaTeratas.id);
       printf("Permintaan pertemanan dari ");
       PrintWord(namaPengguna);
       printf(" telah disetujui. Selamat! Anda telah berteman dengan ");
       PrintWord(namaPengguna);
       printf(".\n\n");
     } else {
+      dequeue(&currentUser.PermintaanBerteman);
       printf("Permintaan pertemanan dari ");
       PrintWord(namaPengguna);
       printf(" telah ditolak.\n\n");
@@ -278,6 +283,31 @@ void DoSetujuiPertemanan() {
 
   } else {
     printf("Tidak ada permintaan pertemanan untuk Anda.\n");
+  }
+}
+
+void DoDaftarTeman() {
+  printTeman(listUser, networkPertemanan, currentUser);
+}
+
+void DoHapusTeman() {
+  Word namaPengguna;
+  PromptUser("Masukkan nama pengguna:\n", &namaPengguna);
+  Pengguna teman;
+  GetUserByName(listUser, &teman, namaPengguna);
+  if(!isTeman(networkPertemanan, currentUser.id, teman.id)) {
+    PrintWord(teman.Nama);
+    printf(" bukan teman Anda.\n");
+    return;
+  }
+  Word response;
+  PromptUser("Apakah anda yakin ingin menghapus Bob dari daftar teman anda?(YA/TIDAK) ", &response);
+  if(WordCmp(response, "YA")) {
+    hapusTeman(&networkPertemanan, currentUser.id, teman.id);
+    PrintWord(namaPengguna);
+    printf(" berhasil dihapus dari daftar teman Anda.\n");
+  } else {
+    printf("Penghapusan teman dibatalkan.\n"); 
   }
 }
 
@@ -306,6 +336,10 @@ void DoPerintah() {
     DoDaftarPermintaanPertemanan();
   } else if (WordCmp(action, "SETUJUI_PERTEMANAN")) {
     DoSetujuiPertemanan();
+  } else if (WordCmp(action, "DAFTAR_TEMAN")) {
+    DoDaftarTeman();
+  } else if (WordCmp(action, "HAPUS_TEMAN")) {
+    DoHapusTeman();
   } else {
     printf("Perintah tidak valid!\n");
   }

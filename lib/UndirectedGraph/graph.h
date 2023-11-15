@@ -54,13 +54,4 @@ boolean isTeman(Graph graph, int index_user_asal, int index_user_tujuan);
 /* Fungsi untuk menghitunng jumlah teman yang dimiliki oleh suatu user */
 int jumlahTeman(Graph graph, int user_index);
 
-/* Fungsi untuk menambahkan edge/sisi (hubungan pertemanan) pada graph */
-void addTeman(Graph *graph, int index_user_asal, int index_user_tujuan);
-
-/* Fungsi untuk menghapus teman */
-void hapusTeman(Graph *graph, int index_user_asal, int index_user_tujuan);
-
-/* Fungsi untuk mencetak daftar teman */
-void printTeman(Graph graph, User user, int user_index);
-
 #endif

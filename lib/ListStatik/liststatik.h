@@ -6,6 +6,7 @@
 #include "../MesinKata/wordmachine.h"
 #include "../PriorityQueue/prioqueue.h"
 #include "../utility/boolean.h"
+#include "../UndirectedGraph/graph.h"
 /*  Kamus Umum */
 #define CAPACITYListPengguna 20
 /* Kapasitas penyimpanan */
@@ -22,6 +23,7 @@ typedef int PenggunaIdxType;
 
 typedef struct pengguna {
   boolean isValid;
+  int id;
   Word Nama;
   Word KataSandi;
   Word NoHP;
@@ -153,6 +155,7 @@ void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi);
 void InvalidateUser(Pengguna *p);
 boolean IsUserValid(Pengguna p);
 boolean GetUserByName(ListPengguna l, Pengguna *p, Word nama);
+boolean GetUserById(ListPengguna l, Pengguna *p, int id);
 boolean GetMutableUserByName(ListPengguna *l, Pengguna **p, Word nama);
 void DisplayProfile(Pengguna p);
 void ChangeUserInfo(Pengguna *p, boolean isValid, Word Nama, Word KataSandi,
@@ -165,5 +168,8 @@ void UpdateProfil(Pengguna *p, Matriks m);
 boolean TambahTeman(Pengguna from, Pengguna *to);
 Address GetPermintaanTeratas(Pengguna p);
 void PrintListTeman(Pengguna p);
+void hapusTeman(Graph *graph, int index_user_asal, int index_user_tujuan);
+void printTeman(ListPengguna listUser, Graph graph, Pengguna p);
+void addTeman(Graph *graph, int index_user_asal, int index_user_tujuan);
 
 #endif

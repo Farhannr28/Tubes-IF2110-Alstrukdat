@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "liststatik.h"
 #include "../pcolor/pcolor.h"
+#include "../UndirectedGraph/graph.h"
+
+int userId = 0;
 
 void CreateListPengguna(ListPengguna *l){
     int i;
@@ -237,11 +240,14 @@ boolean UserAndPasswordMatch(ListPengguna l, Word nama, Word password) {
     return false;
 }
 
+
 void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi) {
     AssignWord(&p->JenisAkun, "PUBLIK");
     p->isValid = true;
     p->Nama = Nama;
     p->KataSandi = KataSandi;
+    p->id = userId;
+    userId++;
     CreateProfil(&p->FotoProfil);
     CreatePriorityQueue(&p->PermintaanBerteman);
 }
@@ -259,6 +265,18 @@ boolean GetUserByName(ListPengguna l, Pengguna *p, Word nama) {
     for (int i = 0; i < length; i++) {
         Pengguna currentPengguna = ELMTStatik(l, i);
         if(WordCmpWord(currentPengguna.Nama, nama)) {
+            *p = currentPengguna;
+            return true;
+        }
+    }
+    return false;
+}
+
+boolean GetUserById(ListPengguna l, Pengguna *p, int id) {
+    int length = ListPenggunaLength(l);
+    for (int i = 0; i < length; i++) {
+        Pengguna currentPengguna = ELMTStatik(l, i);
+        if(currentPengguna.id == id) {
             *p = currentPengguna;
             return true;
         }
@@ -371,5 +389,52 @@ void PrintListTeman(Pengguna p) {
         Address teman = FIRST_QUEUE(temp);
         enqueue(&p.PermintaanBerteman, DATA(teman), PRIORITY(teman));
         dequeue(&temp);
+    }
+}
+
+
+/* Fungsi untuk menambahkan edge/sisi (hubungan pertemanan) pada graph */
+void addTeman(Graph *graph, int index_user_asal, int index_user_tujuan)
+{
+    ELMT_GRAPH(*graph, index_user_asal, index_user_tujuan) = 1;
+    ELMT_GRAPH(*graph, index_user_tujuan, index_user_asal) = 1;
+}
+
+/* Fungsi untuk menghapus teman */
+void hapusTeman(Graph *graph, int index_user_asal, int index_user_tujuan)
+{
+    ELMT_GRAPH(*graph, index_user_asal, index_user_tujuan) = 0;
+    ELMT_GRAPH(*graph, index_user_tujuan, index_user_asal) = 0;
+}
+
+/* Fungsi untuk mencetak daftar teman */
+void printTeman(ListPengguna listUser, Graph graph, Pengguna p)
+{
+    int j = 0;
+    int temanUser = jumlahTeman(graph, p.id);
+    if (temanUser == 0)
+    {
+        PrintWord(p.Nama);
+        printf(" tidak memiliki teman\n");
+    }
+    else
+    {
+        PrintWord(p.Nama);
+        printf(" memiliki %d teman\n", temanUser);
+        printf("Daftar teman ");
+        PrintWord(p.Nama);
+        printf(": \n");
+
+        for (j = 0; j < MAX_SIMPUL; j++)
+        {
+            if (ELMT_GRAPH(graph, p.id, j) == 1)
+            {
+                Pengguna teman;
+                GetUserById(listUser, &teman, j);
+                printf("| ");
+                PrintWord(teman.Nama);
+                printf("\n");
+            }
+        }
     }
 }
