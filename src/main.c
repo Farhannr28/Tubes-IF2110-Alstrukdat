@@ -1,13 +1,16 @@
 #include <boolean.h>
+#include <graph.h>
 #include <liststatik.h>
+#include <matriks.h>
+#include <prioqueue.h>
 #include <stdio.h>
 #include <wordmachine.h>
-#include <matriks.h>
 
 Word perintah;
 boolean isStop = false;
 Pengguna currentUser;
 ListPengguna listUser;
+Graph networkPertemanan;
 
 void greetings() {
   Word configFile;
@@ -63,7 +66,7 @@ void DoDaftar() {
   PromptUser("Masukkan kata sandi:\n", &password);
   Pengguna newUser;
   CreatePengguna(&newUser, nama, password);
-  insertFirstListPengguna(&listUser, newUser);
+  insertLastListPengguna(&listUser, newUser);
   printf("Pengguna telah berhasil terdaftar. Masuk untuk menikmati "
          "fitur-fitur BurBir.\n");
 }
@@ -81,14 +84,16 @@ void DoMasuk() {
   while (true) {
     PromptUser("Masukkan kata sandi:\n", &password);
     if (UserAndPasswordMatch(listUser, nama, password)) {
-      CreatePengguna(&currentUser, nama, password);
+      GetUserByName(listUser, &currentUser, nama);
       break;
     } else {
       printf("Wah, kata sandi yang Anda masukkan belum tepat. Periksa "
              "kembali kata sandi Anda!\n");
     }
   }
-  printf("Anda telah berhasil masuk dengan nama pengguna Tuan Bri. Mari "
+  printf("Anda telah berhasil masuk dengan nama pengguna ");
+  PrintWord(currentUser.Nama);
+  printf(". Mari "
          "menjelajahi BurBir bersama Ande-Ande Lumut!\n");
 }
 
@@ -136,9 +141,9 @@ void DoLihatProfil(Word nama) {
   if (UserIsPrivate(theUser) || !WordCmpWord(theUser.Nama, currentUser.Nama)) {
     printf("Wah, akun");
     PrintWord(theUser.Nama);
-    printf(
-        " diprivat nih. Ikuti dulu yuk untuk bisa melihat profil ");
+    printf(" diprivat nih. Ikuti dulu yuk untuk bisa melihat profil ");
     PrintWord(theUser.Nama);
+    printf("\n");
   } else {
     printf("| Nama: ");
     PrintWord(theUser.Nama);
@@ -207,6 +212,75 @@ void DoUbahFotoProfil() {
   printf("Foto profil anda sudah berhasil diganti!\n");
 }
 
+void DoTambahTeman() {
+  Word namaPengguna;
+  PromptUser("Masukkan nama pengguna:\n", &namaPengguna);
+  Pengguna *friend;
+  boolean userAvailable =
+      GetMutableUserByName(&listUser, &friend, namaPengguna);
+  if (userAvailable) {
+    boolean success = TambahTeman(currentUser, friend);
+    if (success) {
+      printf("Permintaan pertemanan kepada ");
+      PrintWord(namaPengguna);
+      printf(" telah dikirim. Tunggu beberapa saat hingga permintaan Anda "
+             "disetujui.\n");
+    } else {
+      printf(
+          "Terdapat permintaan pertemanan yang belum Anda setujui. Silakan "
+          "kosongkan daftar permintaan pertemanan untuk Anda terlebih dahulu.");
+    }
+  } else {
+    printf("Pengguna bernama ");
+    PrintWord(namaPengguna);
+    printf(" tidak ditemukan");
+  }
+}
+
+void DoDaftarPermintaanPertemanan() {
+  int banyakTeman = length_queue(currentUser.PermintaanBerteman);
+  if (banyakTeman) {
+    printf("Terdapat %d permintaan pertemanan untuk Anda.\n\n", banyakTeman);
+    PrintListTeman(currentUser);
+  } else {
+    printf("Tidak ada permintaan pertemanan untuk Anda.\n");
+  }
+}
+
+void DoSetujuiPertemanan() {
+  int banyakTeman = length_queue(currentUser.PermintaanBerteman);
+  if (banyakTeman) {
+    Address penggunaTeratas = GetPermintaanTeratas(currentUser);
+    Word namaPengguna = DATA(penggunaTeratas);
+    int jumlahTemanPengguna = PRIORITY(penggunaTeratas);
+    printf("| ");
+    PrintWord(namaPengguna);
+    printf("\n");
+    printf("| Jumlah teman: %d\n\n", jumlahTemanPengguna);
+
+    Word response;
+    PromptUser(
+        "Apakah Anda ingin menyetujui permintaan pertemanan ini? (YA/TIDAK) ",
+        &response);
+    if (WordCmp(response, "YA")) {
+      // TODO: add accepts
+
+      printf("Permintaan pertemanan dari ");
+      PrintWord(namaPengguna);
+      printf(" telah disetujui. Selamat! Anda telah berteman dengan ");
+      PrintWord(namaPengguna);
+      printf(".\n\n");
+    } else {
+      printf("Permintaan pertemanan dari ");
+      PrintWord(namaPengguna);
+      printf(" telah ditolak.\n\n");
+    }
+
+  } else {
+    printf("Tidak ada permintaan pertemanan untuk Anda.\n");
+  }
+}
+
 void DoPerintah() {
   Word action, args1;
   ParseWord(&perintah, ' ', &action, &args1);
@@ -221,14 +295,17 @@ void DoPerintah() {
   } else if (WordCmp(action, "GANTI_PROFIL")) {
     DoGantiProfil();
   } else if (WordCmp(action, "LIHAT_PROFIL")) {
-    // TODO: still buggy, ga ngeliatin profilnya, namanya ga muncul
-    // possible cause: namanya ngga ke assign dari awal masuk list
-    // or GetUserByName salah implementasi
     DoLihatProfil(args1);
   } else if (WordCmp(action, "ATUR_JENIS_AKUN")) {
     DoAturJenisAkun();
   } else if (WordCmp(action, "UBAH_FOTO_PROFIL")) {
     DoUbahFotoProfil();
+  } else if (WordCmp(action, "TAMBAH_TEMAN")) {
+    DoTambahTeman();
+  } else if (WordCmp(action, "DAFTAR_PERMINTAAN_PERTEMANAN")) {
+    DoDaftarPermintaanPertemanan();
+  } else if (WordCmp(action, "SETUJUI_PERTEMANAN")) {
+    DoSetujuiPertemanan();
   } else {
     printf("Perintah tidak valid!\n");
   }

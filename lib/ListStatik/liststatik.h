@@ -4,6 +4,7 @@
 #include "../Matriks/matriks.h"
 #include "../MesinKarakter/charmachine.h"
 #include "../MesinKata/wordmachine.h"
+#include "../PriorityQueue/prioqueue.h"
 #include "../utility/boolean.h"
 /*  Kamus Umum */
 #define CAPACITYListPengguna 20
@@ -28,6 +29,7 @@ typedef struct pengguna {
   Word Weton;
   Word JenisAkun;
   Matriks FotoProfil;
+  PriorityQueue PermintaanBerteman;
 } Pengguna;
 
 typedef struct {
@@ -150,7 +152,8 @@ boolean UserAndPasswordMatch(ListPengguna l, Word nama, Word password);
 void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi);
 void InvalidateUser(Pengguna *p);
 boolean IsUserValid(Pengguna p);
-void GetUserByName(ListPengguna l, Pengguna *p, Word nama);
+boolean GetUserByName(ListPengguna l, Pengguna *p, Word nama);
+boolean GetMutableUserByName(ListPengguna *l, Pengguna **p, Word nama);
 void DisplayProfile(Pengguna p);
 void ChangeUserInfo(Pengguna *p, boolean isValid, Word Nama, Word KataSandi,
                     Word NoHP, Word BioAkun, Word Weton, Word JenisAkun,
@@ -159,4 +162,8 @@ void ChangePrivacy(Pengguna *p, boolean private_);
 boolean UserIsPrivate(Pengguna p);
 void CreateProfil(Matriks *m);
 void UpdateProfil(Pengguna *p, Matriks m);
+boolean TambahTeman(Pengguna from, Pengguna *to);
+Address GetPermintaanTeratas(Pengguna p);
+void PrintListTeman(Pengguna p);
+
 #endif

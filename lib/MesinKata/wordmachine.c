@@ -75,7 +75,7 @@ boolean WordCmp(Word word, const char compare[]) {
     i++;
   }
 
-  return true;
+  return true && (i == word.Length);
 }
 
 boolean WordCmpWord(Word w1, Word w2) {

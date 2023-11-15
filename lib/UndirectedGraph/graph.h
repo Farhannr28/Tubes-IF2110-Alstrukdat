@@ -15,7 +15,6 @@
 #define ELMT_GRAPH(p, i, j) (p).adjMatrix[i][j] // Baris = user asal, kolom = user tujuan
 #define NAME_USER(p) (p).name
 #define INDEX_USER(p) (p).userIndex
-#define FOLLOWER(p) (p).follower
 #define REQUEST(p, i) (p).request[i]
 #define PENDING_REQUEST(p, i) (p).pendingRequest[i]
 

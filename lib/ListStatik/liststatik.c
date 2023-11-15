@@ -243,6 +243,7 @@ void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi) {
     p->Nama = Nama;
     p->KataSandi = KataSandi;
     CreateProfil(&p->FotoProfil);
+    CreatePriorityQueue(&p->PermintaanBerteman);
 }
 
 void InvalidateUser(Pengguna *p) {
@@ -253,19 +254,27 @@ boolean IsUserValid(Pengguna p) {
     return p.isValid;
 }
 
-void GetUserByName(ListPengguna l, Pengguna *p, Word nama) {
+boolean GetUserByName(ListPengguna l, Pengguna *p, Word nama) {
     int length = ListPenggunaLength(l);
     for (int i = 0; i < length; i++) {
         Pengguna currentPengguna = ELMTStatik(l, i);
-        PrintWord(currentPengguna.Nama);
-        printf(" ?? ");
-        PrintWord(nama);
-        printf("\n");
         if(WordCmpWord(currentPengguna.Nama, nama)) {
-            printf("HERE\n");
             *p = currentPengguna;
+            return true;
         }
     }
+    return false;
+}
+
+boolean GetMutableUserByName(ListPengguna *l, Pengguna **p, Word nama) {
+    int length = ListPenggunaLength(*l);
+    for (int i = 0; i < length; i++) {
+        if(WordCmpWord((*l).UserList[i].Nama, nama)) {
+            *p = &l->UserList[i];
+            return true;
+        }
+    }
+    return false;
 }
 
 void DisplayProfile(Pengguna p) {
@@ -331,5 +340,36 @@ void UpdateProfil(Pengguna *p, Matriks m) {
         for (int j=0; j<10; j++) {
             ELMT(*pm, i, j) = ELMT(m, i, j);
         }
+    }
+}
+
+boolean TambahTeman(Pengguna from, Pengguna *to) {
+  if (isEmpty(from.PermintaanBerteman)) {
+    enqueue(&to->PermintaanBerteman, from.Nama,
+            length_queue(from.PermintaanBerteman));
+    return true;
+  } 
+  return false;
+}
+
+Address GetPermintaanTeratas(Pengguna p) {
+    return FIRST_QUEUE(p.PermintaanBerteman);
+}
+
+void PrintListTeman(Pengguna p) {
+    PriorityQueue temp;
+    CreatePriorityQueue(&temp);
+    while(!isEmpty(p.PermintaanBerteman)) {
+        Address teman = GetPermintaanTeratas(p);
+        printf("| ");PrintWord(DATA(teman));printf("\n");
+        printf("| Jumlah teman: %d \n", PRIORITY(teman));
+        printf("\n");
+        enqueue(&temp, DATA(teman), PRIORITY(teman));
+        dequeue(&p.PermintaanBerteman);
+    }
+    while (!isEmpty(temp)) {
+        Address teman = FIRST_QUEUE(temp);
+        enqueue(&p.PermintaanBerteman, DATA(teman), PRIORITY(teman));
+        dequeue(&temp);
     }
 }
