@@ -11,7 +11,6 @@ void CreateListPengguna(ListPengguna *l){
 
 int ListPenggunaLength(ListPengguna l){
     int listLength=0,i=0;
-    // WARN: sementara dicomment dulu, ganggu compilation
     if (!ELMTStatik(l, IDXMINListPengguna).isValid){
         return 0;
     } else {
@@ -150,9 +149,8 @@ void insertAtListPengguna(ListPengguna *l,Pengguna user, PenggunaIdxType idx){
 /* I.S. List l tidak kosong dan tidak penuh, idx merupakan index yang valid di l */
 /* F.S. val adalah elemen yang disisipkan pada index idx l */
 /* *** Menambahkan elemen terakhir *** */
-    int i;
     if (!isFullListPengguna(*l) && !isEmptyListPengguna(*l) && isIdxValidListPengguna(*l,idx)){
-        for(i=ListPenggunaLength(*l)+1;i>IDXMINListPengguna;i--){
+        for(int i=ListPenggunaLength(*l)+1;i>IDXMINListPengguna;i--){
             ELMTStatik(*l,i) = ELMTStatik(*l,(i-1));
         }
         ELMTStatik(*l,idx) = user;
@@ -265,7 +263,7 @@ void GetUserByName(ListPengguna l, Pengguna *p, Word nama) {
         printf("\n");
         if(WordCmpWord(currentPengguna.Nama, nama)) {
             printf("HERE\n");
-            p = &currentPengguna;
+            *p = currentPengguna;
         }
     }
 }
