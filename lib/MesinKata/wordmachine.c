@@ -22,6 +22,21 @@ void GetWord(Word *w) {
   }
 }
 
+void GetWordButTrim(Word *w, char delim) {
+  if (w->Length != 0)
+    w->Length = 0;
+
+  char currentChar;
+  ADV(&currentChar);
+  if (currentChar == MARK) {
+    EndWord = true;
+  } else {
+    EndWord = false;
+    CopyWordButTrim(&currentChar, w, delim);
+    ADV(&currentChar);
+  }
+}
+
 void PrintWord(Word w) {
   for (int i = 0; i < w.Length; i++) {
     printf("%c", w.TabWord[i]);
@@ -38,11 +53,39 @@ void CopyWord(char *currentChar, Word *w) {
   }
 }
 
+void CopyWordButTrim(char *currentChar, Word *w, char delim) {
+  int i = 0;
+  while (*currentChar != MARK && w->Length < NMax) {
+    if (*currentChar != delim) {
+      w->TabWord[i] = *currentChar;
+      i++;
+      w->Length++;
+    }
+    ADV(currentChar);
+  }
+}
+
 boolean WordCmp(Word word, const char compare[]) {
   int i = 0;
 
   while (word.TabWord[i] != '\0' && compare[i] != '\0') {
     if (word.TabWord[i] != compare[i]) {
+      return false;
+    }
+    i++;
+  }
+
+  return true && (i == word.Length);
+}
+
+boolean WordCmpWord(Word w1, Word w2) {
+  int i = 0;
+
+  if (w1.Length != w2.Length)
+    return false;
+
+  while (w1.Length != i && w2.Length != i) {
+    if (w1.TabWord[i] != w2.TabWord[i]) {
       return false;
     }
     i++;
@@ -99,4 +142,11 @@ void ParseWord(Word *source, char delimiter, ...) {
   }
 
   va_end(args);
+}
+
+void AssignWordFromWord(Word from, Word *to) {
+  for (int i = 0; i < from.Length; i++) {
+    to->TabWord[i] = from.TabWord[i];
+  }
+  to->Length = from.Length;
 }

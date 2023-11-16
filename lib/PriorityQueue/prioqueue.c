@@ -1,55 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../MesinKata/wordmachine.h"
 #include "../UndirectedGraph/graph.h"
-
-/* Selektor */
-#define DATA(p) (p)->user
-#define NEXT_QUEUE(p) (p)->next
-#define PRIORITY(p) (p)->priority
-#define FIRST_QUEUE(l) (l) // Buat ambil node dari list l
-
-/* Address = Pointer to Node */
-typedef struct node *Address;
-
-/* Node = Element dari Priority Queue Linked List */
-typedef struct node
-{
-    User user;
-    int priority;
-    struct node *next;
-} Node;
-
-/* List = Address (Elemen pertama queue) */
-typedef Address List;
+#include "prioqueue.h"
 
 /* Buat convert data user ke node */
-Address newNode(User user)
+Address newNode(Word nama, int priority)
 {
-    Address temp = (Address)malloc(sizeof(Node));
+    Address temp = (Address)malloc(sizeof(Word));
     if (temp != NULL)
     {
-        DATA(temp) = user;
-        PRIORITY(temp) = FOLLOWER(user);
+        DATA(temp) = nama;
+        PRIORITY(temp) = priority;
         NEXT_QUEUE(temp) = NULL;
     }
     return temp;
 }
 
 /* Buat Priority Queue*/
-void CreateList(List *l)
+void CreatePriorityQueue(PriorityQueue *l)
 {
     FIRST_QUEUE(*l) = NULL;
 }
 
 /* Cek apakah queue kosong*/
-boolean isEmpty(List l)
+boolean isEmpty(PriorityQueue l)
 {
     return (FIRST_QUEUE(l) == NULL);
 }
 
 /* Fungsi untuk hapus elemen/node dengan prioritas tertinggi*/
-void dequeue(List *l)
+void dequeue(PriorityQueue *l)
 {
     Address temp = FIRST_QUEUE(*l);
     FIRST_QUEUE(*l) = NEXT_QUEUE(FIRST_QUEUE(*l));
@@ -57,23 +39,21 @@ void dequeue(List *l)
 }
 
 /* Fungsi untuk menambahkan node*/
-void enqueue(List *l, User user, int follower)
+void enqueue(PriorityQueue *l, Word nama, int follower)
 {
     Address start = FIRST_QUEUE(*l);
 
     /* Convert data user ke node */
-    Address temp = newNode(user);
+    Address temp = newNode(nama, follower);
 
     /* Case 1: Jika list kosong*/
     if (FIRST_QUEUE(*l) == NULL)
     {
-        NEXT_QUEUE(temp) = FIRST_QUEUE(*l);
         FIRST_QUEUE(*l) = temp;
     }
     /* Case 2 : Jika elemen pertama memiliki prioritas lebih kecil dari user yang akan diinput*/
     else if (PRIORITY(FIRST_QUEUE(*l)) < follower)
     {
-
         // Insert New Node before head
         NEXT_QUEUE(temp) = FIRST_QUEUE(*l);
         FIRST_QUEUE(*l) = temp;
@@ -93,7 +73,7 @@ void enqueue(List *l, User user, int follower)
     }
 }
 
-int length_queue(List l)
+int length_queue(PriorityQueue l)
 {
     int count = 0;
     Address temp = FIRST_QUEUE(l);
@@ -196,8 +176,8 @@ int jumlahPendingRequest(User user)
 /* Fungsi buat print daftar teman yang ada */
 void daftarPermintaanTeman(User user)
 {
-    List listRequest;
-    CreateList(&listRequest);
+    PriorityQueue listRequest;
+    CreatePriorityQueue(&listRequest);
     /* Case 1 : Jika ga ada request pertemanan */
     if (isNoPendingRequest(user))
     {
@@ -212,14 +192,14 @@ void daftarPermintaanTeman(User user)
         {
             if (PENDING_REQUEST(user, i) == 1)
             {
-                enqueue(&listRequest, listOfUser[i], FOLLOWER(listOfUser[i]));
+                /* enqueue(&listRequest, listOfUser[i], FOLLOWER(listOfUser[i])); */
             }
         }
         printf("\n");
         while (!isEmpty(listRequest))
         {
-            printf("| %s\n", nameOfUser[INDEX_USER(DATA(FIRST_QUEUE(listRequest)))]);
-            printf("| Jumlah Teman: %d \n\n", FOLLOWER(DATA(FIRST_QUEUE(listRequest))));
+            /* printf("| %s\n", nameOfUser[INDEX_USER(DATA(FIRST_QUEUE(listRequest)))]); */
+            /* printf("| Jumlah Teman: %d \n\n", FOLLOWER(DATA(FIRST_QUEUE(listRequest)))); */
             dequeue(&listRequest);
         }
     }

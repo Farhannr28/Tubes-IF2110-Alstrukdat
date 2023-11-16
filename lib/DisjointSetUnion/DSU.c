@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include"dsu.h"
+#include"DSU.h"
 
 /* ********** KONSTRUKTOR ********** */
 void CreateDSU(DSU *d){

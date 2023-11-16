@@ -1,19 +1,23 @@
 #include <stdio.h>
 #include "liststatik.h"
+#include "../pcolor/pcolor.h"
+#include "../UndirectedGraph/graph.h"
+
+int userId = 0;
+
 void CreateListPengguna(ListPengguna *l){
     int i;
     for (i=IDXMINListPengguna;i<CAPACITYListPengguna;i++){
-        ELMTStatik(*l, i) = MARK;
+        ELMTStatik(*l, i).isValid = false;
     }
 }
 
 int ListPenggunaLength(ListPengguna l){
     int listLength=0,i=0;
-    if (ELMTStatik(l, IDXMINListPengguna)  == -9999){
+    if (!ELMTStatik(l, IDXMINListPengguna).isValid){
         return 0;
-    }
-    else{
-        while (ELMTStatik(l, i) != -9999 && i<CAPACITYListPengguna){
+    } else {
+        while (ELMTStatik(l, i).isValid && i<CAPACITYListPengguna){
             listLength +=1;
             i++;
         }
@@ -23,39 +27,39 @@ int ListPenggunaLength(ListPengguna l){
 /* Mengirimkan nol jika List kosong */  
 }
 
-IdxType getFirstIdxListPengguna(ListPengguna l){
+PenggunaIdxType getFirstIdxListPengguna(ListPengguna l){
     return IDXMINListPengguna;
 /* Prekondisi : List l tidak kosong */
 /* Mengirimkan indeks elemen l pertama */
 }
 
-IdxType getLastIdxListPengguna(ListPengguna l){
+PenggunaIdxType getLastIdxListPengguna(ListPengguna l){
     int length;
-    length = listLength(l);
+    length = ListPenggunaLength(l);
     return (length-1);
 /* Prekondisi : List l tidak kosong */
 /* Mengirimkan indeks elemen l terakhir */
 }
 
-boolean isIdxValidListPengguna(ListPengguna l, IdxType i){
+boolean isIdxValidListPengguna(ListPengguna l, PenggunaIdxType i){
     return(i>=IDXMINListPengguna && i<CAPACITYListPengguna);
 /* Mengirimkan true jika i adalah indeks yang valid utk kapasitas List l */
 /* yaitu antara indeks yang terdefinisi utk container*/
 }
-boolean isIdxEffListPengguna(ListPengguna l, IdxType i){
-    return(i>=IDXMINListPengguna && i<listLength(l));
+boolean isIdxEffListPengguna(ListPengguna l, PenggunaIdxType i){
+    return(i>=IDXMINListPengguna && i<ListPenggunaLength(l));
 /* Mengirimkan true jika i adalah indeks yang terdefinisi utk List l */
 /* yaitu antara 0..length(l)-1 */
 }
 
 boolean isEmptyListPengguna(ListPengguna l){
     /* Mengirimkan true jika List l kosong, mengirimkan false jika tidak */
-    return(listLength(l)==0);
+    return(ListPenggunaLength(l)==0);
 }
 
 boolean isFullListPengguna(ListPengguna l){
     /* Mengirimkan true jika List l penuh, mengirimkan false jika tidak */
-    return(listLength(l)==CAPACITYListPengguna);
+    return(ListPenggunaLength(l)==CAPACITYListPengguna);
 }
 
 void readListListPengguna(ListPengguna *l){
@@ -89,7 +93,7 @@ void printListPengguna(ListPengguna l){
     /* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
     /* Jika List kosong : menulis [] */
     int length,i;
-    length = listLength(l);
+    length = ListPenggunaLength(l);
     if (length==0){
         printf("[]");
     }
@@ -111,44 +115,45 @@ void printListPengguna(ListPengguna l){
     }
 }
 
-int indexOfListPengguna(ListPengguna l, ElType val){
+int indexOfListPengguna(ListPengguna l, PenggunaElType val){
 /* Search apakah ada elemen List l yang bernilai val */
 /* Jika ada, menghasilkan indeks i terkecil, dengan ELMTStatik(l,i) = val */
 /* Jika tidak ada atau jika l kosong, mengirimkan IDX_UNDEFListPengguna */
 /* Skema Searching yang digunakan bebas */
     int i;
-    if (isEmpty(l)){
+    if (isEmptyListPengguna(l)){
         return IDX_UNDEFListPengguna;
     }
     else{
-        for(i=0;i<listLength(l);i++){
-            if(ELMTStatik(l,i)==val){
-                return i;
-            }
+        for(i=0;i<ListPenggunaLength(l);i++){
+            // WARN: sementara dicomment dulu, ganggu compilation
+            /* if(ELMTStatik(l,i)==val){ */
+            /*     return i; */
+            /* } */
         }
         return IDX_UNDEFListPengguna;
     }
 }
+
 void insertFirstListPengguna(ListPengguna *l, Pengguna user){
 /* Proses: Menambahkan val sebagai elemen pertama List */
 /* I.S. List l boleh kosong, tetapi tidak penuh */
 /* F.S. val adalah elemen pertama l yang baru */
 /* *** Menambahkan elemen pada index tertentu *** */
     int i;
-    for (i = listLength(*l); i>IDXMINListPengguna; i--){
+    for (i = ListPenggunaLength(*l); i>IDXMINListPengguna; i--){
         ELMTStatik(*l, i)= ELMTStatik(*l, i-1);
     }
-    ELMTStatik(*l, IDXMINListPengguna)= user;
+    ELMTStatik(*l, IDXMINListPengguna) = user;
 }
 
-void insertAtListPengguna(ListPengguna *l,Pengguna user, IdxType idx){
+void insertAtListPengguna(ListPengguna *l,Pengguna user, PenggunaIdxType idx){
 /* Proses: Menambahkan val sebagai elemen pada index idx List */
 /* I.S. List l tidak kosong dan tidak penuh, idx merupakan index yang valid di l */
 /* F.S. val adalah elemen yang disisipkan pada index idx l */
 /* *** Menambahkan elemen terakhir *** */
-    int i;
-    if (!isFull(*l) && !isEmpty(*l) && isIdxValid(*l,idx)){
-        for(i=listLength(*l)+1;i>IDXMINListPengguna;i--){
+    if (!isFullListPengguna(*l) && !isEmptyListPengguna(*l) && isIdxValidListPengguna(*l,idx)){
+        for(int i=ListPenggunaLength(*l)+1;i>IDXMINListPengguna;i--){
             ELMTStatik(*l,i) = ELMTStatik(*l,(i-1));
         }
         ELMTStatik(*l,idx) = user;
@@ -159,11 +164,11 @@ void insertLastListPengguna(ListPengguna *l, Pengguna user){
 /* Proses: Menambahkan val sebagai elemen terakhir List */
 /* I.S. List l boleh kosong, tetapi tidak penuh */
 /* F.S. val adalah elemen terakhir l yang baru */
-   if (isEmpty(*l)) {
+   if (isEmptyListPengguna(*l)) {
       ELMTStatik(*l, IDXMINListPengguna) = user;
    }
-   else if (!isFull(*l)) {
-      ELMTStatik(*l, getLastIdx(*l)+1) = user;
+   else if (!isFullListPengguna(*l)) {
+      ELMTStatik(*l, getLastIdxListPengguna(*l)+1) = user;
    }
 }
 
@@ -175,14 +180,15 @@ void deleteFirstListPengguna(ListPengguna *l){
 /*      List l mungkin menjadi kosong */
 /* *** Menghapus elemen pada index tertentu *** */
     int i;
-    if (!isEmpty(*l)){
-        for(i=1;i<listLength(*l);i++){
+    if (!isEmptyListPengguna(*l)){
+        for(i=1;i<ListPenggunaLength(*l);i++){
             ELMTStatik(*l,i-1) = ELMTStatik(*l,i);
         }
-        ELMTStatik(*l,listLength(*l)-1) = MARK;
+        // WARN: sementara dicomment dulu, ganggu compilation
+        /* ELMTStatik(*l,ListPenggunaLength(*l)-1) = MARK; */
     }
 }
-void deleteAtListPengguna(ListPengguna *l, IdxType idx){
+void deleteAtListPengguna(ListPengguna *l, PenggunaIdxType idx){
 /* Proses : Menghapus elemen pada index idx List */
 /* I.S. List tidak kosong, idx adalah index yang valid di l */
 /* F.S. val adalah nilai elemen pada index idx l sebelum penghapusan, */
@@ -190,11 +196,12 @@ void deleteAtListPengguna(ListPengguna *l, IdxType idx){
 /*      List l mungkin menjadi kosong */
 /* *** Menghapus elemen terakhir *** */
     int i;
-    if (!isEmpty(*l) && isIdxValid(*l,idx)){
-        for(i=idx+1;i<listLength(*l);i++){
+    if (!isEmptyListPengguna(*l) && isIdxValidListPengguna(*l,idx)){
+        for(i=idx+1;i<ListPenggunaLength(*l);i++){
             ELMTStatik(*l,i-1) = ELMTStatik(*l,i);
         }
-        ELMTStatik(*l,listLength(*l)-1) = MARK;
+        // WARN: sementara dicomment dulu, ganggu compilation
+        /* ELMTStatik(*l,ListPenggunaLength(*l)-1) = MARK; */
     }
 }
 void deleteLastListPengguna(ListPengguna *l){
@@ -204,7 +211,230 @@ void deleteLastListPengguna(ListPengguna *l){
 /*      Banyaknya elemen List berkurang satu */
 /*      List l mungkin menjadi kosong */
     int i;
-    if (!isEmpty(*l)){
-    ELMTStatik(*l,getLastIdx(*l)) = MARK;
+    if (!isEmptyListPengguna(*l)){
+        // WARN: sementara dicomment dulu, ganggu compilation
+        /* ELMTStatik(*l,getLastIdx(*l)) = MARK; */
+    }
+}
+
+boolean UsernameTaken(ListPengguna l, Word nama) {
+    int length = ListPenggunaLength(l);
+    for (int i = 0; i < length; i++) {
+        Pengguna currentPengguna = ELMTStatik(l, i);
+        if(WordCmpWord(currentPengguna.Nama, nama)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+boolean UserAndPasswordMatch(ListPengguna l, Word nama, Word password) {
+    int length = ListPenggunaLength(l);
+    for (int i = 0; i < length; i++) {
+        Pengguna currentPengguna = ELMTStatik(l, i);
+        // TODO: add hash
+        if(WordCmpWord(currentPengguna.KataSandi, password) && WordCmpWord(currentPengguna.Nama, nama)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi) {
+    AssignWord(&p->JenisAkun, "PUBLIK");
+    p->isValid = true;
+    p->Nama = Nama;
+    p->KataSandi = KataSandi;
+    p->id = userId;
+    userId++;
+    CreateProfil(&p->FotoProfil);
+    CreatePriorityQueue(&p->PermintaanBerteman);
+}
+
+void InvalidateUser(Pengguna *p) {
+    p->isValid = false;
+}
+
+boolean IsUserValid(Pengguna p) {
+    return p.isValid;
+}
+
+boolean GetUserByName(ListPengguna l, Pengguna *p, Word nama) {
+    int length = ListPenggunaLength(l);
+    for (int i = 0; i < length; i++) {
+        Pengguna currentPengguna = ELMTStatik(l, i);
+        if(WordCmpWord(currentPengguna.Nama, nama)) {
+            *p = currentPengguna;
+            return true;
+        }
+    }
+    return false;
+}
+
+boolean GetUserById(ListPengguna l, Pengguna *p, int id) {
+    int length = ListPenggunaLength(l);
+    for (int i = 0; i < length; i++) {
+        Pengguna currentPengguna = ELMTStatik(l, i);
+        if(currentPengguna.id == id) {
+            *p = currentPengguna;
+            return true;
+        }
+    }
+    return false;
+}
+
+boolean GetMutableUserByName(ListPengguna *l, Pengguna **p, Word nama) {
+    int length = ListPenggunaLength(*l);
+    for (int i = 0; i < length; i++) {
+        if(WordCmpWord((*l).UserList[i].Nama, nama)) {
+            *p = &l->UserList[i];
+            return true;
+        }
+    }
+    return false;
+}
+
+void DisplayProfile(Pengguna p) {
+    Matriks m = p.FotoProfil;
+    for (int i=0; i<ROW_EFF(m); i++) {
+        for (int j=0; j<COL_EFF(m); j++) {
+            boolean isR = ELMT(m, i, j) == 'R';
+            boolean isG = ELMT(m, i, j) == 'G';
+            boolean isB = ELMT(m, i, j) == 'B';
+            if(isR) {
+                print_red(ELMT(m, i, j+1));
+            } 
+            if(isG) {
+                print_green(ELMT(m, i, j+1));
+            } 
+            if(isB) {
+                print_blue(ELMT(m, i, j+1));
+            } 
+        }
+        printf("\n");
+    }
+}
+
+void ChangeUserInfo(Pengguna *p, boolean isValid, Word Nama, Word KataSandi,
+                    Word NoHP, Word BioAkun, Word Weton, Word JenisAkun,
+                    Matriks FotoProfil) {
+    p->isValid = isValid;
+    p->Nama = Nama;
+    p->KataSandi = KataSandi;
+    p->NoHP = NoHP;
+    p->BioAkun = BioAkun;
+    p->Weton = Weton;
+    p->FotoProfil = FotoProfil;
+}
+
+void ChangePrivacy(Pengguna *p, boolean private_) {
+    if(!private_) {
+        AssignWord(&p->JenisAkun, "PUBLIK");
+    } else {
+        AssignWord(&p->JenisAkun, "PRIVATE");
+    }
+}
+
+boolean UserIsPrivate(Pengguna p) {
+    return WordCmp(p.JenisAkun, "PRIVATE");
+}
+
+void CreateProfil(Matriks *m) {
+    createMatriks(5, 10, m);
+    for (int i=0; i<5; i++) {
+        for (int j=0; j<10; j++) {
+            if(j % 2 == 0) 
+                ELMT(*m, i, j) = 'R';
+            else
+                ELMT(*m, i, j) = '*';
+        }
+    }
+}
+
+void UpdateProfil(Pengguna *p, Matriks m) {
+    Matriks *pm = &p->FotoProfil;
+    for (int i=0; i<5; i++) {
+        for (int j=0; j<10; j++) {
+            ELMT(*pm, i, j) = ELMT(m, i, j);
+        }
+    }
+}
+
+boolean TambahTeman(Pengguna from, Pengguna *to) {
+  if (isEmpty(from.PermintaanBerteman)) {
+    enqueue(&to->PermintaanBerteman, from.Nama,
+            length_queue(from.PermintaanBerteman));
+    return true;
+  } 
+  return false;
+}
+
+Address GetPermintaanTeratas(Pengguna p) {
+    return FIRST_QUEUE(p.PermintaanBerteman);
+}
+
+void PrintListTeman(Pengguna p) {
+    PriorityQueue temp;
+    CreatePriorityQueue(&temp);
+    while(!isEmpty(p.PermintaanBerteman)) {
+        Address teman = GetPermintaanTeratas(p);
+        printf("| ");PrintWord(DATA(teman));printf("\n");
+        printf("| Jumlah teman: %d \n", PRIORITY(teman));
+        printf("\n");
+        enqueue(&temp, DATA(teman), PRIORITY(teman));
+        dequeue(&p.PermintaanBerteman);
+    }
+    while (!isEmpty(temp)) {
+        Address teman = FIRST_QUEUE(temp);
+        enqueue(&p.PermintaanBerteman, DATA(teman), PRIORITY(teman));
+        dequeue(&temp);
+    }
+}
+
+
+/* Fungsi untuk menambahkan edge/sisi (hubungan pertemanan) pada graph */
+void addTeman(Graph *graph, int index_user_asal, int index_user_tujuan)
+{
+    ELMT_GRAPH(*graph, index_user_asal, index_user_tujuan) = 1;
+    ELMT_GRAPH(*graph, index_user_tujuan, index_user_asal) = 1;
+}
+
+/* Fungsi untuk menghapus teman */
+void hapusTeman(Graph *graph, int index_user_asal, int index_user_tujuan)
+{
+    ELMT_GRAPH(*graph, index_user_asal, index_user_tujuan) = 0;
+    ELMT_GRAPH(*graph, index_user_tujuan, index_user_asal) = 0;
+}
+
+/* Fungsi untuk mencetak daftar teman */
+void printTeman(ListPengguna listUser, Graph graph, Pengguna p)
+{
+    int j = 0;
+    int temanUser = jumlahTeman(graph, p.id);
+    if (temanUser == 0)
+    {
+        PrintWord(p.Nama);
+        printf(" tidak memiliki teman\n");
+    }
+    else
+    {
+        PrintWord(p.Nama);
+        printf(" memiliki %d teman\n", temanUser);
+        printf("Daftar teman ");
+        PrintWord(p.Nama);
+        printf(": \n");
+
+        for (j = 0; j < MAX_SIMPUL; j++)
+        {
+            if (ELMT_GRAPH(graph, p.id, j) == 1)
+            {
+                Pengguna teman;
+                GetUserById(listUser, &teman, j);
+                printf("| ");
+                PrintWord(teman.Nama);
+                printf("\n");
+            }
+        }
     }
 }

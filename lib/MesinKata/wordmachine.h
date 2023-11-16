@@ -7,7 +7,7 @@
 #include "../MesinKarakter/charmachine.h"
 #include "../utility/boolean.h"
 
-#define NMax 50
+#define NMax 280
 #define BLANK ' '
 
 typedef struct {
@@ -26,6 +26,10 @@ void PrintWord(Word w);
 boolean WordCmp(Word word, const char compare[]);
 void readParagraph(Word *input);
 void AssignWord(Word *word, const char chars[]);
+void AssignWordFromWord(Word from, Word *to);
 void GetCharsFromWord(Word word, char *chars);
 void ParseWord(Word *source, char delimiter, ...);
+boolean WordCmpWord(Word w1, Word w2);
+void CopyWordButTrim(char *currentChar, Word *w, char delim);
+void GetWordButTrim(Word *w, char delim);
 #endif
