@@ -84,3 +84,23 @@ boolean DLT(DATETIME D1, DATETIME D2) {
 boolean DGT(DATETIME D1, DATETIME D2) {
     return (!DLT(D1, D2) && !DEQ(D1, D2));
 }
+
+
+DATETIME GetCurrentDateTime() {
+    DATETIME currentDateTime;
+
+    time_t currentTime;
+    struct tm *localTime;
+
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+
+    Day(currentDateTime) = localTime->tm_mday;
+    Month(currentDateTime) = localTime->tm_mon + 1; // INI TIMENYA ANEH BANGET
+    Year(currentDateTime) = localTime->tm_year + 1900; // INI TIMENYA ANEH BANGET
+    Time(currentDateTime).HH = localTime->tm_hour;
+    Time(currentDateTime).MM = localTime->tm_min;
+    Time(currentDateTime).SS = localTime->tm_sec;
+
+    return currentDateTime;
+}

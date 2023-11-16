@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-#include "time.h"
+#include "ctime.h"
 
 void CreateTime (TIME * T, int HH, int MM, int SS) {
     Hour(*T) = HH;

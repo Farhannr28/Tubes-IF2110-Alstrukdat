@@ -4,7 +4,7 @@
 #define DATETIME_H
 
 #include "../utility/boolean.h"
-#include "time.h"
+#include "ctime.h"
 
 typedef struct
 {
@@ -42,6 +42,8 @@ boolean DNEQ(DATETIME D1, DATETIME D2);
 boolean DLT(DATETIME D1, DATETIME D2);
 /* Mengirimkan true jika D1>D2, false jika tidak */
 boolean DGT(DATETIME D1, DATETIME D2);
+
+DATETIME GetCurrentDateTime();
 
 
 #endif
