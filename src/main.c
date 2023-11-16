@@ -335,6 +335,57 @@ void DoKicauan() {
   showVisibleKicauan(listKicauan, listUser, currentUser, networkPertemanan);
 }
 
+void DoSukaKicauan(Word idKicauWord) {
+  int idKicau = IntFromWord(idKicauWord);
+  Kicauan kicauan;
+  int found = getKicauanById(listKicauan, &kicauan, idKicau);
+  if(!found) {
+    printf("Tidak ditemukan kicauan dengan ID = %d;\n", idKicau);
+    return;
+  } 
+  Pengguna pengkicau;
+  GetUserById(listUser, &pengkicau, kicauan.idPembuat);
+  boolean dariTeman = isTeman(networkPertemanan, currentUser.id, kicauan.idPembuat);
+  boolean dariSendiri = currentUser.id == kicauan.idPembuat;
+  if(!UserIsPrivate(pengkicau) || dariTeman || dariSendiri) {
+    sukaKicauan(&listKicauan, idKicau);
+    printf("Selamat! kicauan telah disukai!\n");
+    printf("Detil kicauan:\n");
+    printf("| ID = %d\n", kicauan.id);
+    printf("| ");PrintWord(currentUser.Nama);printf("\n");
+    printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
+    printf("| ");PrintWord(kicauan.text);printf("\n");
+    printf("| Disukai: %d\n", kicauan.like+1);
+  } else {
+    printf("Wah, kicauan tersebut dibuat oleh akun privat! Ikuti akun itu dulu ya\n");
+  }
+}
+
+void DoUbahKicauan(Word idKicauWord) {
+  int idKicau = IntFromWord(idKicauWord);
+  Kicauan kicauan;
+  int found = getKicauanById(listKicauan, &kicauan, idKicau);
+  if(!found) {
+    printf("Tidak ditemukan kicauan dengan ID = %d;\n", idKicau);
+    return;
+  } 
+  boolean dariSendiri = currentUser.id == kicauan.idPembuat;
+  if(dariSendiri) {
+    Word textKicauanBaru;
+    PromptUser("Masukkan kicauan baru:\n", &textKicauanBaru);
+    ubahKicauan(&listKicauan, idKicau, textKicauanBaru);
+    printf("Selamat! kicauan telah diterbitkan!\n");
+    printf("Detil kicauan:\n");
+    printf("| ID = %d\n", kicauan.id);
+    printf("| ");PrintWord(currentUser.Nama);printf("\n");
+    printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
+    printf("| ");PrintWord(textKicauanBaru);printf("\n");
+    printf("| Disukai: %d\n", kicauan.like);
+  } else {
+    printf("Kicauan dengan ID = %d bukan milikmu!\n", idKicau);
+  }
+}
+
 void DoPerintah() {
   Word action, args1;
   ParseWord(&perintah, ' ', &action, &args1);
@@ -368,6 +419,10 @@ void DoPerintah() {
     DoKicau();
   } else if (WordCmp(action, "KICAUAN")) {
     DoKicauan();
+  } else if (WordCmp(action, "SUKA_KICAUAN")) {
+    DoSukaKicauan(args1);
+  } else if (WordCmp(action, "UBAH_KICAUAN")) {
+    DoUbahKicauan(args1);
   } else {
     printf("Perintah tidak valid!\n");
   }

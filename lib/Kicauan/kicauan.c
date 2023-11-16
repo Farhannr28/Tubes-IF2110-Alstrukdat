@@ -121,7 +121,6 @@ void showVisibleKicauan(ListKicauan listKicauan, ListPengguna listUser,
                 printf("| ");PrintWord(k.text);printf("\n");
                 printf("| Disukai: %d\n", k.like);
                 printf("\n");
-                success = true;
             } 
         }
     }

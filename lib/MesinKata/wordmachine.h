@@ -32,4 +32,5 @@ void ParseWord(Word *source, char delimiter, ...);
 boolean WordCmpWord(Word w1, Word w2);
 void CopyWordButTrim(char *currentChar, Word *w, char delim);
 void GetWordButTrim(Word *w, char delim);
+int IntFromWord(Word w);
 #endif

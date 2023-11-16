@@ -150,3 +150,11 @@ void AssignWordFromWord(Word from, Word *to) {
   }
   to->Length = from.Length;
 }
+
+int IntFromWord(Word w) {
+  int result = 0;
+  for (int i = 0; i < w.Length; ++i) {
+    result = result * 10 + (w.TabWord[i] - '0');
+  }
+  return result;
+}
