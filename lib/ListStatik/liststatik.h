@@ -171,5 +171,7 @@ void PrintListTeman(Pengguna p);
 void hapusTeman(Graph *graph, int index_user_asal, int index_user_tujuan);
 void printTeman(ListPengguna listUser, Graph graph, Pengguna p);
 void addTeman(Graph *graph, int index_user_asal, int index_user_tujuan);
+boolean validateNoHP(Word noHp);
+boolean validateWeton(Word weton);
 
 #endif

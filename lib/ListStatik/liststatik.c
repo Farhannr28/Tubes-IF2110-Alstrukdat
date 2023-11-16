@@ -438,3 +438,25 @@ void printTeman(ListPengguna listUser, Graph graph, Pengguna p)
         }
     }
 }
+
+boolean validateNoHP(Word noHp) {
+    if(noHp.Length < 9) return false;
+    if(noHp.TabWord[0] != '0') return false;
+    for (int i = 0; i < noHp.Length; i++) {
+        char c = noHp.TabWord[i];
+        if(!(c >= '0' && c <= '9')) {
+            return false;
+        }
+    }
+    return true;
+}
+
+boolean validateWeton(Word weton) {
+    if(WordCmp(weton, "Kliwon")) return true;
+    if(WordCmp(weton, "Wage")) return true;
+    if(WordCmp(weton, "Legi")) return true;
+    if(WordCmp(weton, "Pahing")) return true;
+    if(WordCmp(weton, "Pon")) return true;
+    if(WordCmp(weton, "")) return true;
+    return false;
+}

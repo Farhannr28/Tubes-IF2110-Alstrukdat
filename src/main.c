@@ -23,12 +23,13 @@ void greetings() {
          "|   _  <  |  |  |  | |      /     |   _  <  |  | |      /     \n"
          "|  |_)  | |  `--'  | |  |\\  \\----.|  |_)  | |  | |  |\\  \\----.\n"
          "|______/   \\______/  | _| `._____||______/  |__| | _| `._____|  \n"
-         "Selamat datang di BurBir. \n"
+         "Selamat datang di BurBir. \n\n"
          "Aplikasi untuk studi kualitatif mengenai perilaku manusia dengan "
          "menggunakan metode (pengambilan data berupa) Focused Group "
-         "Discussion kedua di zamannya.\n"
+         "Discussion kedua di zamannya.\n\n"
          "Silahkan masukan folder konfigurasi untuk dimuat: ");
   GetWord(&configFile);
+  printf("\n");
   // TODO: load config
   // WARN: this should be ifNotLoaded
   CreateListPengguna(&listUser);
@@ -36,17 +37,19 @@ void greetings() {
   InvalidateUser(&currentUser);
   // WARN: max user asumsi 20
   createGraph(&networkPertemanan, 20);
-  printf("File konfigurasi berhasil dimuat! Selamat berkicau!\n");
+  printf("File konfigurasi berhasil dimuat! Selamat berkicau!\n\n");
 }
 
 void GetPerintah() {
   printf(">> ");
   GetWord(&perintah);
+  printf("\n");
 }
 
 void PromptUser(const char *c, Word *w) {
   printf("%s", c);
   GetWord(w);
+  printf("\n");
 }
 
 void DoKeluar() {
@@ -60,11 +63,15 @@ void DoKeluar() {
 }
 
 void DoDaftar() {
+  if(IsUserValid(currentUser)) {
+    printf("Anda sudah masuk. Keluar terlebih dahulu untuk melakukan daftar.\n\n");
+    return;
+  }
   Word nama, password;
   while (true) {
     PromptUser("Masukkan nama:\n", &nama);
     if (UsernameTaken(listUser, nama)) {
-      printf("Wah, sayang sekali nama tersebut telah diambil.\n");
+      printf("Wah, sayang sekali nama tersebut telah diambil.\n\n");
     } else {
       break;
     }
@@ -78,6 +85,10 @@ void DoDaftar() {
 }
 
 void DoMasuk() {
+  if(IsUserValid(currentUser)) {
+    printf("Wah Anda sudah masuk. Keluar dulu yuk!\n\n");
+    return;
+  }
   Word nama, password;
   while (true) {
     PromptUser("Masukkan nama:\n", &nama);
@@ -121,24 +132,34 @@ void DoGantiProfil() {
   printf("\n");
   printf("| Weton: ");
   PrintWord(currentUser.Weton);
-  printf("\n");
+  printf("\n\n");
   Word newBioAkun, newNoHP, newWeton;
   PromptUser("Masukkan Bio Akun:", &newBioAkun);
-  // TODO: validation
-  PromptUser("Masukkan No HP:", &newNoHP);
-  // TODO: validation
-  PromptUser("Masukkan Weton:", &newWeton);
+  while(true) {
+    PromptUser("Masukkan No HP:", &newNoHP);
+    boolean noHpValid = validateNoHP(newNoHP);
+    if(noHpValid) break;
+    else printf("No HP tidak valid. Masukkan lagi yuk!\n\n");
+  }
+  while(true) {
+    PromptUser("Masukkan Weton:", &newWeton);
+    boolean wetonValid = validateWeton(newWeton);
+    if(wetonValid) break;
+    else printf("Weton anda tidak valid.\n\n");
+  }
 
   ChangeUserInfo(&currentUser, currentUser.isValid, currentUser.Nama,
                  currentUser.KataSandi, newNoHP, newBioAkun, newWeton,
                  currentUser.JenisAkun, currentUser.FotoProfil);
 
   Pengguna currentUserInDatabase;
+  // TODO: not changed in list
   GetUserByName(listUser, &currentUserInDatabase, currentUser.Nama);
   ChangeUserInfo(&currentUserInDatabase, currentUserInDatabase.isValid,
                  currentUserInDatabase.Nama, currentUserInDatabase.KataSandi,
                  newNoHP, newBioAkun, newWeton, currentUserInDatabase.JenisAkun,
                  currentUserInDatabase.FotoProfil);
+  printf("Profil Anda sudah berhasil diperbarui!");
 }
 
 void DoLihatProfil(Word nama) {
@@ -149,7 +170,7 @@ void DoLihatProfil(Word nama) {
     PrintWord(theUser.Nama);
     printf(" diprivat nih. Ikuti dulu yuk untuk bisa melihat profil ");
     PrintWord(theUser.Nama);
-    printf("\n");
+    printf("\n\n");
   } else {
     printf("| Nama: ");
     PrintWord(theUser.Nama);
@@ -162,10 +183,10 @@ void DoLihatProfil(Word nama) {
     printf("\n");
     printf("| Weton: ");
     PrintWord(theUser.Weton);
-    printf("\n");
+    printf("\n\n");
     printf("Foto Profil:\n");
     DisplayProfile(theUser);
-    printf("\n");
+    printf("\n\n");
   }
 }
 
@@ -183,14 +204,7 @@ void DoAturJenisAkun() {
                "Privat? (YA/TIDAK) ",
                &choice);
   }
-
-  /* while (!WordCmp(choice, "YA") || !WordCmp(choice, "TIDAK")) { */
-  /*   printf("Jawaban tidak valid\n"); */
-  /*   PromptUser( */
-  /*       "Saat ini, akun Anda adalah akun Publik.\nIngin mengubah ke akun " */
-  /*       "Privat? (YA/TIDAK) ", */
-  /*       &choice); */
-  /* } */
+  printf("\n");
 
   if (WordCmp(choice, "YA")) {
     ChangePrivacy(&currentUser, true);
@@ -199,6 +213,7 @@ void DoAturJenisAkun() {
     ChangePrivacy(&currentUser, false);
     printf("Akun anda sudah diubah menjadi akun Publik.\n");
   }
+  printf("\n");
 }
 
 void DoUbahFotoProfil() {
@@ -221,6 +236,7 @@ void DoUbahFotoProfil() {
 void DoTambahTeman() {
   Word namaPengguna;
   PromptUser("Masukkan nama pengguna:\n", &namaPengguna);
+  printf("\n");
   Pengguna *friend;
   boolean userAvailable =
       GetMutableUserByName(&listUser, &friend, namaPengguna);
@@ -235,12 +251,15 @@ void DoTambahTeman() {
       printf(
           "Terdapat permintaan pertemanan yang belum Anda setujui. Silakan "
           "kosongkan daftar permintaan pertemanan untuk Anda terlebih dahulu.");
+      printf("\n");
     }
   } else {
     printf("Pengguna bernama ");
     PrintWord(namaPengguna);
     printf(" tidak ditemukan");
+    printf("\n");
   }
+  printf("\n");
 }
 
 void DoDaftarPermintaanPertemanan() {
@@ -251,6 +270,7 @@ void DoDaftarPermintaanPertemanan() {
   } else {
     printf("Tidak ada permintaan pertemanan untuk Anda.\n");
   }
+  printf("\n");
 }
 
 void DoSetujuiPertemanan() {
@@ -287,25 +307,35 @@ void DoSetujuiPertemanan() {
 
   } else {
     printf("Tidak ada permintaan pertemanan untuk Anda.\n");
+    printf("\n");
   }
 }
 
-void DoDaftarTeman() { printTeman(listUser, networkPertemanan, currentUser); }
+void DoDaftarTeman() { 
+  if(IsUserValid(currentUser))
+    printTeman(listUser, networkPertemanan, currentUser); 
+  else
+    printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+  printf("\n");
+}
 
 void DoHapusTeman() {
   Word namaPengguna;
   PromptUser("Masukkan nama pengguna:\n", &namaPengguna);
+  printf("\n");
   Pengguna teman;
   GetUserByName(listUser, &teman, namaPengguna);
   if (!isTeman(networkPertemanan, currentUser.id, teman.id)) {
     PrintWord(teman.Nama);
     printf(" bukan teman Anda.\n");
+    printf("\n");
     return;
   }
   Word response;
   PromptUser("Apakah anda yakin ingin menghapus Bob dari daftar teman "
              "anda?(YA/TIDAK) ",
              &response);
+  printf("\n");
   if (WordCmp(response, "YA")) {
     hapusTeman(&networkPertemanan, currentUser.id, teman.id);
     PrintWord(namaPengguna);
@@ -313,6 +343,7 @@ void DoHapusTeman() {
   } else {
     printf("Penghapusan teman dibatalkan.\n");
   }
+  printf("\n");
 }
 
 void DoKicau() {
@@ -426,6 +457,7 @@ void DoPerintah() {
   } else {
     printf("Perintah tidak valid!\n");
   }
+  printf("\n");
 }
 
 int main() {
