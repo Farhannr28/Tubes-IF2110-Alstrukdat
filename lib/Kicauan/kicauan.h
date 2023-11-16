@@ -5,6 +5,8 @@
 #include "../MesinKata/wordmachine.h"
 #include "../MesinKarakter/charmachine.h"
 #include "../Sederhana/datetime.h"
+#include "../UndirectedGraph/graph.h"
+#include "../ListStatik/liststatik.h"
 
 typedef struct kicauan{
     boolean isValid;
@@ -31,6 +33,7 @@ typedef struct {
 #define TIME(p) (p).waktu
 
 void createKicauan(Kicauan *k, int authorId, Word kicau);
+void createListKicau(ListKicauan *l);
 
 void insertKicauan(ListKicauan *l, Kicauan k);
 /* I.S. Kicauan dengan id tersebut belum ada */
@@ -48,6 +51,10 @@ boolean showKicauan(ListKicauan l, int id);
 /* I.S. Kicauan dengan id tersebut tersedia dan pengguna saat ini sudah berteman dengan author */
 /* F.S. Kicauan ditampilkan kepada pengguna sesuai format */
 
+boolean showKicauan(ListKicauan l, int id);
+
+void showVisibleKicauan(ListKicauan listKicauan, ListPengguna listUser,
+                           Pengguna currentUser, Graph networkPertemanan);
 int kicauanLength(ListKicauan l);
 boolean isKicauanEmpty(ListKicauan l);
 boolean isKicauanFull(ListKicauan l);

@@ -13,6 +13,12 @@ void createKicauan(Kicauan *k, int authorId, Word kicau){
     k->isValid = true;
 }
 
+void createListKicau(ListKicauan *l){
+    for (int i=0;i<CAPACITYKicauan;i++){
+        ELMTKicauan(*l, i).isValid = false;
+    }
+}
+
 int kicauanLength(ListKicauan l){
     int listLength=0, i=0;
     if (!ELMTKicauan(l, 0).isValid){
@@ -49,7 +55,7 @@ void insertKicauan(ListKicauan *l, Kicauan k) {
 
 boolean getKicauanById(ListKicauan l, Kicauan *k, int id) {
     for (int i = 0; i < CAPACITYKicauan; i++) {
-        if(ELMTKicauan(l, 0).isValid) {
+        if(ELMTKicauan(l, i).isValid) {
             if(ELMTKicauan(l, i).id == id) {
                 *k = ELMTKicauan(l, i);
                 return true;
@@ -59,9 +65,22 @@ boolean getKicauanById(ListKicauan l, Kicauan *k, int id) {
     return false;
 }
 
+boolean getKicauanByUserId(ListKicauan l, Kicauan *k, int userId) {
+    for (int i = 0; i < CAPACITYKicauan; i++) {
+        if(ELMTKicauan(l, i).isValid) {
+            if(ELMTKicauan(l, i).idPembuat == userId) {
+                *k = ELMTKicauan(l, i);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
 void sukaKicauan(ListKicauan *l, int id) {
     for (int i = 0; i < CAPACITYKicauan; i++) {
-        if(ELMTKicauan(*l, 0).isValid) {
+        if(ELMTKicauan(*l, i).isValid) {
             if(ELMTKicauan(*l, i).id == id) {
                 ELMTKicauan(*l, i).like++;
             }
@@ -71,7 +90,7 @@ void sukaKicauan(ListKicauan *l, int id) {
 
 void ubahKicauan(ListKicauan *l, int id, Word kicauBaru) {
     for (int i = 0; i < CAPACITYKicauan; i++) {
-        if(ELMTKicauan(*l, 0).isValid) {
+        if(ELMTKicauan(*l, i).isValid) {
             if(ELMTKicauan(*l, i).id == id) {
                 ELMTKicauan(*l, i).text = kicauBaru;
             }
@@ -79,3 +98,31 @@ void ubahKicauan(ListKicauan *l, int id, Word kicauBaru) {
     }
 }
 
+void showVisibleKicauan(ListKicauan listKicauan, ListPengguna listUser,
+                           Pengguna currentUser, Graph networkPertemanan) {
+    for (int i = 0; i < CAPACITYKicauan; i++) {
+        if(ELMTKicauan(listKicauan, i).isValid) {
+            int idPengkicau = ELMTKicauan(listKicauan, i).idPembuat;
+            boolean dariTeman = isTeman(networkPertemanan, currentUser.id, idPengkicau);
+            boolean dariSendiri = currentUser.id == idPengkicau;
+            if(dariSendiri || dariTeman) {
+                Kicauan k = ELMTKicauan(listKicauan, i);
+                printf("| ID = %d\n", k.id);
+                printf("| ");
+                if(dariSendiri) {
+                    PrintWord(currentUser.Nama);
+                } else {
+                    Pengguna teman;
+                    GetUserById(listUser, &teman, idPengkicau);
+                    PrintWord(teman.Nama);
+                } 
+                printf("\n");
+                printf("| ");TulisDateTime(k.waktu);printf("\n");
+                printf("| ");PrintWord(k.text);printf("\n");
+                printf("| Disukai: %d\n", k.like);
+                printf("\n");
+                success = true;
+            } 
+        }
+    }
+}

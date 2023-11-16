@@ -11,7 +11,7 @@ void CreateListKicauan(ListDin *l, int capacity){
     /* KAMUS */
     ElType* ptr;
     /* ALGORITMA */
-    ptr = (ElType*) malloc(capacity * sizeof(ElType));
+    ptr = (ElType*) malloc(capacity * sizeof(ElTypeListDin));
     if (ptr == NULL){
         printf("Memory allocation failed\n");
     } else {
@@ -185,9 +185,9 @@ IdxType indexOfListKicauan(ListDin l, int x){
         return ans;
     }
     for (i=NEFF(l)-1; i>-1; i--){
-        if((ELMT(l,i)).id == x){
-            ans = i;
-        }
+        /* if((ELMT(l,i)).id == x){ */
+        /*     ans = i; */
+        /* } */
     }
     return ans;
 }

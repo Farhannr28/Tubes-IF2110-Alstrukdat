@@ -40,7 +40,7 @@ void CreateDATETIME(DATETIME *D, int DD, int MM, int YYYY, int hh, int mm, int s
     Time(*D) = T;
 }
 
-void TulisDATETIME(DATETIME D) {
+void TulisDateTime(DATETIME D) {
     int DD, MM, YY, hh, mm, ss;
     TIME T;
     DD = Day(D);
