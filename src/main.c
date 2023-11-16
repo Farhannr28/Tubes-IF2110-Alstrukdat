@@ -1,16 +1,19 @@
 #include <boolean.h>
 #include <graph.h>
+#include <kicauan.h>
 #include <liststatik.h>
 #include <matriks.h>
 #include <prioqueue.h>
 #include <stdio.h>
 #include <wordmachine.h>
+#include <datetime.h>
 
 Word perintah;
 boolean isStop = false;
 Pengguna currentUser;
 ListPengguna listUser;
 Graph networkPertemanan;
+ListKicauan listKicauan;
 
 void greetings() {
   Word configFile;
@@ -29,6 +32,7 @@ void greetings() {
   // TODO: load config
   // WARN: this should be ifNotLoaded
   CreateListPengguna(&listUser);
+  createListKicau(&listKicauan);
   InvalidateUser(&currentUser);
   // WARN: max user asumsi 20
   createGraph(&networkPertemanan, 20);
@@ -286,29 +290,49 @@ void DoSetujuiPertemanan() {
   }
 }
 
-void DoDaftarTeman() {
-  printTeman(listUser, networkPertemanan, currentUser);
-}
+void DoDaftarTeman() { printTeman(listUser, networkPertemanan, currentUser); }
 
 void DoHapusTeman() {
   Word namaPengguna;
   PromptUser("Masukkan nama pengguna:\n", &namaPengguna);
   Pengguna teman;
   GetUserByName(listUser, &teman, namaPengguna);
-  if(!isTeman(networkPertemanan, currentUser.id, teman.id)) {
+  if (!isTeman(networkPertemanan, currentUser.id, teman.id)) {
     PrintWord(teman.Nama);
     printf(" bukan teman Anda.\n");
     return;
   }
   Word response;
-  PromptUser("Apakah anda yakin ingin menghapus Bob dari daftar teman anda?(YA/TIDAK) ", &response);
-  if(WordCmp(response, "YA")) {
+  PromptUser("Apakah anda yakin ingin menghapus Bob dari daftar teman "
+             "anda?(YA/TIDAK) ",
+             &response);
+  if (WordCmp(response, "YA")) {
     hapusTeman(&networkPertemanan, currentUser.id, teman.id);
     PrintWord(namaPengguna);
     printf(" berhasil dihapus dari daftar teman Anda.\n");
   } else {
-    printf("Penghapusan teman dibatalkan.\n"); 
+    printf("Penghapusan teman dibatalkan.\n");
   }
+}
+
+void DoKicau() {
+  Word text;
+  PromptUser("Masukkan kicauan:\n", &text);
+  Kicauan kicauan;
+  createKicauan(&kicauan, currentUser.id, text);
+  insertKicauan(&listKicauan, kicauan);
+  printf("Selamat! kicauan telah diterbitkan!\n");
+  printf("Detil kicauan:\n");
+  printf("| ID = %d\n", kicauan.id);
+  printf("| ");PrintWord(currentUser.Nama);printf("\n");
+  printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
+  printf("| ");PrintWord(kicauan.text);printf("\n");
+  printf("| Disukai: %d\n", kicauan.like);
+  printf("\n");
+}
+
+void DoKicauan() {
+  showVisibleKicauan(listKicauan, listUser, currentUser, networkPertemanan);
 }
 
 void DoPerintah() {
@@ -340,6 +364,10 @@ void DoPerintah() {
     DoDaftarTeman();
   } else if (WordCmp(action, "HAPUS_TEMAN")) {
     DoHapusTeman();
+  } else if (WordCmp(action, "KICAU")) {
+    DoKicau();
+  } else if (WordCmp(action, "KICAUAN")) {
+    DoKicauan();
   } else {
     printf("Perintah tidak valid!\n");
   }
