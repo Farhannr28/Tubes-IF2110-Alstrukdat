@@ -30,23 +30,6 @@ boolean isEmptyListLinearUtas(ListLinearUtas l){
     return FIRST(l) == NULL;
 }
 
-int indexOfListLinearUtas(ListLinearUtas l, int IdxUtasan){
-    //Pakai ini untuk cek IDXUtasan itu ada apa tidak
-    int i = 0;
-    int pos = IDX_UNDEF;
-    Address p = l;
-    while(p != NULL && pos == IDX_UNDEF){
-        if(IDUtasan(p) == IdxUtasan){
-            pos = i;
-        }else{
-            i++;
-            p = NEXT(p);
-        }
-    }
-    return pos;
-}
-
-
 void insertFirstListLinearUtas(ListLinearUtas *l, Utasan val){
 /* I.S. l mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */

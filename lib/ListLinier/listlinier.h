@@ -56,12 +56,6 @@ void CreateListLinearUtas(ListLinearUtas *l);
 boolean isEmptyListLinearUtas(ListLinearUtas l);
 /* Mengirim true jika ListLinearUtas kosong */
 
-int indexOfListLinearUtas(ListLinearUtas l, int IdxUtasan);
-/* I.S. l, val terdefinisi */
-/* F.S. Mencari apakah ada elemen ListLinearUtas l yang bernilai val */
-/* Jika ada, mengembalikan indeks elemen pertama l yang bernilai val */
-/* Mengembalikan IDX_UNDEF jika tidak ditemukan */
-
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
 /*** PENAMBAHAN ELEMEN ***/
 void insertFirstListLinearUtas(ListLinearUtas *l, Utasan val);
