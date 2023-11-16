@@ -7,6 +7,7 @@
 #include "../Sederhana/datetime.h"
 
 typedef struct kicauan{
+    boolean isValid;
     int id;
     int idPembuat;
     Word text;
@@ -21,7 +22,7 @@ typedef struct {
 } ListKicauan;
 
 /* ********** SELEKTOR ********** */
-#define ELMTStatik(l, i) (l).UserList[(i)]
+#define ELMTKicauan(l, i) (l).KicauanList[(i)]
 
 #define ID(k) (k).id
 #define AUHTOR(k) (k).idPembuat
@@ -29,7 +30,9 @@ typedef struct {
 #define LIKE(p) (p).like
 #define TIME(p) (p).waktu
 
-void createKicauan(ListKicauan *l, int id, int Author, Word kicau);
+void createKicauan(Kicauan *k, int authorId, Word kicau);
+
+void insertKicauan(ListKicauan *l, Kicauan k);
 /* I.S. Kicauan dengan id tersebut belum ada */
 /* F.S. Terbentuk kicauan dengan id tersebut dengan waktu pembuatan serta like 0 */
 
@@ -41,8 +44,14 @@ void ubahKicauan(ListKicauan *l, int id, Word kicauBaru);
 /* I.S. Kicauan dengan id tersebut tersedia */
 /* F.S. Text dari kicauan dengan id tersebut berubah menjadi kicauBaru, tanggal tidak berubah */
 
-void showKicauan(ListKicauan l, int id);
+boolean showKicauan(ListKicauan l, int id);
 /* I.S. Kicauan dengan id tersebut tersedia dan pengguna saat ini sudah berteman dengan author */
 /* F.S. Kicauan ditampilkan kepada pengguna sesuai format */
+
+int kicauanLength(ListKicauan l);
+boolean isKicauanEmpty(ListKicauan l);
+boolean isKicauanFull(ListKicauan l);
+int getLastKicauanIndex(ListKicauan l);
+boolean getKicauanById(ListKicauan l, Kicauan *k, int id);
 
 #endif
