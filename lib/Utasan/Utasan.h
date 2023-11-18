@@ -10,11 +10,11 @@ Paragraph *newParagraph(Word currentWord);
 
 void insertLastParagraph(Utasan *u, Word text);
 
-void deleteParagraphAtPosition(Utasan *u, int position);
+void deleteParagraphAtPosition(ListLinearUtas *L, int IDUtasan, int position);
 
 int GetUtasanIndex(ListLinearUtas l, int);
 
-void insertParagraphAtPosition(Utasan *u, Word text, int position);
+void insertParagraphAtListPosition(ListLinearUtas *L, int IDUtasan, Word text, int position);
 
 void CreateUtas(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,
                 Word Penulis);

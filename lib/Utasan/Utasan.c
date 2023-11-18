@@ -30,16 +30,30 @@ void insertLastParagraph(Utasan *u, Word text) {
     }
 }
 
-void insertParagraphAtPosition(Utasan *u, Word text, int position) {
+void insertParagraphAtListPosition(ListLinearUtas *L, int IDUtasan, Word text, int position) {
+    // Find the Utasan node with the given IDUtasan
+    Address utasanNode = *L;
+    while (utasanNode != NULL && IDUtasan(utasanNode) != IDUtasan) {
+        utasanNode = NEXT(utasanNode);
+    }
+
+    // If no such Utasan is found, return
+    if (utasanNode == NULL) {
+        printf("Utasan with ID %d not found.\n", IDUtasan);
+        return;
+    }
+
+    // Now work with the found Utasan's TextList
+    Utasan *u = &(INFO(utasanNode));
     Paragraph* InputParagraph = newParagraph(text); 
     if (InputParagraph == NULL) {
         return;
     }
-    if (u->TextList == NULL) {
+
+    if (position == 1 || u->TextList == NULL) {
         InputParagraph->next = u->TextList;
         u->TextList = InputParagraph;
-    } 
-    else {
+    } else {
         Paragraph* current = u->TextList;
         int currentPosition = 1;
         while (currentPosition < position - 1 && current->next != NULL) {
@@ -51,27 +65,43 @@ void insertParagraphAtPosition(Utasan *u, Word text, int position) {
     }
 }
 
-void deleteParagraphAtPosition(Utasan *u, int position) {
 
-    Paragraph *current = u->TextList;
+
+void deleteParagraphAtPosition(ListLinearUtas *L, int IDUtasan, int position) {
+    // Find the Utasan node with the given IDUtasan
+    Address utasanNode = *L;
+    while (utasanNode != NULL && IDUtasan(utasanNode) != IDUtasan) {
+        utasanNode = NEXT(utasanNode);
+    }
+
+    // If no such Utasan is found, return
+    if (utasanNode == NULL) {
+        printf("Utasan with ID %d not found.\n", IDUtasan);
+        return;
+    }
+
+    // Access the TextList of the found Utasan
+    Paragraph *current = TEXT(utasanNode);
     Paragraph *previous = NULL;
     int currentPosition = 1;
+
     if (position == 1) {
-        u->TextList = current->next;
-        free(current); 
-    }
-    else{
-    while (currentPosition < position && current != NULL) {
-        previous = current;
-        current = current->next;
-        currentPosition++;
-    }
-    if (current != NULL) {
-        previous->next = current->next; 
-        free(current); 
-    }
+        TEXT(utasanNode) = current->next;
+        free(current);
+    } else {
+        while (currentPosition < position && current != NULL) {
+            previous = current;
+            current = current->next;
+            currentPosition++;
+        }
+
+        if (current != NULL) {
+            previous->next = current->next;
+            free(current);
+        }
     }
 }
+
 
 
 int GetUtasanIndex(ListLinearUtas l,int IDUtasan){
@@ -165,7 +195,7 @@ void Sambung_Utas(int IDUtas,int index,ListLinearUtas *l){
         Word Kicauan;
         printf("Masukkan kicauan:\n");
         GetWord(&Kicauan);
-        insertParagraphAtPosition(&U1,Kicauan,index);
+        insertParagraphAtListPosition(l,IDUtas,Kicauan,index);
         }
     }
 }
@@ -221,7 +251,7 @@ void Hapus_Utas(int IDUtas,int index,ListLinearUtas*l){
         }
         Utasan U1;
         U1 = INFO(p);
-        deleteParagraphAtPosition(&U1,index);
+        deleteParagraphAtPosition(l,IDUtas,index);
         }
     }
 }
