@@ -4,9 +4,10 @@
 #include "../MesinKarakter/charmachine.h"
 #include "Utasan.h"
 #include "../ListLinier/listlinier.h"
-Paragraph* newParagraph( Word currentWord) {
+Paragraph* newParagraph( Word currentWord,DATETIME D) {
     Paragraph* p = (Paragraph*)malloc(sizeof(Paragraph));  
-    if (p != NULL) {
+    if (p != NULL) {;
+        p->DateTime = D;
         p->text = currentWord;  
         p->next = NULL;  
     }
@@ -14,8 +15,8 @@ Paragraph* newParagraph( Word currentWord) {
 }
 
 
-void insertLastParagraph(Utasan *u, Word text) {
-    Paragraph* InputParagraph = newParagraph(text); 
+void insertLastParagraph(Utasan *u, Word text,DATETIME D) {
+    Paragraph* InputParagraph = newParagraph(text,D); 
     if (InputParagraph != NULL) {
         if (u->TextList == NULL) {
             u->TextList = InputParagraph;
@@ -30,7 +31,7 @@ void insertLastParagraph(Utasan *u, Word text) {
     }
 }
 
-void insertParagraphAtListPosition(ListLinearUtas *L, int IDUtasan, Word text, int position) {
+void insertParagraphAtListPosition(ListLinearUtas *L, int IDUtasan, Word text, int position,DATETIME D) {
     // Find the Utasan node with the given IDUtasan
     Address utasanNode = *L;
     while (utasanNode != NULL && IDUtasan(utasanNode) != IDUtasan) {
@@ -45,7 +46,7 @@ void insertParagraphAtListPosition(ListLinearUtas *L, int IDUtasan, Word text, i
 
     // Now work with the found Utasan's TextList
     Utasan *u = &(INFO(utasanNode));
-    Paragraph* InputParagraph = newParagraph(text); 
+    Paragraph* InputParagraph = newParagraph(text,D); 
     if (InputParagraph == NULL) {
         return;
     }
@@ -121,12 +122,12 @@ int GetUtasanIndex(ListLinearUtas l,int IDUtasan){
     return count;
 }
 
-void CreateUtas(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,Word Penulis) {
+void CreateUtas(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,Word Penulis,DATETIME D) {
     u->IDUtasan = IDUtasan;
     u-> IDKicauan =IDKicauan;
     u->Penulis = Penulis;
     u->TextList = NULL;
-    insertLastParagraph(u,Utasan);
+    insertLastParagraph(u,Utasan,D);
 }
 
 int indexOfListLinearUtas(ListLinearUtas l, int IdUtasan){
@@ -149,6 +150,7 @@ void Utas(int IDKicau,ListLinearUtas *l){
     Word Kicauan;
     Word Penulis;
     Word Validasi;
+    DATETIME D;
     Utasan U1;
     int IDUtas;
     IDUtas = lengthListLinearUtas(*l);
@@ -160,7 +162,8 @@ void Utas(int IDKicau,ListLinearUtas *l){
     //Sementara:
     printf("Masukkan Nama:\n");
     GetWord(&Penulis);
-    CreateUtas(&U1,IDUtas,IDKicau,Kicauan,Penulis);
+    D = GetCurrentDateTime();
+    CreateUtas(&U1,IDUtas,IDKicau,Kicauan,Penulis,D);
     insertFirstListLinearUtas(l,U1);
     printf("Apakah Anda ingin melanjutkan utas ini? (YA/TIDAK):\n");
     GetWord(&Validasi);
@@ -169,7 +172,8 @@ void Utas(int IDKicau,ListLinearUtas *l){
     while(WordCmp(Validasi,"YA")){
         printf("Masukkan Kicauan:\n");
         GetWord(&Kicauan);
-        insertLastParagraph(&U1,Kicauan);
+        D = GetCurrentDateTime();
+        insertLastParagraph(&U1,Kicauan,D);
         printf("Apakah Anda ingin melanjutkan utas ini? (YA/TIDAK):\n");
         GetWord(&Validasi);
     }
@@ -178,6 +182,7 @@ void Utas(int IDKicau,ListLinearUtas *l){
 
 void Sambung_Utas(int IDUtas,int index,ListLinearUtas *l){
     int pos;
+    DATETIME D;
     int indexMax;
     pos = indexOfListLinearUtas(*l,IDUtas);
     if (pos!=IDX_UNDEF){
@@ -195,7 +200,8 @@ void Sambung_Utas(int IDUtas,int index,ListLinearUtas *l){
         Word Kicauan;
         printf("Masukkan kicauan:\n");
         GetWord(&Kicauan);
-        insertParagraphAtListPosition(l,IDUtas,Kicauan,index);
+        D = GetCurrentDateTime();
+        insertParagraphAtListPosition(l,IDUtas,Kicauan,index,D);
         }
     }
 }
@@ -220,6 +226,9 @@ void Cetak_Utas(ListLinearUtas l,int IDUtas) {
         {
             printf("    |");
             printf("INDEX:%d",index);
+            printf("\n");
+            printf("    |");
+            TulisDateTime(CurrTime(paragraph));
             printf("\n");
             printf("    |");
             PrintWord(KONTEN(paragraph));

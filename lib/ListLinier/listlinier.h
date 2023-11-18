@@ -4,8 +4,11 @@
 #include "../utility/boolean.h"
 #include "../MesinKata/wordmachine.h"
 #include "../MesinKarakter/charmachine.h"
+#include "../Sederhana/ctime.h"
+#include "../Sederhana/datetime.h"
 typedef struct node* Address;
 typedef struct paragraph{
+    DATETIME DateTime;
     Word text;
     struct paragraph* next;
 } Paragraph;
@@ -30,9 +33,9 @@ typedef struct node {
 #define IDKicauan(p) (p)->info.IDKicauan
 #define TEXT(p) (p)->info.TextList
 #define KONTEN(p) (p)->text
+#define CurrTime(p) (p)->DateTime
 
 Address newNode(Utasan val);
-Paragraph* newParagraph(Word currentWord);
 
 /* Definisi ListLinearUtas : */
 /* ListLinearUtas kosong : FIRST(l) = NULL */
