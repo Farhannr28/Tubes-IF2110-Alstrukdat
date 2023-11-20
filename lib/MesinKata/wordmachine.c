@@ -98,9 +98,9 @@ void AssignWord(Word *word, const char chars[]) {
   int i = 0;
   while (chars[i] != '\0') {
     word->TabWord[i] = chars[i];
-    word->Length++;
     i++;
   }
+  word->Length=i;
 }
 
 void GetCharsFromWord(Word word, char *chars) {
