@@ -100,7 +100,7 @@ void AssignWord(Word *word, const char chars[]) {
     word->TabWord[i] = chars[i];
     i++;
   }
-  word->Length=i;
+  word->Length = i;
 }
 
 void GetCharsFromWord(Word word, char *chars) {
@@ -154,7 +154,8 @@ void AssignWordFromWord(Word from, Word *to) {
 int IntFromWord(Word w) {
   int result = 0;
   for (int i = 0; i < w.Length; ++i) {
-    result = result * 10 + (w.TabWord[i] - '0');
+    if (w.TabWord[i] >= '0' && w.TabWord[i] <= '9')
+      result = result * 10 + (w.TabWord[i] - '0');
   }
   return result;
 }
