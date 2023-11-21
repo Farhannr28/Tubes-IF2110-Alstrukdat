@@ -45,5 +45,5 @@ boolean DGT(DATETIME D1, DATETIME D2);
 
 DATETIME GetCurrentDateTime();
 
-
+void format_datetime(const DATETIME *dt, char *buffer, int bufferSize);
 #endif

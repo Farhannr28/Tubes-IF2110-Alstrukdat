@@ -1,5 +1,5 @@
-#ifndef ListLinearUtaslinier_H
-#define ListLinearUtaslinier_H
+#ifndef ListLinearUtas_H
+#define ListLinearUtas_H
 
 #include "../utility/boolean.h"
 #include "../MesinKata/wordmachine.h"

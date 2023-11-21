@@ -212,7 +212,7 @@ void Cetak_Utas(ListLinearUtas l,int IDUtas) {
     int count =0;
     while (p!=NULL && IDUtasan(p)!=IDUtas)
     {
-        printf("IDutas%d\n",IDUtasan(p));
+        // printf("IDutas%d\n",IDUtasan(p));
         p = NEXT(p);
         count++;
     }
@@ -228,11 +228,15 @@ void Cetak_Utas(ListLinearUtas l,int IDUtas) {
             printf("INDEX:%d",index);
             printf("\n");
             printf("    |");
+            PrintWord(p->info.Penulis);
+            // printf("\n");
+            printf("    |");
             TulisDateTime(CurrTime(paragraph));
             printf("\n");
             printf("    |");
             PrintWord(KONTEN(paragraph));
             printf("\n");
+            printf("Idkicau:%d\n",p->info.IDKicauan);
             // printf("\n");
             paragraph =  paragraph-> next;
             index ++;
@@ -262,5 +266,23 @@ void Hapus_Utas(int IDUtas,int index,ListLinearUtas*l){
         U1 = INFO(p);
         deleteParagraphAtPosition(l,IDUtas,index);
         }
+    }
+}
+
+int BanyakUtasan(ListLinearUtas l,int IDKicau){
+    Address p =l;
+    while(p!=NULL){
+        // printf("Jalan %d\n",IDKicauan(p));
+        // break;
+        if(IDKicauan(p) == IDKicau){
+            Paragraph *currentParagraph = TEXT(p);
+            int length = 0;
+            while(currentParagraph !=NULL){
+                length++;
+                currentParagraph = currentParagraph->next;
+            }
+            return length;
+        }
+        p = NEXT(p);
     }
 }

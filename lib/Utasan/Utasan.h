@@ -31,4 +31,6 @@ void Cetak_Utas(ListLinearUtas l, int IDUtas);
 
 void Hapus_Utas(int IDUtas, int index, ListLinearUtas *l);
 
+int BanyakUtasan(ListLinearUtas l,int IDKicau);
+
 #endif

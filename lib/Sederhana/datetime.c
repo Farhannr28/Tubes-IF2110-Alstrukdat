@@ -31,7 +31,7 @@ int GetMaxDay(int M, int Y) {
 }
 
 /* Membentuk sebuah DATETIME dari komponen-komponennya yang valid */
-void CreateDATETIME(DATETIME *D, int DD, int MM, int YYYY, int hh, int mm, int ss) {
+void CreateDateTime(DATETIME *D, int DD, int MM, int YYYY, int hh, int mm, int ss) {
     Day(*D) = DD;
     Month(*D) = MM;
     Year(*D) = YYYY;
@@ -103,4 +103,9 @@ DATETIME GetCurrentDateTime() {
     Time(currentDateTime).SS = localTime->tm_sec;
 
     return currentDateTime;
+}
+
+void format_datetime(const DATETIME *dt, char *buffer, int bufferSize) {
+    snprintf(buffer, bufferSize, "%02d/%02d/%04d %02d:%02d:%02d",
+             dt->DD, dt->MM, dt->YYYY, dt->T.HH, dt->T.MM, dt->T.SS);
 }
