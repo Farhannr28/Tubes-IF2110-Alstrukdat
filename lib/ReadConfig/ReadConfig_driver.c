@@ -1,15 +1,19 @@
-#include "ReadConfig.c"
-
+#include "ReadConfig.h"
+#include "../ListLinier/listlinier.h"
+#include "../Utasan/Utasan.h"
+#include "stdio.h"
+#include "../utility/boolean.h"
+#include "../MesinKata/wordmachine.h"
+#include "../MesinKarakter/charmachine.h"
+// #include "../Sederhana/ctime.h"
+#include "../Sederhana/datetime.h"
+#include "string.h"
 //Contoh
 int main(){
     ListLinearUtas listUtas;
     CreateListLinearUtas(&listUtas);
-    // MuatUtas("config",&listUtas);
-    Word W1;
-    Word W2;
-    AssignWord(&W1,"Asep");
-    AssignWord(&W2,"Asep2");
-    PrintWord(W2);
+    MuatUtas("config",&listUtas);
+    printf("fungsi Selesai\n");
     // PrintWord(W1);
-    // Cetak_Utas(listUtas,1);
+    Cetak_Utas(listUtas,1);
 }
