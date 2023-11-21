@@ -2,6 +2,7 @@
 #include <graph.h>
 #include <kicauan.h>
 #include <liststatik.h>
+#include "../lib/ListDinamis/listdin.h"
 #include <matriks.h>
 #include <prioqueue.h>
 #include <stdio.h>
@@ -13,7 +14,7 @@ boolean isStop = false;
 Pengguna currentUser;
 ListPengguna listUser;
 Graph networkPertemanan;
-ListKicauan listKicauan;
+ListDin listKicauan;
 
 void greetings() {
   Word configFile;
@@ -33,7 +34,7 @@ void greetings() {
   // TODO: load config
   // WARN: this should be ifNotLoaded
   CreateListPengguna(&listUser);
-  createListKicau(&listKicauan);
+  CreateListKicauan(&listKicauan, 10);
   InvalidateUser(&currentUser);
   // WARN: max user asumsi 20
   createGraph(&networkPertemanan, 20);
@@ -351,25 +352,36 @@ void DoKicau() {
   PromptUser("Masukkan kicauan:\n", &text);
   Kicauan kicauan;
   createKicauan(&kicauan, currentUser.id, text);
-  insertKicauan(&listKicauan, kicauan);
+  insertKicauanLast(&listKicauan, kicauan);
   printf("Selamat! kicauan telah diterbitkan!\n");
   printf("Detil kicauan:\n");
-  printf("| ID = %d\n", kicauan.id);
-  printf("| ");PrintWord(currentUser.Nama);printf("\n");
-  printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
-  printf("| ");PrintWord(kicauan.text);printf("\n");
-  printf("| Disukai: %d\n", kicauan.like);
-  printf("\n");
+	showKicauan(kicauan, currentUser);
 }
 
 void DoKicauan() {
-  showVisibleKicauan(listKicauan, listUser, currentUser, networkPertemanan);
+  int i;
+  for (i=0; i<listKicauan.nEff; i++){
+		if(ELMTKicauan(listKicauan, i).isValid) {
+			int idPengkicau = ELMTKicauan(listKicauan, i).idPembuat;
+			boolean dariTeman = isTeman(networkPertemanan, currentUser.id, idPengkicau);
+			boolean dariSendiri = currentUser.id == idPengkicau;
+			if(dariSendiri || dariTeman) {
+				Pengguna Author;
+				if(dariSendiri) {
+						Author = currentUser;
+				} else {
+						GetUserById(listUser, &Author, idPengkicau);
+				} 
+				showKicauan(ELMTKicauan(listKicauan, i), Author);
+			} 
+		}
+  }
 }
 
 void DoSukaKicauan(Word idKicauWord) {
   int idKicau = IntFromWord(idKicauWord);
   Kicauan kicauan;
-  int found = getKicauanById(listKicauan, &kicauan, idKicau);
+  boolean found = getKicauanById(listKicauan, &kicauan, idKicau);
   if(!found) {
     printf("Tidak ditemukan kicauan dengan ID = %d;\n", idKicau);
     return;
@@ -377,16 +389,12 @@ void DoSukaKicauan(Word idKicauWord) {
   Pengguna pengkicau;
   GetUserById(listUser, &pengkicau, kicauan.idPembuat);
   boolean dariTeman = isTeman(networkPertemanan, currentUser.id, kicauan.idPembuat);
-  boolean dariSendiri = currentUser.id == kicauan.idPembuat;
+  boolean dariSendiri = (currentUser.id == kicauan.idPembuat);
   if(!UserIsPrivate(pengkicau) || dariTeman || dariSendiri) {
-    sukaKicauan(&listKicauan, idKicau);
+		sukaKicauan(&kicauan);
     printf("Selamat! kicauan telah disukai!\n");
     printf("Detil kicauan:\n");
-    printf("| ID = %d\n", kicauan.id);
-    printf("| ");PrintWord(currentUser.Nama);printf("\n");
-    printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
-    printf("| ");PrintWord(kicauan.text);printf("\n");
-    printf("| Disukai: %d\n", kicauan.like+1);
+    showKicauan(kicauan, pengkicau);
   } else {
     printf("Wah, kicauan tersebut dibuat oleh akun privat! Ikuti akun itu dulu ya\n");
   }
@@ -395,23 +403,18 @@ void DoSukaKicauan(Word idKicauWord) {
 void DoUbahKicauan(Word idKicauWord) {
   int idKicau = IntFromWord(idKicauWord);
   Kicauan kicauan;
-  int found = getKicauanById(listKicauan, &kicauan, idKicau);
+  boolean found = getKicauanById(listKicauan, &kicauan, idKicau);
   if(!found) {
     printf("Tidak ditemukan kicauan dengan ID = %d;\n", idKicau);
     return;
   } 
-  boolean dariSendiri = currentUser.id == kicauan.idPembuat;
+  boolean dariSendiri = (currentUser.id == kicauan.idPembuat);
   if(dariSendiri) {
     Word textKicauanBaru;
     PromptUser("Masukkan kicauan baru:\n", &textKicauanBaru);
-    ubahKicauan(&listKicauan, idKicau, textKicauanBaru);
+    ubahKicauan(&kicauan, textKicauanBaru);
     printf("Selamat! kicauan telah diterbitkan!\n");
-    printf("Detil kicauan:\n");
-    printf("| ID = %d\n", kicauan.id);
-    printf("| ");PrintWord(currentUser.Nama);printf("\n");
-    printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
-    printf("| ");PrintWord(textKicauanBaru);printf("\n");
-    printf("| Disukai: %d\n", kicauan.like);
+    showKicauan(kicauan, currentUser);
   } else {
     printf("Kicauan dengan ID = %d bukan milikmu!\n", idKicau);
   }

@@ -19,9 +19,8 @@
 /* Definisi elemen dan koleksi objek */
 typedef Kicauan ElTypeListDin; /* type elemen list */
 typedef int IdxType;
-typedef struct
-{
-    ElType *buffer; /* memori tempat penyimpan elemen (container) */
+typedef struct{
+    ElTypeListDin *buffer; /* memori tempat penyimpan elemen (container) */
     int nEff;       /* >=0, banyaknya elemen efektif */
     int capacity;   /* ukuran elemen */
 } ListDin;
@@ -40,7 +39,7 @@ typedef struct
 /* ********** SELEKTOR ********** */
 #define NEFF(l) (l).nEff
 #define BUFFER(l) (l).buffer
-#define ELMT(l, i) (l).buffer[i]
+#define ELMTKicauan(l, i) (l).buffer[i]
 #define CAPACITY(l) (l).capacity
 
 /* ********** KONSTRUKTOR ********** */
@@ -138,18 +137,18 @@ void compressListKicauan(ListDin *l);
 
 /* ********** MENAMBAH DAN MENGHAPUS ELEMEN DI AKHIR ********** */
 /* *** Menambahkan elemen *** */
-void insertKicauanAt(ListDin *l, ElType val, IdxType idx);
+void insertKicauanAt(ListDin *l, ElTypeListDin val, IdxType idx);
 /* Proses: Menambahkan val sebagai elemen list pada posisi idx, menggeser elemen setelahnya*/
 /* I.S. List l tidak kosong, mungkin penuh, idx effektif */
 /* F.S. Jika l penuh, kapasitas l menjadi 2 kalinya. Val adalah elemen terakhir l yang baru */
 
-void insertKicauanLast(ListDin *l, ElType val);
+void insertKicauanLast(ListDin *l, ElTypeListDin val);
 /* Proses: Menambahkan val sebagai elemen terakhir list */
 /* I.S. List l boleh kosong, tetapi tidak penuh */
 /* F.S. val adalah elemen terakhir l yang baru */
 
 /* ********** MENGHAPUS ELEMEN ********** */
-void deleteKicauanAt(ListDin *l, ElType *val, IdxType idx);
+void deleteKicauanAt(ListDin *l, ElTypeListDin *val, IdxType idx);
 /* Proses : Menghapus elemen list pada posisi idx, menggeser elemen setelahnya*/
 /* I.S. List tidak kosong, idx valid */
 /* F.S. val adalah nilai elemen terakhir l sebelum penghapusan, */
@@ -157,11 +156,15 @@ void deleteKicauanAt(ListDin *l, ElType *val, IdxType idx);
 /*      Jika l <25% terisi, kapasitas menjadi setengahnya */
 /*      List l mungkin menjadi kosong */
 
-void deleteKicauanLast(ListDin *l, ElType *val);
+void deleteKicauanLast(ListDin *l, ElTypeListDin *val);
 /* Proses : Menghapus elemen terakhir list */
 /* I.S. List tidak kosong */
 /* F.S. val adalah nilai elemen terakhir l sebelum penghapusan, */
 /*      Banyaknya elemen list berkurang satu */
 /*      List l mungkin menjadi kosong */
 
+/* ********** Get ********** */
+boolean getKicauanById(ListDin l, Kicauan *k, int id);
+
+boolean getKicauanByUserId(ListDin l, Kicauan *k, int userId);
 #endif

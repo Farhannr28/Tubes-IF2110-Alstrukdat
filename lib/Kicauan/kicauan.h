@@ -17,15 +17,7 @@ typedef struct kicauan{
     DATETIME waktu;
 } Kicauan;
 
-#define CAPACITYKicauan 100
-
-typedef struct {
-  Kicauan KicauanList[CAPACITYKicauan];
-} ListKicauan;
-
 /* ********** SELEKTOR ********** */
-#define ELMTKicauan(l, i) (l).KicauanList[(i)]
-
 #define ID(k) (k).id
 #define AUHTOR(k) (k).idPembuat
 #define TEXT(k) (k).text
@@ -33,32 +25,12 @@ typedef struct {
 #define TIME(p) (p).waktu
 
 void createKicauan(Kicauan *k, int authorId, Word kicau);
-void createListKicau(ListKicauan *l);
 
-void insertKicauan(ListKicauan *l, Kicauan k);
-/* I.S. Kicauan dengan id tersebut belum ada */
-/* F.S. Terbentuk kicauan dengan id tersebut dengan waktu pembuatan serta like 0 */
+void sukaKicauan(Kicauan *k);
 
-void sukaKicauan(ListKicauan *l, int id);
-/* I.S. Kicauan dengan id tersebut tersedia dan author bukan akun privat yang belum berteman dengan user sekarang */
-/* F.S. Like dari kicauan dengan id tersebut bertambah 1 */
-
-void ubahKicauan(ListKicauan *l, int id, Word kicauBaru);
+void ubahKicauan(Kicauan *k, Word kicauBaru);
 /* I.S. Kicauan dengan id tersebut tersedia */
 /* F.S. Text dari kicauan dengan id tersebut berubah menjadi kicauBaru, tanggal tidak berubah */
 
-boolean showKicauan(ListKicauan l, int id);
-/* I.S. Kicauan dengan id tersebut tersedia dan pengguna saat ini sudah berteman dengan author */
-/* F.S. Kicauan ditampilkan kepada pengguna sesuai format */
-
-boolean showKicauan(ListKicauan l, int id);
-
-void showVisibleKicauan(ListKicauan listKicauan, ListPengguna listUser,
-                           Pengguna currentUser, Graph networkPertemanan);
-int kicauanLength(ListKicauan l);
-boolean isKicauanEmpty(ListKicauan l);
-boolean isKicauanFull(ListKicauan l);
-int getLastKicauanIndex(ListKicauan l);
-boolean getKicauanById(ListKicauan l, Kicauan *k, int id);
-
+void showKicauan(Kicauan k, Pengguna Author);
 #endif
