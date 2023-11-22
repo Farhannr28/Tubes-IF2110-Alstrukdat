@@ -250,6 +250,7 @@ void CreatePengguna(Pengguna *p, Word Nama, Word KataSandi) {
     userId++;
     CreateProfil(&p->FotoProfil);
     CreatePriorityQueue(&p->PermintaanBerteman);
+    CreateStack(&p->Draf);
 }
 
 void InvalidateUser(Pengguna *p) {
