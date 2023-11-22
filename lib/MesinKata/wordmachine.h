@@ -33,4 +33,6 @@ boolean WordCmpWord(Word w1, Word w2);
 void CopyWordButTrim(char *currentChar, Word *w, char delim);
 void GetWordButTrim(Word *w, char delim);
 int IntFromWord(Word w);
+Word WordFromInt(int i);
+
 #endif

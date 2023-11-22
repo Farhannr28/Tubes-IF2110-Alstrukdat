@@ -159,3 +159,21 @@ int IntFromWord(Word w) {
   }
   return result;
 }
+
+Word WordFromInt(int num) {
+  int temp = num;
+  int numDigits = 0;
+  while (temp != 0) {
+    temp /= 10;
+    numDigits++;
+  }
+
+  Word result;
+  for (int i = numDigits - 1; i >= 0; --i) {
+    result.TabWord[i] = (char)('0' + num % 10);
+    num /= 10;
+  }
+  result.Length = numDigits;
+
+  return result;
+}
