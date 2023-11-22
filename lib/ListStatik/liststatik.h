@@ -7,6 +7,8 @@
 #include "../PriorityQueue/prioqueue.h"
 #include "../utility/boolean.h"
 #include "../UndirectedGraph/graph.h"
+#include "../Stack/stack.h"
+
 /*  Kamus Umum */
 #define CAPACITYListPengguna 20
 /* Kapasitas penyimpanan */
@@ -32,6 +34,7 @@ typedef struct pengguna {
   Word JenisAkun;
   Matriks FotoProfil;
   PriorityQueue PermintaanBerteman;
+  Stack Draf;
 } Pengguna;
 
 typedef struct {

@@ -2,19 +2,19 @@
 #include <graph.h>
 #include <kicauan.h>
 #include <liststatik.h>
-#include "../lib/ListDinamis/listdin.h"
 #include <matriks.h>
 #include <prioqueue.h>
 #include <stdio.h>
 #include <wordmachine.h>
 #include <datetime.h>
+#include <stack.h>
 
 Word perintah;
 boolean isStop = false;
 Pengguna currentUser;
 ListPengguna listUser;
 Graph networkPertemanan;
-ListDin listKicauan;
+ListKicauan listKicauan;
 
 void greetings() {
   Word configFile;
@@ -34,7 +34,7 @@ void greetings() {
   // TODO: load config
   // WARN: this should be ifNotLoaded
   CreateListPengguna(&listUser);
-  CreateListKicauan(&listKicauan, 10);
+  createListKicau(&listKicauan);
   InvalidateUser(&currentUser);
   // WARN: max user asumsi 20
   createGraph(&networkPertemanan, 20);
@@ -352,36 +352,25 @@ void DoKicau() {
   PromptUser("Masukkan kicauan:\n", &text);
   Kicauan kicauan;
   createKicauan(&kicauan, currentUser.id, text);
-  insertKicauanLast(&listKicauan, kicauan);
+  insertKicauan(&listKicauan, kicauan);
   printf("Selamat! kicauan telah diterbitkan!\n");
   printf("Detil kicauan:\n");
-	showKicauan(kicauan, currentUser);
+  printf("| ID = %d\n", kicauan.id);
+  printf("| ");PrintWord(currentUser.Nama);printf("\n");
+  printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
+  printf("| ");PrintWord(kicauan.text);printf("\n");
+  printf("| Disukai: %d\n", kicauan.like);
+  printf("\n");
 }
 
 void DoKicauan() {
-  int i;
-  for (i=0; i<listKicauan.nEff; i++){
-		if(ELMTKicauan(listKicauan, i).isValid) {
-			int idPengkicau = ELMTKicauan(listKicauan, i).idPembuat;
-			boolean dariTeman = isTeman(networkPertemanan, currentUser.id, idPengkicau);
-			boolean dariSendiri = currentUser.id == idPengkicau;
-			if(dariSendiri || dariTeman) {
-				Pengguna Author;
-				if(dariSendiri) {
-						Author = currentUser;
-				} else {
-						GetUserById(listUser, &Author, idPengkicau);
-				} 
-				showKicauan(ELMTKicauan(listKicauan, i), Author);
-			} 
-		}
-  }
+  showVisibleKicauan(listKicauan, listUser, currentUser, networkPertemanan);
 }
 
 void DoSukaKicauan(Word idKicauWord) {
   int idKicau = IntFromWord(idKicauWord);
   Kicauan kicauan;
-  boolean found = getKicauanById(listKicauan, &kicauan, idKicau);
+  int found = getKicauanById(listKicauan, &kicauan, idKicau);
   if(!found) {
     printf("Tidak ditemukan kicauan dengan ID = %d;\n", idKicau);
     return;
@@ -389,12 +378,16 @@ void DoSukaKicauan(Word idKicauWord) {
   Pengguna pengkicau;
   GetUserById(listUser, &pengkicau, kicauan.idPembuat);
   boolean dariTeman = isTeman(networkPertemanan, currentUser.id, kicauan.idPembuat);
-  boolean dariSendiri = (currentUser.id == kicauan.idPembuat);
+  boolean dariSendiri = currentUser.id == kicauan.idPembuat;
   if(!UserIsPrivate(pengkicau) || dariTeman || dariSendiri) {
-		sukaKicauan(&kicauan);
+    sukaKicauan(&listKicauan, idKicau);
     printf("Selamat! kicauan telah disukai!\n");
     printf("Detil kicauan:\n");
-    showKicauan(kicauan, pengkicau);
+    printf("| ID = %d\n", kicauan.id);
+    printf("| ");PrintWord(currentUser.Nama);printf("\n");
+    printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
+    printf("| ");PrintWord(kicauan.text);printf("\n");
+    printf("| Disukai: %d\n", kicauan.like+1);
   } else {
     printf("Wah, kicauan tersebut dibuat oleh akun privat! Ikuti akun itu dulu ya\n");
   }
@@ -403,20 +396,83 @@ void DoSukaKicauan(Word idKicauWord) {
 void DoUbahKicauan(Word idKicauWord) {
   int idKicau = IntFromWord(idKicauWord);
   Kicauan kicauan;
-  boolean found = getKicauanById(listKicauan, &kicauan, idKicau);
+  int found = getKicauanById(listKicauan, &kicauan, idKicau);
   if(!found) {
     printf("Tidak ditemukan kicauan dengan ID = %d;\n", idKicau);
     return;
   } 
-  boolean dariSendiri = (currentUser.id == kicauan.idPembuat);
+  boolean dariSendiri = currentUser.id == kicauan.idPembuat;
   if(dariSendiri) {
     Word textKicauanBaru;
     PromptUser("Masukkan kicauan baru:\n", &textKicauanBaru);
-    ubahKicauan(&kicauan, textKicauanBaru);
+    ubahKicauan(&listKicauan, idKicau, textKicauanBaru);
     printf("Selamat! kicauan telah diterbitkan!\n");
-    showKicauan(kicauan, currentUser);
+    printf("Detil kicauan:\n");
+    printf("| ID = %d\n", kicauan.id);
+    printf("| ");PrintWord(currentUser.Nama);printf("\n");
+    printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
+    printf("| ");PrintWord(textKicauanBaru);printf("\n");
+    printf("| Disukai: %d\n", kicauan.like);
   } else {
     printf("Kicauan dengan ID = %d bukan milikmu!\n", idKicau);
+  }
+}
+
+void DoBuatDraf () {
+  Word textDrafKicauan;
+  PromptUser("Masukkan draf:\n", &textDrafKicauan);
+  Word command;
+  PromptUser("Apakah anda ingin menghapus, menyimpan, atau menerbitkan draf ini?\n", &command);
+  if (WordCmp(command, "HAPUS")) {
+    printf("Draf telah berhasil dihapus!\n");
+  } else if (WordCmp(command, "SIMPAN")) {
+    DrafKicau drafkicauan;
+    CreateDrafKicau(&drafkicauan, textDrafKicauan);
+    Push(&currentUser.Draf, drafkicauan);
+  } else if (WordCmp(command, "TERBIT")) {
+    Kicauan kicauan;
+    createKicauan(&kicauan, currentUser.id, textDrafKicauan);
+    insertKicauan(&listKicauan, kicauan);
+    printf("Selamat! Draf kicauan telah diterbitkan!\n");
+    printf("Detil kicauan:\n");
+    printf("| ID = %d\n", kicauan.id);
+    printf("| ");PrintWord(currentUser.Nama);printf("\n");
+    printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
+    printf("| ");PrintWord(kicauan.text);printf("\n");
+    printf("| Disukai: %d\n", kicauan.like);
+    printf("\n");
+  }
+}
+
+void DoLihatDraf() {
+  if (IsEmptyStack(currentUser.Draf)) {
+    printf("Yah, anda belum memiliki draf apapun! Buat dulu ya :D\n");
+  } else {
+    DrafKicau drafkicauan;
+    Pop(&currentUser.Draf, &drafkicauan);
+    printf("Ini draf terakhir Anda:\n");
+    DisplayDrafKicau(drafkicauan);
+    Word command;
+    PromptUser("Apakah anda ingin mengubah, menghapus, atau menerbitkan draf ini? (KEMBALI jika ingin kembali)\n", &command);
+    if (WordCmp(command, "HAPUS")) {
+      printf("Draf telah berhasil dihapus!\n");
+    } else if (WordCmp(command, "UBAH")) {
+      DoBuatDraf();
+    } else if (WordCmp(command, "TERBIT")) {
+      Kicauan kicauan;
+      createKicauan(&kicauan, currentUser.id, drafkicauan.text);
+      insertKicauan(&listKicauan, kicauan);
+      printf("Selamat! Draf kicauan telah diterbitkan!\n");
+      printf("Detil kicauan:\n");
+      printf("| ID = %d\n", kicauan.id);
+      printf("| ");PrintWord(currentUser.Nama);printf("\n");
+      printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
+      printf("| ");PrintWord(kicauan.text);printf("\n");
+      printf("| Disukai: %d\n", kicauan.like);
+      printf("\n");
+    } else if (WordCmp(command, "KEMBALI")) {
+      Push(&currentUser.Draf, drafkicauan);
+    }
   }
 }
 
@@ -457,6 +513,10 @@ void DoPerintah() {
     DoSukaKicauan(args1);
   } else if (WordCmp(action, "UBAH_KICAUAN")) {
     DoUbahKicauan(args1);
+  } else if (WordCmp(action, "BUAT_DRAF")) {
+    DoBuatDraf();
+  } else if (WordCmp(action, "LIHAT_DRAF")) {
+    DoLihatDraf();
   } else {
     printf("Perintah tidak valid!\n");
   }

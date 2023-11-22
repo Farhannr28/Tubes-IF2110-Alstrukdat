@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "boolean.h": "c"
+        "boolean.h": "c",
+        "stacklinked.h": "c",
+        "stdio.h": "c",
+        "datetime.h": "c"
     }
 }
