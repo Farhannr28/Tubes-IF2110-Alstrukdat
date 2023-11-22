@@ -1,5 +1,9 @@
 #include "kicauan.h"
 #include <stdio.h>
+#include "../utility/boolean.h"
+#include "../MesinKata/wordmachine.h"
+#include "../MesinKarakter/charmachine.h"
+#include "../Sederhana/datetime.h"
 
 int idKicauan = 0;
 
@@ -21,11 +25,11 @@ void ubahKicauan(Kicauan *k, Word kicauBaru) {
     k -> text = kicauBaru;
 }
 
-void showKicauan(Kicauan k, Pengguna Author) {
+void showKicauan(Kicauan k, Word Author) {
     /* Menunjukkan Kicauan yang memang valid untuk ditunjukkan */
     printf("| ID = %d\n", k.id);
     printf("| ");
-    printWord(Author);
+    PrintWord(Author);
     printf("\n");
     printf("| ");TulisDateTime(k.waktu);printf("\n");
     printf("| ");PrintWord(k.text);printf("\n");

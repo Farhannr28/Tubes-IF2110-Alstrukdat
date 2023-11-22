@@ -5,8 +5,6 @@
 #include "../MesinKata/wordmachine.h"
 #include "../MesinKarakter/charmachine.h"
 #include "../Sederhana/datetime.h"
-#include "../UndirectedGraph/graph.h"
-#include "../ListStatik/liststatik.h"
 
 typedef struct kicauan{
     boolean isValid;
@@ -32,5 +30,5 @@ void ubahKicauan(Kicauan *k, Word kicauBaru);
 /* I.S. Kicauan dengan id tersebut tersedia */
 /* F.S. Text dari kicauan dengan id tersebut berubah menjadi kicauBaru, tanggal tidak berubah */
 
-void showKicauan(Kicauan k, Pengguna Author);
+void showKicauan(Kicauan k, Word Author);
 #endif

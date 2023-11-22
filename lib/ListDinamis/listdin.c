@@ -112,62 +112,6 @@ boolean isListKicauanFull(ListDin l){
     return(NEFF(l)==CAPACITY(l));
 }
 
-/* ********** BACA dan TULIS dengan INPUT/OUTPUT device ********** */
-/* *** Mendefinisikan isi list dari pembacaan *** */
-void readListKicauan(ListDin *l){
-/* I.S. l sembarang dan sudah dialokasikan sebelumnya */
-/* F.S. List l terdefinisi */
-/* Proses : membaca banyaknya elemen l dan mengisi nilainya */
-/* 1. Baca banyaknya elemen diakhiri enter, misalnya N */
-/*    Pembacaan diulangi sampai didapat N yang benar yaitu 0 <= N <= CAPACITY(l) */
-/*    Jika N tidak valid, tidak diberikan pesan kesalahan */
-/* 2. Jika 0 < N <= CAPACITY(l); Lakukan N kali: Baca elemen mulai dari indeks
-      0 satu per satu diakhiri enter */
-/*    Jika N = 0; hanya terbentuk l kosong */
-
-    /* KAMUS */
-    int n;
-    ElTypeListDin a;
-    IdxType i;
-    /* ALGORITMA */
-    scanf("%d", &n);
-    while(!isIdxListKicauanValid(*l,n)){
-        scanf("%d", &n);
-    }
-    if (n==0){
-        NEFF(*l) = 0;
-    } else {
-        for (i=0; i<n; i++){
-            scanf("%d", &a);
-            ELMTKicauan(*l,i) = a;
-        }
-        NEFF(*l) = n;
-    }
-}
-
-void printListKicauan(ListDin l){
-/* Proses : Menuliskan isi list dengan traversal, list ditulis di antara kurung siku;
-   antara dua elemen dipisahkan dengan separator "koma", tanpa tambahan karakter di depan,
-   di tengah, atau di belakang, termasuk spasi dan enter */
-/* I.S. l boleh kosong */
-/* F.S. Jika l tidak kosong: [e1,e2,...,en] */
-/* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
-/* Jika list kosong : menulis [] */
-
-    /* KAMUS */
-    IdxType i;
-    /* ALGORITMA */
-    if (isListKicauanEmpty(l)){
-        printf("[]");
-    } else {
-        printf("[%d", ELMTKicauan(l,0));
-        for(i=1; i<NEFF(l); i++){
-            printf(",%d", ELMTKicauan(l,i));
-        }
-        printf("]");
-    }
-}
-
 /* ********** SEARCHING ********** */
 /* ***  Perhatian : list boleh kosong!! *** */
 IdxType indexOfListKicauan(ListDin l, int x){
