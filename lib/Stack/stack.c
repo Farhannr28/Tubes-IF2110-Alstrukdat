@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include "../MesinKata/wordmachine.h"
+#include "../Sederhana/datetime.h"
 #include "stack.h"
 
 void CreateDrafKicau(DrafKicau *D, Word text) {
@@ -24,11 +26,7 @@ boolean IsFullStack(Stack S) {
 }
 
 void Push(Stack * S, infotype X) {
-    if (IsEmpty(*S)) {
-        Top(*S) = 1;
-    } else {
-        Top(*S)++;
-    }
+    Top(*S)++;
     InfoTop(*S) = X;
 }
 

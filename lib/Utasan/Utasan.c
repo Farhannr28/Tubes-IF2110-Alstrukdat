@@ -33,7 +33,7 @@ void insertLastParagraph(Utasan *u, Word text,DATETIME D) {
 
 void insertParagraphAtListPosition(ListLinearUtas *L, int IDUtasan, Word text, int position,DATETIME D) {
     // Find the Utasan node with the given IDUtasan
-    Address utasanNode = *L;
+    AddressUtas utasanNode = *L;
     while (utasanNode != NULL && IDUtasan(utasanNode) != IDUtasan) {
         utasanNode = NEXT(utasanNode);
     }
@@ -70,7 +70,7 @@ void insertParagraphAtListPosition(ListLinearUtas *L, int IDUtasan, Word text, i
 
 void deleteParagraphAtPosition(ListLinearUtas *L, int IDUtasan, int position) {
     // Find the Utasan node with the given IDUtasan
-    Address utasanNode = *L;
+    AddressUtas utasanNode = *L;
     while (utasanNode != NULL && IDUtasan(utasanNode) != IDUtasan) {
         utasanNode = NEXT(utasanNode);
     }
@@ -109,7 +109,7 @@ int GetUtasanIndex(ListLinearUtas l,int IDUtasan){
 /* Mengirimkan banyaknya elemen ListLinearUtas; mengirimkan 0 jika ListLinearUtas kosong */
     int i;
     int count = 0;
-    Address p = l;
+    AddressUtas p = l;
     while(IDUtasan(p) != IDUtasan){
         p = NEXT(p);
     }
@@ -134,7 +134,7 @@ int indexOfListLinearUtas(ListLinearUtas l, int IdUtasan){
     //Pakai ini untuk cek IDXUtasan itu ada apa tidak
     int i = 0;
     int pos = IDX_UNDEF;
-    Address p = l;
+    AddressUtas p = l;
     while(p != NULL && pos == IDX_UNDEF){
         if(IDUtasan(p) == IdUtasan){
             pos = i;
@@ -153,7 +153,8 @@ void Utas(int IDKicau,ListLinearUtas *l){
     DATETIME D;
     Utasan U1;
     int IDUtas;
-    IDUtas = lengthListLinearUtas(*l);
+    IDUtas = lengthListLinearUtas(*l)+1;
+    printf("============\n");
     printf("Ini IDUTAS:%d\n",IDUtas);
     //Sementara enggak looping validasi ada apa tidak
     //Kkeurangan: Cek kicauan ada atau bukan , dan apakah kicauan milik sendiri
@@ -191,7 +192,7 @@ void Sambung_Utas(int IDUtas,int index,ListLinearUtas *l){
             printf("Index terlalu tinggi!\n");
         }
         else{
-        Address p = *l;
+        AddressUtas p = *l;
         while(p!=NULL && IDUtasan(p)!=IDUtas){
             p = NEXT(p);
         }
@@ -208,7 +209,7 @@ void Sambung_Utas(int IDUtas,int index,ListLinearUtas *l){
 
 void Cetak_Utas(ListLinearUtas l,int IDUtas) {
     //Kurang: Cari Kicauan utama, cari penulis, datetime
-    Address p = l;
+    AddressUtas p = l;
     int count =0;
     while (p!=NULL && IDUtasan(p)!=IDUtas)
     {
@@ -229,15 +230,15 @@ void Cetak_Utas(ListLinearUtas l,int IDUtas) {
             printf("\n");
             printf("    |");
             PrintWord(p->info.Penulis);
-            // printf("\n");
+            printf("\n");
             printf("    |");
             TulisDateTime(CurrTime(paragraph));
             printf("\n");
             printf("    |");
             PrintWord(KONTEN(paragraph));
             printf("\n");
-            printf("Idkicau:%d\n",p->info.IDKicauan);
-            // printf("\n");
+            // printf("Idkicau:%d\n",p->info.IDKicauan);
+            printf("\n");
             paragraph =  paragraph-> next;
             index ++;
         }
@@ -258,7 +259,7 @@ void Hapus_Utas(int IDUtas,int index,ListLinearUtas*l){
             printf("Kicauan sambungan dengan index %d tidak ditemukan pada utas!\n",index);
         }
         else{
-        Address p = *l;
+        AddressUtas p = *l;
         while(p!=NULL && IDUtasan(p)!=IDUtas){
             p = NEXT(p);
         }
@@ -270,7 +271,7 @@ void Hapus_Utas(int IDUtas,int index,ListLinearUtas*l){
 }
 
 int BanyakUtasan(ListLinearUtas l,int IDKicau){
-    Address p =l;
+    AddressUtas p =l;
     while(p!=NULL){
         // printf("Jalan %d\n",IDKicauan(p));
         // break;

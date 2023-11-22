@@ -4,7 +4,9 @@
 #define STACK_H
 
 #include "../utility/boolean.h"
-#include "../Kicauan/kicauan.h"
+#include "../MesinKarakter/charmachine.h"
+#include "../MesinKata/wordmachine.h"
+#include "../Sederhana/datetime.h"
 
 #define Nil -1 /* Nil adalah stack dengan elemen kosong */
 #define MaxEl 20 /* Asumsi Draf tidak akan mencapai 20 */
