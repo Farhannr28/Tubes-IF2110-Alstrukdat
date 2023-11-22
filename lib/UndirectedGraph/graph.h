@@ -13,10 +13,10 @@
 /* Selektor */
 #define SIMPUL(p) (p).simpul
 #define ELMT_GRAPH(p, i, j) (p).adjMatrix[i][j] // Baris = user asal, kolom = user tujuan
-#define NAME_USER(p) (p).name
-#define INDEX_USER(p) (p).userIndex
-#define REQUEST(p, i) (p).request[i]
-#define PENDING_REQUEST(p, i) (p).pendingRequest[i]
+// #define NAME_USER(p) (p).name
+// #define INDEX_USER(p) (p).userIndex
+// #define REQUEST(p, i) (p).request[i]
+// #define PENDING_REQUEST(p, i) (p).pendingRequest[i]
 
 /* Define structur untuk graph */
 typedef struct graph
@@ -25,25 +25,25 @@ typedef struct graph
     int adjMatrix[MAX_SIMPUL][MAX_SIMPUL]; // adjacency matrix yg berisi pointer to integer untuk menyimpan hubungan pertemanan
 } Graph;
 
-/* Define structur untuk user */
-typedef struct user
-{
-    char name[20];
-    int userIndex;
-    int follower;
-    int request[20];
-    int pendingRequest[20];
-} User;
+// /* Define structur untuk user */
+// typedef struct user
+// {
+//     char name[20];
+//     int userIndex;
+//     int follower;
+//     int request[20];
+//     int pendingRequest[20];
+// } User;
 
 /* Define array of user index ( 0 berarti masih belum keisi ) */
-extern char nameOfUser[MAX_SIMPUL][20]; // Baris = user asal, kolom = panjang kata max
-extern User listOfUser[MAX_SIMPUL];
+// extern char nameOfUser[MAX_SIMPUL][20]; // Baris = user asal, kolom = panjang kata max
+// extern User listOfUser[MAX_SIMPUL];
 
 /* Fungsi untuk membuat graph baru */
 void createGraph(Graph *graph, int jumlahUser);
 
-/* Fungsi untuk membuat freindlist user */
-void createUser(User *newUser, char name[20], int follower);
+// /* Fungsi untuk membuat freindlist user */
+// void createUser(User *newUser, char name[20], int follower);
 
 /* Fungsi untuk mengecek apakah user tidak ada teman (adjacency matrixnya 0)*/
 boolean isNoTeman(Graph graph, int user_index);

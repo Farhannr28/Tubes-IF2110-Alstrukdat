@@ -11,11 +11,11 @@
 /* Selektor */
 #define SIMPUL(p) (p).simpul
 #define ELMT_GRAPH(p, i, j) (p).adjMatrix[i][j] // Baris = user asal, kolom = user tujuan
-#define NAME_USER(p) (p).name
-#define INDEX_USER(p) (p).userIndex
-#define FOLLOWER(p) (p).follower
-#define REQUEST(p, i) (p).request[i]
-#define PENDING_REQUEST(p, i) (p).pendingRequest[i]
+// #define NAME_USER(p) (p).name
+// #define INDEX_USER(p) (p).userIndex
+// #define FOLLOWER(p) (p).follower
+// #define REQUEST(p, i) (p).request[i]
+// #define PENDING_REQUEST(p, i) (p).pendingRequest[i]
 
 /* Define structur untuk graph */
 typedef struct graph
@@ -24,20 +24,20 @@ typedef struct graph
     int adjMatrix[MAX_SIMPUL][MAX_SIMPUL]; // adjacency matrix yg berisi pointer to integer untuk menyimpan hubungan pertemanan
 } Graph;
 
-/* Define structur untuk user */
-typedef struct user
-{
-    char name[20];
-    int userIndex;
-    int follower;
-    int request[20];
-    int pendingRequest[20];
-} User;
+// /* Define structur untuk user */
+// typedef struct user
+// {
+//     char name[20];
+//     int userIndex;
+//     int follower;
+//     int request[20];
+//     int pendingRequest[20];
+// } User;
 
 /* Define array of user index ( 0 berarti masih belum keisi ) */
-char nameOfUser[MAX_SIMPUL][20]; // Baris = user asal, kolom = panjang kata max
-int indexOfUser[MAX_SIMPUL] = {0};
-User listOfUser[MAX_SIMPUL];
+// char nameOfUser[MAX_SIMPUL][20]; // Baris = user asal, kolom = panjang kata max
+// int indexOfUser[MAX_SIMPUL] = {0};
+// User listOfUser[MAX_SIMPUL];
 
 /* Fungsi untuk membuat graph baru */
 void createGraph(Graph *graph, int jumlahUser)
@@ -50,51 +50,6 @@ void createGraph(Graph *graph, int jumlahUser)
         for (int j = 0; j < jumlahUser; j++)
         {
             ELMT_GRAPH(*graph, i, j) = 0;
-        }
-    }
-}
-
-/* Fungsi baut ngecek apakah user sudah penuh */
-boolean isUserFull(int indexOfUser[])
-{
-    for (int i = 0; i < MAX_SIMPUL; i++)
-    {
-        if (indexOfUser[i] == 0)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-/* Fungsi untuk membuat freindlist user */
-void createUser(User *newUser, char name[20], int follower)
-{
-    if (isUserFull(indexOfUser))
-    {
-        printf("User sudah penuh\n");
-        return;
-    }
-    else
-    {
-        int i;
-        strncpy(NAME_USER(*newUser), name, sizeof(NAME_USER(*newUser))); // NB : INI HARUS DIGANTI KE COPYWORD MESIN KATA
-        for (i = 0; i < MAX_SIMPUL; i++)
-        {
-            if (indexOfUser[i] == 0)
-            {
-                INDEX_USER(*newUser) = i;
-                indexOfUser[i] = 1;
-                strncpy(nameOfUser[i], name, sizeof(nameOfUser[i])); // NB : INI HARUS DIGANTI KE COPYWORD MESIN KATA
-                FOLLOWER(*newUser) = follower;
-                listOfUser[i] = *newUser;
-                for (int j = 0; j < MAX_SIMPUL; j++)
-                {
-                    REQUEST(*newUser, j) = 0;
-                    PENDING_REQUEST(*newUser, j) = 0;
-                }
-                break; // Break agar ga lanjut nge loop
-            }
         }
     }
 }
@@ -139,3 +94,48 @@ int jumlahTeman(Graph graph, int user_index)
     }
     return jumlah;
 }
+// /* Fungsi baut ngecek apakah user sudah penuh */
+// boolean isUserFull(int indexOfUser[])
+// {
+//     for (int i = 0; i < MAX_SIMPUL; i++)
+//     {
+//         if (indexOfUser[i] == 0)
+//         {
+//             return false;
+//         }
+//     }
+//     return true;
+// }
+
+// /* Fungsi untuk membuat freindlist user */
+// void createUser(User *newUser, char name[20], int follower)
+// {
+//     if (isUserFull(indexOfUser))
+//     {
+//         printf("User sudah penuh\n");
+//         return;
+//     }
+//     else
+//     {
+//         int i;
+//         strncpy(NAME_USER(*newUser), name, sizeof(NAME_USER(*newUser))); // NB : INI HARUS DIGANTI KE COPYWORD MESIN KATA
+//         for (i = 0; i < MAX_SIMPUL; i++)
+//         {
+//             if (indexOfUser[i] == 0)
+//             {
+//                 INDEX_USER(*newUser) = i;
+//                 indexOfUser[i] = 1;
+//                 strncpy(nameOfUser[i], name, sizeof(nameOfUser[i])); // NB : INI HARUS DIGANTI KE COPYWORD MESIN KATA
+//                 FOLLOWER(*newUser) = follower;
+//                 listOfUser[i] = *newUser;
+//                 for (int j = 0; j < MAX_SIMPUL; j++)
+//                 {
+//                     REQUEST(*newUser, j) = 0;
+//                     PENDING_REQUEST(*newUser, j) = 0;
+//                 }
+//                 break; // Break agar ga lanjut nge loop
+//             }
+//         }
+//     }
+// }
+

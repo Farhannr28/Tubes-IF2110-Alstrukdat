@@ -8,7 +8,7 @@
 /* Buat convert data user ke node */
 Address newNode(Word nama, int priority)
 {
-    Address temp = (Address)malloc(sizeof(Word));
+    Address temp = (Address)malloc(sizeof(PriorityQueueNode));
     if (temp != NULL)
     {
         DATA(temp) = nama;
@@ -85,153 +85,153 @@ int length_queue(PriorityQueue l)
     return count;
 }
 
-/* Fungsi baut ngecek apakah ada pending request */
-boolean isNoPendingRequest(User user)
-{
-    boolean empty = true;
-    for (int i = 0; i < MAX_SIMPUL; i++)
-    {
-        if (PENDING_REQUEST(user, i) == 1)
-        {
-            empty = false;
-        }
-    }
-    return empty;
-}
+// /* Fungsi baut ngecek apakah ada pending request */
+// boolean isNoPendingRequest(User user)
+// {
+//     boolean empty = true;
+//     for (int i = 0; i < MAX_SIMPUL; i++)
+//     {
+//         if (PENDING_REQUEST(user, i) == 1)
+//         {
+//             empty = false;
+//         }
+//     }
+//     return empty;
+// }
 
-/* Fungsi buat ngirim request pertemanan*/
-void sendRequest(Graph *graph, User *user_asal, User *user_tujuan)
-{
-    /* Cek jika ada pending request sebelumnya atau tidak */
-    if (!isNoPendingRequest(*user_asal))
-    {
-        printf("Terdapat permintaan pertemanan yang belum Anda setujui. Silakan kosongkan daftar permintaan pertemanan untuk Anda terlebih dahulu.\n");
-        return;
-    }
-    else
-    {
-        /* Jika ngirim freind request ke diri sendiri */
-        if (INDEX_USER(*user_asal) == INDEX_USER(*user_tujuan))
-        {
-            printf("Kamu tidak bisa mengirim request ke diri sendiri.\n");
-            return;
-        }
-        else
-        {
-            /* Case 1 : Jika sudah berteman dengan user tertentu*/
-            if (isTeman(*graph, INDEX_USER(*user_asal), INDEX_USER(*user_tujuan)))
-            {
-                printf("Anda sudah bertemean dengan %s\n.", nameOfUser[INDEX_USER(*user_tujuan)]);
-                return;
-            }
-            /* Case 2 : Jika sudah ngirim request ke user tertentu */
-            else if (REQUEST(*user_asal, INDEX_USER(*user_tujuan)) == 1)
-            {
-                printf("Anda sudah mengirimkan permintaan pertemanan kepada %s. Silakan tunggu hingga permintaan Anda disetujui\n.", nameOfUser[INDEX_USER(*user_tujuan)]);
-                return;
-            }
-            /* Case 3 : Jika belum ngirim request sama sekali ke user tertentu */
-            else
-            {
-                REQUEST(*user_asal, INDEX_USER(*user_tujuan)) = 1;
-                PENDING_REQUEST(*user_tujuan, INDEX_USER(*user_asal)) = 1;
-                printf("Permintaan pertemanan kepada %s telah dikirim. Tunggu beberapa saat hingga permintaan Anda disetujui.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
-                return;
-            }
-        }
-    }
-}
+// /* Fungsi buat ngirim request pertemanan*/
+// void sendRequest(Graph *graph, User *user_asal, User *user_tujuan)
+// {
+//     /* Cek jika ada pending request sebelumnya atau tidak */
+//     if (!isNoPendingRequest(*user_asal))
+//     {
+//         printf("Terdapat permintaan pertemanan yang belum Anda setujui. Silakan kosongkan daftar permintaan pertemanan untuk Anda terlebih dahulu.\n");
+//         return;
+//     }
+//     else
+//     {
+//         /* Jika ngirim freind request ke diri sendiri */
+//         if (INDEX_USER(*user_asal) == INDEX_USER(*user_tujuan))
+//         {
+//             printf("Kamu tidak bisa mengirim request ke diri sendiri.\n");
+//             return;
+//         }
+//         else
+//         {
+//             /* Case 1 : Jika sudah berteman dengan user tertentu*/
+//             if (isTeman(*graph, INDEX_USER(*user_asal), INDEX_USER(*user_tujuan)))
+//             {
+//                 printf("Anda sudah bertemean dengan %s\n.", nameOfUser[INDEX_USER(*user_tujuan)]);
+//                 return;
+//             }
+//             /* Case 2 : Jika sudah ngirim request ke user tertentu */
+//             else if (REQUEST(*user_asal, INDEX_USER(*user_tujuan)) == 1)
+//             {
+//                 printf("Anda sudah mengirimkan permintaan pertemanan kepada %s. Silakan tunggu hingga permintaan Anda disetujui\n.", nameOfUser[INDEX_USER(*user_tujuan)]);
+//                 return;
+//             }
+//             /* Case 3 : Jika belum ngirim request sama sekali ke user tertentu */
+//             else
+//             {
+//                 REQUEST(*user_asal, INDEX_USER(*user_tujuan)) = 1;
+//                 PENDING_REQUEST(*user_tujuan, INDEX_USER(*user_asal)) = 1;
+//                 printf("Permintaan pertemanan kepada %s telah dikirim. Tunggu beberapa saat hingga permintaan Anda disetujui.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
+//                 return;
+//             }
+//         }
+//     }
+// }
 
-/* Fungsi buat nge cancel request pertemanan*/
-void cancelRequest(User *user_asal, User *user_tujuan)
-{
-    /* Case 1 : Jika belum ada ngirim pertemanan ke user tertentu */
-    if (REQUEST(*user_asal, INDEX_USER(*user_tujuan)) == 0)
-    {
-        printf("Anda belum mengirimkan permintaan pertemanan kepada %s.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
-    }
-    /* Case 2: Jika benar ada udah ngirim request ke user tertentu */
-    else
-    {
-        REQUEST(*user_asal, INDEX_USER(*user_tujuan)) = 0;
-        PENDING_REQUEST(*user_tujuan, INDEX_USER(*user_asal)) = 0;
-        printf("Permintaan pertemanan kepada %s telah dibatalkan.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
-    }
-}
+// /* Fungsi buat nge cancel request pertemanan*/
+// void cancelRequest(User *user_asal, User *user_tujuan)
+// {
+//     /* Case 1 : Jika belum ada ngirim pertemanan ke user tertentu */
+//     if (REQUEST(*user_asal, INDEX_USER(*user_tujuan)) == 0)
+//     {
+//         printf("Anda belum mengirimkan permintaan pertemanan kepada %s.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
+//     }
+//     /* Case 2: Jika benar ada udah ngirim request ke user tertentu */
+//     else
+//     {
+//         REQUEST(*user_asal, INDEX_USER(*user_tujuan)) = 0;
+//         PENDING_REQUEST(*user_tujuan, INDEX_USER(*user_asal)) = 0;
+//         printf("Permintaan pertemanan kepada %s telah dibatalkan.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
+//     }
+// }
 
-/* Fungsi untuk nyari jumlah pending request yang ada */
-int jumlahPendingRequest(User user)
-{
-    int jumlah = 0;
-    for (int i = 0; i < MAX_SIMPUL; i++)
-    {
-        if (PENDING_REQUEST(user, i) == 1)
-        {
-            jumlah++;
-        }
-    }
-    return jumlah;
-}
+// /* Fungsi untuk nyari jumlah pending request yang ada */
+// int jumlahPendingRequest(User user)
+// {
+//     int jumlah = 0;
+//     for (int i = 0; i < MAX_SIMPUL; i++)
+//     {
+//         if (PENDING_REQUEST(user, i) == 1)
+//         {
+//             jumlah++;
+//         }
+//     }
+//     return jumlah;
+// }
 
-/* Fungsi buat print daftar teman yang ada */
-void daftarPermintaanTeman(User user)
-{
-    PriorityQueue listRequest;
-    CreatePriorityQueue(&listRequest);
-    /* Case 1 : Jika ga ada request pertemanan */
-    if (isNoPendingRequest(user))
-    {
-        printf("Tidak ada permintaan pertemanan untuk Anda.\n");
-        return;
-    }
-    /* Case 2 : Jika ada request */
-    else
-    {
-        printf("Terdapat %d permintaan pertemanan untuk Anda.\n", jumlahPendingRequest(user));
-        for (int i = 0; i < MAX_SIMPUL; i++)
-        {
-            if (PENDING_REQUEST(user, i) == 1)
-            {
-                /* enqueue(&listRequest, listOfUser[i], FOLLOWER(listOfUser[i])); */
-            }
-        }
-        printf("\n");
-        while (!isEmpty(listRequest))
-        {
-            /* printf("| %s\n", nameOfUser[INDEX_USER(DATA(FIRST_QUEUE(listRequest)))]); */
-            /* printf("| Jumlah Teman: %d \n\n", FOLLOWER(DATA(FIRST_QUEUE(listRequest)))); */
-            dequeue(&listRequest);
-        }
-    }
-}
+// /* Fungsi buat print daftar teman yang ada */
+// void daftarPermintaanTeman(User user)
+// {
+//     PriorityQueue listRequest;
+//     CreatePriorityQueue(&listRequest);
+//     /* Case 1 : Jika ga ada request pertemanan */
+//     if (isNoPendingRequest(user))
+//     {
+//         printf("Tidak ada permintaan pertemanan untuk Anda.\n");
+//         return;
+//     }
+//     /* Case 2 : Jika ada request */
+//     else
+//     {
+//         printf("Terdapat %d permintaan pertemanan untuk Anda.\n", jumlahPendingRequest(user));
+//         for (int i = 0; i < MAX_SIMPUL; i++)
+//         {
+//             if (PENDING_REQUEST(user, i) == 1)
+//             {
+//                 /* enqueue(&listRequest, listOfUser[i], FOLLOWER(listOfUser[i])); */
+//             }
+//         }
+//         printf("\n");
+//         while (!isEmpty(listRequest))
+//         {
+//             /* printf("| %s\n", nameOfUser[INDEX_USER(DATA(FIRST_QUEUE(listRequest)))]); */
+//             /* printf("| Jumlah Teman: %d \n\n", FOLLOWER(DATA(FIRST_QUEUE(listRequest)))); */
+//             dequeue(&listRequest);
+//         }
+//     }
+// }
 
-/* Fungsi buat menerima request pertemanan */
-void acceptRequest(Graph *graph, User *user_asal, User *user_tujuan)
-{
-    if (PENDING_REQUEST(*user_asal, INDEX_USER(*user_tujuan)) == 0)
-    {
-        printf("Anda belum menerima permintaan pertemanan dari %s.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
-    }
-    else
-    {
-        addTeman(graph, INDEX_USER(*user_asal), INDEX_USER(*user_tujuan));
-        REQUEST(*user_tujuan, INDEX_USER(*user_asal)) = 0;
-        PENDING_REQUEST(*user_asal, INDEX_USER(*user_tujuan)) = 0;
-        printf("Permintaan pertemanan dari %s telah disetujui. Selamat! Anda telah berteman dengan %s.\n", nameOfUser[INDEX_USER(*user_tujuan)], nameOfUser[INDEX_USER(*user_tujuan)]);
-    }
-}
+// /* Fungsi buat menerima request pertemanan */
+// void acceptRequest(Graph *graph, User *user_asal, User *user_tujuan)
+// {
+//     if (PENDING_REQUEST(*user_asal, INDEX_USER(*user_tujuan)) == 0)
+//     {
+//         printf("Anda belum menerima permintaan pertemanan dari %s.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
+//     }
+//     else
+//     {
+//         addTeman(graph, INDEX_USER(*user_asal), INDEX_USER(*user_tujuan));
+//         REQUEST(*user_tujuan, INDEX_USER(*user_asal)) = 0;
+//         PENDING_REQUEST(*user_asal, INDEX_USER(*user_tujuan)) = 0;
+//         printf("Permintaan pertemanan dari %s telah disetujui. Selamat! Anda telah berteman dengan %s.\n", nameOfUser[INDEX_USER(*user_tujuan)], nameOfUser[INDEX_USER(*user_tujuan)]);
+//     }
+// }
 
-/* Fungsi buat request nolak pertemanan */
-void declineRequest(User *user_asal, User *user_tujuan)
-{
-    if (PENDING_REQUEST(*user_asal, INDEX_USER(*user_tujuan)) == 0)
-    {
-        printf("Anda belum menerima permintaan pertemanan dari %s.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
-    }
-    else
-    {
-        REQUEST(*user_tujuan, INDEX_USER(*user_asal)) = 0;
-        PENDING_REQUEST(*user_asal, INDEX_USER(*user_tujuan)) = 0;
-        printf("Permintaan pertemanan dari %s telah ditolak.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
-    }
-}
+// /* Fungsi buat request nolak pertemanan */
+// void declineRequest(User *user_asal, User *user_tujuan)
+// {
+//     if (PENDING_REQUEST(*user_asal, INDEX_USER(*user_tujuan)) == 0)
+//     {
+//         printf("Anda belum menerima permintaan pertemanan dari %s.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
+//     }
+//     else
+//     {
+//         REQUEST(*user_tujuan, INDEX_USER(*user_asal)) = 0;
+//         PENDING_REQUEST(*user_asal, INDEX_USER(*user_tujuan)) = 0;
+//         printf("Permintaan pertemanan dari %s telah ditolak.\n", nameOfUser[INDEX_USER(*user_tujuan)]);
+//     }
+// }
