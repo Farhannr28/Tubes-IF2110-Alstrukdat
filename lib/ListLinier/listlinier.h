@@ -6,7 +6,7 @@
 #include "../MesinKarakter/charmachine.h"
 #include "../Sederhana/ctime.h"
 #include "../Sederhana/datetime.h"
-typedef struct node* Address;
+typedef struct nodeUtas* AddressUtas;
 typedef struct paragraph{
     DATETIME DateTime;
     Word text;
@@ -21,10 +21,10 @@ typedef struct utasan{
     int variable; 
 } Utasan;
 
-typedef struct node {
+typedef struct nodeUtas {
     Utasan info;
-    Address next;
-} Node;
+    AddressUtas next;
+} NodeUtas;
 
 #define INFO(p) (p)->info
 #define NEXT(p) (p)->next
@@ -35,15 +35,15 @@ typedef struct node {
 #define KONTEN(p) (p)->text
 #define CurrTime(p) (p)->DateTime
 
-Address newNode(Utasan val);
+AddressUtas newNodeUtas(Utasan val);
 
 /* Definisi ListLinearUtas : */
 /* ListLinearUtas kosong : FIRST(l) = NULL */
-/* Setiap elemen dengan Address p dapat diacu INFO(p), NEXT(p) */
-/* Elemen terakhir ListLinearUtas: jika addressnya Last, maka NEXT(Last)=NULL */
+/* Setiap elemen dengan AddressUtas p dapat diacu INFO(p), NEXT(p) */
+/* Elemen terakhir ListLinearUtas: jika AddressUtasnya Last, maka NEXT(Last)=NULL */
 
-typedef Address ListLinearUtas;
-// typedef Address ListParagraf;
+typedef AddressUtas ListLinearUtas;
+// typedef AddressUtas ListParagraf;
 
 #define IDX_UNDEF (-1)
 #define FIRST(l) (l)
