@@ -7,9 +7,14 @@
 #include "../Kicauan/kicauan.h"
 
 #define Nil -1 /* Nil adalah stack dengan elemen kosong */
-#define MaxEl 100
+#define MaxEl 20 /* Asumsi Draf tidak akan mencapai 20 */
 
-typedef Kicauan infotype;
+typedef struct drafKicau {
+    Word text;
+    DATETIME waktu;
+} DrafKicau;
+
+typedef DrafKicau infotype;
 typedef int address;
 typedef struct { 
   infotype T[MaxEl]; /* tabel penyimpan elemen */
@@ -20,15 +25,21 @@ typedef struct {
 #define Top(S) (S).TOP
 #define InfoTop(S) (S).T[(S).TOP]
 
+/* Konstruktor DrafKicau */
+void CreateDrafKicau(DrafKicau *D, Word text);
+
+/* Menampilkan Elemen stack */
+void DisplayDrafKicau(DrafKicau D);
+
 /* Konstruktor Stack */
-void CreateEmpty(Stack *S);
+void CreateStack(Stack *S);
 /* I.S. sembarang; */
 /* F.S. Membuat sebuah stack S yang kosong berkapasitas MaxEl */
 
 /* Mengirim true jika Stack kosong */
-boolean IsEmpty(Stack S);
+boolean IsEmptyStack(Stack S);
 /* Mengirim true jika tabel penampung nilai elemen stack penuh */
-boolean IsFull(Stack S);
+boolean IsFullStack(Stack S);
 
 /* Menambahkan X sebagai elemen Stack S. */
 void Push(Stack * S, infotype X);

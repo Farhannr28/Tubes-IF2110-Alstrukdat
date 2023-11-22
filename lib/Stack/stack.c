@@ -1,15 +1,25 @@
 #include <stdio.h>
 #include "stack.h"
 
-void CreateEmpty(Stack *S) {
+void CreateDrafKicau(DrafKicau *D, Word text) {
+    D->text = text;
+    D->waktu = GetCurrentDateTime();
+}
+
+void DisplayDrafKicau(DrafKicau D) {
+    printf("| ");TulisDateTime(D.waktu);printf("\n");
+    printf("| ");PrintWord(D.text);printf("\n");
+}
+
+void CreateStack(Stack *S) {
     Top(*S) = Nil;
 }
 
-boolean IsEmpty(Stack S) {
+boolean IsEmptyStack(Stack S) {
     return Top(S) == Nil;
 }
 
-boolean IsFull(Stack S) {
+boolean IsFullStack(Stack S) {
     return Top(S) == MaxEl-1;
 }
 
