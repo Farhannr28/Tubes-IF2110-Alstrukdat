@@ -3,6 +3,8 @@
 #include "../MesinKata/wordmachine.h"
 #include "../MesinKarakter/charmachine.h"
 #include "Utasan.h"
+#include "../Pengguna/pengguna_methods.h"
+#include "../Kicauan/kicauan_methods.h"
 #include "../ListLinier/listlinier.h"
 
 Paragraph* newParagraph( Word currentWord,DATETIME D) {
@@ -108,7 +110,6 @@ void deleteParagraphAtPosition(ListLinearUtas *L, int IDUtasan, int position) {
 
 int GetUtasanIndex(ListLinearUtas l,int IDUtasan){
 /* Mengirimkan banyaknya elemen ListLinearUtas; mengirimkan 0 jika ListLinearUtas kosong */
-    int i;
     int count = 0;
     AddressUtas p = l;
     while(IDUtasan(p) != IDUtasan){
@@ -206,7 +207,7 @@ void Sambung_Utas(int IDUtas,int index,ListLinearUtas *l){
     }
 }
 
-void Cetak_Utas(ListLinearUtas l,int IDUtas,ListDin ListKicau,ListPengguna Users) {
+void Cetak_Utas(ListLinearUtas l,int IDUtas,ListDin ListKicau, ListStatik Users) {
     //Kurang: Cari Kicauan utama, cari penulis, datetime
     AddressUtas p = l;
     int count =0;
@@ -221,8 +222,8 @@ void Cetak_Utas(ListLinearUtas l,int IDUtas,ListDin ListKicau,ListPengguna Users
     }
     id = p->info.IDKicauan;
     idpembuat = K.idPembuat;
-    GetUserById(Users,&target,idpembuat);
-    getKicauanById(ListKicau,&K,id);
+    GetUserById(Users, &target, idpembuat);
+    getKicauanById(ListKicau, &K, id);
     if(p==NULL){
         printf("Utas tidak ditemukan\n");
     }

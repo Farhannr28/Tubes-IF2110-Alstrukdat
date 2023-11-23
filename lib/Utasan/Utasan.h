@@ -29,7 +29,7 @@ void Utas(int IDKicau, ListLinearUtas *l,Word Penulis);
 
 void Sambung_Utas(int IDUtas, int index, ListLinearUtas *l);
 
-void Cetak_Utas(ListLinearUtas l, int IDUtas,ListDin ListKicau,ListPengguna Users);
+void Cetak_Utas(ListLinearUtas l, int IDUtas,ListDin ListKicau, ListStatik Users);
 
 void Hapus_Utas(int IDUtas, int index, ListLinearUtas *l);
 

@@ -125,7 +125,7 @@ IdxType indexOfListDinamik(ListDin l, int x){
     IdxType i;
     IdxType ans;
     /* ALGORITMA */
-    ans = IDX_UNDEF;
+    ans = IDX_UNDEF_LIST_DIN;
     if (isListDinamikEmpty(l)){
         return ans;
     }

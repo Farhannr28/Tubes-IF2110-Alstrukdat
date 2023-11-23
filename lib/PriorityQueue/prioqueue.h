@@ -29,9 +29,6 @@ typedef Address PriorityQueue;
 /* Buat convert data user ke node */
 Address newNode(Word nama, int priority);
 
-/* Buat Priority Queue*/
-void CreateList(PriorityQueue *l);
-
 /* Cek apakah queue kosong*/
 boolean isEmpty(PriorityQueue l);
 
@@ -43,6 +40,8 @@ void enqueue(PriorityQueue *l, Word namaPengguna, int follower);
 
 /* Buat nyari berapa banyak user yang ada */
 int length_queue(PriorityQueue l);
+
+void CreatePriorityQueue(PriorityQueue *l);
 
 // /* Fungsi baut ngecek apakah ada pending request */
 // boolean isNoPendingRequest(User user);
