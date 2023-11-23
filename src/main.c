@@ -2,6 +2,7 @@
 #include <Simpan.h>
 #include <Utasan.h>
 #include <boolean.h>
+#include <balasan.h>
 #include <datetime.h>
 #include <graph.h>
 #include <kicauan.h>
@@ -16,6 +17,7 @@
 #include <stack.h>
 #include <stdio.h>
 #include <tagar.h>
+#include <tree.h>
 #include <wordmachine.h>
 
 Word perintah;
@@ -496,6 +498,79 @@ void DoUbahKicauan(Word idKicauWord) {
   }
 }
 
+void DoBalas(Word idKicauWord, Word idBalasWord){
+  int idKicau = IntFromWord(idKicauWord);
+  int idBalas = IntFromWord(idBalasWord);
+  Kicauan kicau;
+  Pengguna pengkicau;
+  kicau = ELMTDinamik(listKicauan, idKicau).k;
+  GetUserById(listUser, &pengkicau, kicau.idPembuat);
+  if (idKicau >= listKicauan.nEff || idKicau < 0){
+    printf("Wah, tidak terdapat kicauan yang ingin Anda balas!\n");
+  } else if (idBalas != -1 && searchBalasanById(kicau.treeBalasan, idBalas) == NULL){
+    printf("Wah, tidak terdapat balasan yang ingin Anda balas!\n");
+  } else if (UserIsPrivate(pengkicau) && !isTeman(networkPertemanan, currentUser.id, pengkicau.id)){
+    printf("Wah, akun tersebut merupakan akun privat dan anda belum berteman akun tersebut!\n");
+  } else {
+    Word inputBalasan;
+    PromptUser("Masukkan Balasan: \n", &inputBalasan);
+    Balasan newBalasan;
+    Word author = currentUser.Nama;
+    createBalasan(&newBalasan, currentUser.id, author, inputBalasan);
+    AddressTreeNode newNode = newTreeNode(newBalasan);
+    insertTreeNode(newNode, kicau.treeBalasan, idBalas);
+    printf("Selamat! balasan telah diterbitkan!\n");
+    printf("Detil balasan: ");
+    showBalasan(newBalasan, 0, true);
+  }
+}
+
+void DoBalasan(Word idKicauWord){
+  int idKicau = IntFromWord(idKicauWord);
+  Kicauan kicau;
+  Pengguna pengkicau;
+  kicau = ELMTDinamik(listKicauan, idKicau).k;
+  GetUserById(listUser, &pengkicau, kicau.idPembuat);
+  if (idKicau >= listKicauan.nEff || idKicau < 0){
+    printf("Tidak terdapat kicauan dengan id tersebut!\n");
+  } else if (UserIsPrivate(pengkicau) && !isTeman(networkPertemanan, currentUser.id, pengkicau.id)){
+    printf("Wah, kicauan tersebut dibuat oleh pengguna dengan akun privat!\n");
+  } else {
+    BinTree tree;
+    tree = kicau.treeBalasan;
+    if (isTreeEmpty(tree)){
+      printf("Belum terdapat balasan apapun pada kicauan tersebut. Yuk balas kicauan tersebut!");
+    } else {
+      int i;
+      for (i=0; i<20; i++){
+        friendList[i] = isTeman(networkPertemanan, currentUser.id, ELMTPengguna(listUser, i).id);
+      }
+      friendList[currentUser.id] = true;
+      printf("\n");
+      printTree(tree);
+    }
+  }
+}
+
+void DoHapusBalasan(Word idKicauWord, Word idBalasWord){
+  int idKicau = IntFromWord(idKicauWord);
+  int idBalas = IntFromWord(idBalasWord);
+  Kicauan kicau;
+  Pengguna pengkicau;
+  kicau = ELMTDinamik(listKicauan, idKicau).k;
+  GetUserById(listUser, &pengkicau, kicau.idPembuat);
+  AddressTreeNode nodeAddress = searchBalasanById(kicau.treeBalasan, idBalas);
+  Balasan b = INFO(nodeAddress);
+  if (nodeAddress == NULL){
+    printf("Balasan tidak ditemukan");
+  } else if (b.idPembuat != currentUser.id){
+    printf("Hei, ini balasan punya siapa? Jangan dihapus ya!");
+  } else {
+    deleteTree(nodeAddress);
+    print("Balasan berhasil dihapus\n");
+  }
+}
+
 void DoBuatDraf() {
   Word textDrafKicauan;
   PromptUser("Masukkan draf:\n", &textDrafKicauan);
@@ -759,6 +834,12 @@ void DoPerintah() {
     else{
     DoUbahKicauan(args1);
     }
+  } else if (WordCmp(action, "BALAS")) {
+    DoBalas(args1, args2);
+  } else if (WordCmp(action, "BALASAN")) {
+    DoBalasan(args1);
+  } else if (WordCmp(action, "HAPUS_BALASAN")) {
+    DoHapusBalasan(args1, args2);
   } else if (WordCmp(action, "BUAT_DRAF")) {
     if(!IsUserValid(currentUser)){
       printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
