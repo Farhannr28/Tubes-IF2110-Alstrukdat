@@ -249,7 +249,7 @@ void DoTambahTeman() {
       GetMutableUserByName(&listUser, &friend, namaPengguna);
   if (userAvailable) {
     boolean success = TambahTeman(currentUser, friend);
-    if (success) {
+    if (success && !isTeman(networkPertemanan, currentUser.id, friend->id)) {
       printf("Permintaan pertemanan kepada ");
       PrintWord(namaPengguna);
       printf(" telah dikirim. Tunggu beberapa saat hingga permintaan Anda "
@@ -283,9 +283,11 @@ void DoDaftarPermintaanPertemanan() {
 void DoSetujuiPertemanan() {
   int banyakTeman = length_queue(currentUser.PermintaanBerteman);
   if (banyakTeman) {
+    Pengguna p;
     Address addressPenggunaTeratas = GetPermintaanTeratas(currentUser);
+    GetUserByName(listUser, &p, DATA(addressPenggunaTeratas));
     Word namaPengguna = DATA(addressPenggunaTeratas);
-    int jumlahTemanPengguna = PRIORITY(addressPenggunaTeratas);
+    int jumlahTemanPengguna = p.friendCount;
 
     printf("| ");
     PrintWord(namaPengguna);
@@ -339,13 +341,17 @@ void DoHapusTeman() {
     return;
   }
   Word response;
-  PromptUser("Apakah anda yakin ingin menghapus Bob dari daftar teman "
+  printf("Apakah Anda yakin ingin menghapus ");
+  PrintWord(namaPengguna);
+  PromptUser("Apakah anda yakin ingin menghapus dari daftar teman "
              "anda?(YA/TIDAK) ",
              &response);
   printf("\n");
   if (WordCmp(response, "YA")) {
     hapusTeman(&networkPertemanan, currentUser.id, teman.id);
     PrintWord(namaPengguna);
+    currentUser.friendCount--;
+    teman.friendCount--;
     printf(" berhasil dihapus dari daftar teman Anda.\n");
   } else {
     printf("Penghapusan teman dibatalkan.\n");
