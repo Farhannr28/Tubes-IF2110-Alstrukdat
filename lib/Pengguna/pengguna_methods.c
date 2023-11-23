@@ -221,8 +221,6 @@ void printTeman(ListStatik listUser, Graph graph, Pengguna p) {
 boolean validateNoHP(Word noHp) {
   if (noHp.Length < 9)
     return false;
-  if (noHp.TabWord[0] != '0')
-    return false;
   for (int i = 0; i < noHp.Length; i++) {
     char c = noHp.TabWord[i];
     if (!(c >= '0' && c <= '9')) {
@@ -274,3 +272,13 @@ void printKelompokTeman(ListStatik listUser, DSU d, Pengguna currentUser) {
 }
 
 void printSet(DSU d, idPengguna id) {}
+int GetPenggunaIndex(ListStatik l, Word nama) {
+    int length = ListStatikLength(l);
+    for (int i = 0; i < length; i++) {
+        Pengguna currentPengguna = ELMTPengguna(l, i);
+        if (WordCmpWord(currentPengguna.Nama, nama)) {
+            return i; 
+        }
+    }
+    return -1; 
+}

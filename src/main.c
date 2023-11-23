@@ -181,14 +181,23 @@ void DoGantiProfil() {
                  currentUserInDatabase.Nama, currentUserInDatabase.KataSandi,
                  newNoHP, newBioAkun, newWeton, currentUserInDatabase.JenisAkun,
                  currentUserInDatabase.FotoProfil);
+  int pos = GetPenggunaIndex(listUser,currentUser.Nama);
+  ChangeUserInfo(&listUser.elements[pos], currentUserInDatabase.isValid,
+                currentUserInDatabase.Nama, currentUserInDatabase.KataSandi,
+                newNoHP, newBioAkun, newWeton, currentUserInDatabase.JenisAkun,
+                currentUserInDatabase.FotoProfil);
   printf("Profil Anda sudah berhasil diperbarui!");
+  // Pengguna Test;
+  // GetUserById(listUser,&Test,currentUser.id);
+  // printf("Ini harusnya isi:\n");
+  // PrintWord(Test.BioAkun);
 }
 
 void DoLihatProfil(Word nama) {
   Pengguna theUser;
   GetUserByName(listUser, &theUser, nama);
-  if (UserIsPrivate(theUser) || !WordCmpWord(theUser.Nama, currentUser.Nama)) {
-    printf("Wah, akun");
+  if (UserIsPrivate(theUser) &&!WordCmpWord(theUser.Nama, currentUser.Nama)) {
+    printf("Wah, akun ");
     PrintWord(theUser.Nama);
     printf(" diprivat nih. Ikuti dulu yuk untuk bisa melihat profil ");
     PrintWord(theUser.Nama);
@@ -652,51 +661,166 @@ void DoPerintah() {
   } else if (WordCmp(action, "TUTUP_PROGRAM")) {
     DoTutupProgram();
   } else if (WordCmp(action, "GANTI_PROFIL")) {
-    DoGantiProfil();
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
+      DoGantiProfil();
+    }
   } else if (WordCmp(action, "LIHAT_PROFIL")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoLihatProfil(args1);
+    }
   } else if (WordCmp(action, "ATUR_JENIS_AKUN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoAturJenisAkun();
+    }
   } else if (WordCmp(action, "UBAH_FOTO_PROFIL")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoUbahFotoProfil();
+    }
   } else if (WordCmp(action, "TAMBAH_TEMAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoTambahTeman();
+    }
   } else if (WordCmp(action, "DAFTAR_PERMINTAAN_PERTEMANAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoDaftarPermintaanPertemanan();
+    }
   } else if (WordCmp(action, "SETUJUI_PERTEMANAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoSetujuiPertemanan();
+    }
   } else if (WordCmp(action, "DAFTAR_TEMAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoDaftarTeman();
+    }
   } else if (WordCmp(action, "HAPUS_TEMAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoHapusTeman();
+    }
   } else if (WordCmp(action, "KICAU")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoKicau();
+    }
   } else if (WordCmp(action, "KICAUAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoKicauan();
+    }
   } else if (WordCmp(action, "SUKA_KICAUAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoSukaKicauan(args1);
+    }
   } else if (WordCmp(action, "UBAH_KICAUAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoUbahKicauan(args1);
+    }
   } else if (WordCmp(action, "BUAT_DRAF")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoBuatDraf();
+    }
   } else if (WordCmp(action, "LIHAT_DRAF")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoLihatDraf();
+    }
   } else if (WordCmp(action, "UTAS")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoUtas(args1);
+    }
   } else if (WordCmp(action, "SAMBUNG_UTAS")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoSambungUtas(args1, args2);
+    }
   } else if (WordCmp(action, "CETAK_UTAS")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoCetakUtas(args1);
+    }
   } else if (WordCmp(action, "SIMPAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     SIMPANUTAS(ListUtas, "testing");
+    }
   } else if (WordCmp(action, "HAPUS_UTAS")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoHapusUtas(args1, args2);
+    }
   } else if (WordCmp(action, "CARI_KICAUAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoCariKicauan(args1);
+    }
   } else if (WordCmp(action, "KELOMPOK_TEMAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoKelompokTeman();
+    }
   } else if (WordCmp(action, "FYB")) {
+    if(!IsUserValid(currentUser)){
+      printf("Silahkan login terlebih dahulu!\n");
+    }
+    else{
     DoFYB();
+    }
   } else {
     printf("Perintah tidak valid!\n");
   }

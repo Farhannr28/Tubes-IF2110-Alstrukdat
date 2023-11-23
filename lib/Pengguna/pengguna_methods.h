@@ -34,5 +34,5 @@ void addTeman(Graph *graph, DSU *kelompokTeman, int index_user_asal,
 boolean validateNoHP(Word noHp);
 boolean validateWeton(Word weton);
 void printKelompokTeman(ListStatik listUser, DSU d, Pengguna currentUser);
-
+int GetPenggunaIndex(ListStatik l, Word nama);
 #endif

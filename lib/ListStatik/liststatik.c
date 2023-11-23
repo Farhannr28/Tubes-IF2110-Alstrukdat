@@ -145,3 +145,5 @@ void deleteLastListStatik(ListStatik *l){
 boolean isListStatikEmptyAt(ListStatik l, int idx) {
     return !ELMTStatik(l, idx).isValid;
 }
+
+
