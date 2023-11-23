@@ -42,9 +42,7 @@ typedef struct graph
 /* Fungsi untuk membuat graph baru */
 void createGraph(Graph *graph, int jumlahUser)
 {
-    int i, j;
     SIMPUL(*graph) = jumlahUser;
-
     for (int i = 0; i < jumlahUser; i++)
     {
         for (int j = 0; j < jumlahUser; j++)

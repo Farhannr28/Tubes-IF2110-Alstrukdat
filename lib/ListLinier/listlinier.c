@@ -127,7 +127,6 @@ void deleteAtListLinearUtas(ListLinearUtas *l, int idx){
 
 int lengthListLinearUtas(ListLinearUtas l){
 /* Mengirimkan banyaknya elemen ListLinearUtas; mengirimkan 0 jika ListLinearUtas kosong */
-    int i;
     int count = 0;
     AddressUtas p = l;
     while(p != NULL){

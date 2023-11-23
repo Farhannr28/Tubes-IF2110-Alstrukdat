@@ -13,11 +13,12 @@
 #include <listlinier.h>
 #include <Simpan.h>
 #include <kicauan_methods.h>
+#include <pengguna_methods.h>
 
 Word perintah;
 boolean isStop = false;
 Pengguna currentUser;
-ListPengguna listUser;
+ListStatik listUser;
 Graph networkPertemanan;
 ListDin listKicauan;
 ListLinearUtas ListUtas;
@@ -39,7 +40,7 @@ void greetings() {
   printf("\n");
   // TODO: load config
   // WARN: this should be ifNotLoaded
-  CreateListPengguna(&listUser);
+  CreateListStatik(&listUser, PENGGUNA);
   CreateListDinamik(&listKicauan, 10, KICAUAN);
   InvalidateUser(&currentUser);
   // WARN: max user asumsi 20
