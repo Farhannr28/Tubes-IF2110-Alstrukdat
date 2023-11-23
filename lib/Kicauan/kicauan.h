@@ -4,6 +4,7 @@
 #include "../utility/boolean.h"
 #include "../MesinKata/wordmachine.h"
 #include "../Sederhana/datetime.h"
+#include "../Tree/tree.h"
 
 typedef struct kicauan{
     int id;
@@ -11,6 +12,7 @@ typedef struct kicauan{
     Word text;
     int like;
     DATETIME waktu;
+    BinTree treeBalasan;
 } Kicauan;
 
 #endif

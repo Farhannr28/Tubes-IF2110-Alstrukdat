@@ -6,6 +6,7 @@
 #include "../MesinKarakter/charmachine.h"
 #include "../Sederhana/datetime.h"
 #include "../ListDinamis/listdin.h"
+#include "../Balasan/balasan.h"
 
 int idKicauan = 0;
 
@@ -16,6 +17,7 @@ void createKicauan(Kicauan *k, int authorId, Word kicau){
     k->idPembuat = authorId;
     k->like = 0;
     k->waktu = GetCurrentDateTime();
+    k->treeBalasan = NULL;
 }
 
 void sukaKicauan(ListDin *l, int kicauanId) {
