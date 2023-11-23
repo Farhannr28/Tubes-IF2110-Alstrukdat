@@ -257,17 +257,41 @@ void DoTambahTeman() {
   boolean userAvailable =
       GetMutableUserByName(&listUser, &friend, namaPengguna);
   if (userAvailable) {
-    boolean success = TambahTeman(currentUser, friend);
-    if (success && !isTeman(networkPertemanan, currentUser.id, friend->id)) {
+    if (currentUser.id == friend->id) {
+      printf("Anda tidak bisa berteman dengan diri sendiri.\n");
+    }
+    else if (ELMT_GRAPH(networkPertemanan, currentUser.id, friend->id) == 1 && ELMT_GRAPH(networkPertemanan, friend->id, currentUser.id) == 0) {
+      printf("Anda sudah mengirim permintaan pertemanan kepada ");
+      PrintWord(namaPengguna);
+      printf(" Silakan tunggu hingga permintaan Anda disetujui.");
+      printf(".\n");
+    }
+    else if (isTeman(networkPertemanan,currentUser.id,friend->id)){
+      printf("Anda sudah berteman dengan ");
+      PrintWord(namaPengguna);
+      printf(".\n");
+    }
+    else if (ELMT_GRAPH(networkPertemanan, friend->id, currentUser.id) == 1) {
+      printf("Anda sudah menerima permintaan pertemanan dari ");
+      PrintWord(namaPengguna);
+      printf(". Silakan setujui permintaan pertemanan tersebut.");
+      printf(".\n");
+    }
+    else if (!isTeman(networkPertemanan, currentUser.id, friend->id)) {
+      boolean success = TambahTeman(currentUser, friend);
+      if (success){
       printf("Permintaan pertemanan kepada ");
       PrintWord(namaPengguna);
       printf(" telah dikirim. Tunggu beberapa saat hingga permintaan Anda "
              "disetujui.\n");
-    } else {
-      printf(
-          "Terdapat permintaan pertemanan yang belum Anda setujui. Silakan "
-          "kosongkan daftar permintaan pertemanan untuk Anda terlebih dahulu.");
-      printf("\n");
+      sendRequest(&networkPertemanan, currentUser.id, friend->id);
+      }
+      else {
+        printf(
+            "Terdapat permintaan pertemanan yang belum Anda setujui. Silakan "
+            "kosongkan daftar permintaan pertemanan untuk Anda terlebih dahulu.");
+        printf("\n");
+      }
     }
   } else {
     printf("Pengguna bernama ");
@@ -315,6 +339,9 @@ void DoSetujuiPertemanan() {
       PrintWord(namaPengguna);
       printf(" telah disetujui. Selamat! Anda telah berteman dengan ");
       PrintWord(namaPengguna);
+      // currentUser.PermintaanBerteman->priority++;
+      // penggunaTeratas.PermintaanBerteman->priority++;
+      dequeue(&currentUser.PermintaanBerteman);
       printf(".\n\n");
     } else {
       dequeue(&currentUser.PermintaanBerteman);
@@ -329,12 +356,11 @@ void DoSetujuiPertemanan() {
   }
 }
 
-void DoDaftarTeman() {
-  if (IsUserValid(currentUser))
-    printTeman(listUser, networkPertemanan, currentUser);
+void DoDaftarTeman() { 
+  if(IsUserValid(currentUser))
+    printTeman(listUser, networkPertemanan, currentUser); 
   else
-    printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan "
-           "BurBir.\n");
+    printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
   printf("\n");
 }
 
@@ -359,6 +385,8 @@ void DoHapusTeman() {
   if (WordCmp(response, "YA")) {
     hapusTeman(&networkPertemanan, currentUser.id, teman.id);
     PrintWord(namaPengguna);
+    // currentUser.PermintaanBerteman->priority--;
+    // teman.PermintaanBerteman->priority--;
     printf(" berhasil dihapus dari daftar teman Anda.\n");
   } else {
     printf("Penghapusan teman dibatalkan.\n");

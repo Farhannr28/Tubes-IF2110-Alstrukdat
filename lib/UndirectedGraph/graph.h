@@ -33,4 +33,6 @@ boolean isTeman(Graph graph, int index_user_asal, int index_user_tujuan);
 /* Fungsi untuk menghitunng jumlah teman yang dimiliki oleh suatu user */
 int jumlahTeman(Graph graph, int user_index);
 
+void sendRequest(Graph *graph, int index_user_asal, int index_user_tujuan);
+
 #endif
