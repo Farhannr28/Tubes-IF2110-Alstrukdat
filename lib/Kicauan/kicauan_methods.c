@@ -7,7 +7,7 @@
 #include "../Sederhana/datetime.h"
 #include "../ListDinamis/listdin.h"
 
-int idKicauan = 0;
+int idKicauan = 1;
 
 void createKicauan(Kicauan *k, int authorId, Word kicau){
     k->id = idKicauan;

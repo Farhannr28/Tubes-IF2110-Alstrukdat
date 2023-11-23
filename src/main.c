@@ -585,15 +585,17 @@ void DoSambungUtas(Word IDUtasWord, Word indexWord) {
 
 void DoCetakUtas(Word IDUtasWord) {
   int IDUtas = IntFromWord(IDUtasWord);
-  Pengguna user;
+  Word Penulis;
   Kicauan K;
+  Pengguna InfoPenulis;
   // printf("===========\n");
-  if (indexOfListLinearUtas(ListUtas, IDUtas, &user) == IDX_UNDEF) {
+  if (indexOfListLinearUtas(ListUtas, IDUtas, &Penulis) == IDX_UNDEF) {
     printf("Utas tidak ditemukan!");
   } else {
-    boolean dariTeman = isTeman(networkPertemanan, currentUser.id, user.id);
-    boolean dariSendiri = (currentUser.id == user.id);
-    if (!UserIsPrivate(user) || dariTeman || dariSendiri) {
+    boolean found = GetUserByName(listUser, &InfoPenulis, Penulis);
+    boolean dariTeman = isTeman(networkPertemanan, currentUser.id, InfoPenulis.id);
+    boolean dariSendiri = (currentUser.id == InfoPenulis.id);
+    if (!UserIsPrivate(InfoPenulis) || dariTeman || dariSendiri) {
       Cetak_Utas(ListUtas, IDUtas, listKicauan, listUser);
     } else {
       printf("Akun yang membuat utas ini adalah akun privat! Ikuti dahulu akun "
