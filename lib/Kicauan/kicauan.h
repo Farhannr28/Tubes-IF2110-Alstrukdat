@@ -13,6 +13,7 @@ typedef struct kicauan{
     int like;
     DATETIME waktu;
     BinTree treeBalasan;
+    Word tagar;
 } Kicauan;
 
 #endif

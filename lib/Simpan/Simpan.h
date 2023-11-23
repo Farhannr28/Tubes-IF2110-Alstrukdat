@@ -13,5 +13,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+void str_copy(char *dest, const char *src, size_t dest_size);
+void str_concat(char *dest, const char *src, size_t dest_size);
 void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName);
 #endif

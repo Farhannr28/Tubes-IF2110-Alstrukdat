@@ -1,3 +1,4 @@
+#include <DSU.h>
 #include <Simpan.h>
 #include <Utasan.h>
 #include <boolean.h>
@@ -10,6 +11,7 @@
 #include <listlinier.h>
 #include <liststatik.h>
 #include <matriks.h>
+#include <maxheap.h>
 #include <pengguna_methods.h>
 #include <prioqueue.h>
 #include <stack.h>
@@ -26,6 +28,8 @@ ListStatik listTagar;
 Graph networkPertemanan;
 ListDin listKicauan;
 ListLinearUtas ListUtas;
+DSU kelompokTeman;
+MaxHeap fyb;
 
 void greetings() {
   Word configFile;
@@ -47,6 +51,8 @@ void greetings() {
   CreateListStatik(&listUser, PENGGUNA);
   CreateListStatik(&listTagar, TAGARNODE);
   CreateListDinamik(&listKicauan, 10, KICAUAN);
+  CreateDSU(&kelompokTeman);
+  createMaxHeap(&fyb);
   InvalidateUser(&currentUser);
   // WARN: max user asumsi 20
   createGraph(&networkPertemanan, 20);
@@ -177,14 +183,23 @@ void DoGantiProfil() {
                  currentUserInDatabase.Nama, currentUserInDatabase.KataSandi,
                  newNoHP, newBioAkun, newWeton, currentUserInDatabase.JenisAkun,
                  currentUserInDatabase.FotoProfil);
+  int pos = GetPenggunaIndex(listUser,currentUser.Nama);
+  ChangeUserInfo(&listUser.elements[pos], currentUserInDatabase.isValid,
+                currentUserInDatabase.Nama, currentUserInDatabase.KataSandi,
+                newNoHP, newBioAkun, newWeton, currentUserInDatabase.JenisAkun,
+                currentUserInDatabase.FotoProfil);
   printf("Profil Anda sudah berhasil diperbarui!");
+  // Pengguna Test;
+  // GetUserById(listUser,&Test,currentUser.id);
+  // printf("Ini harusnya isi:\n");
+  // PrintWord(Test.BioAkun);
 }
 
 void DoLihatProfil(Word nama) {
   Pengguna theUser;
   GetUserByName(listUser, &theUser, nama);
-  if (UserIsPrivate(theUser) || !WordCmpWord(theUser.Nama, currentUser.Nama)) {
-    printf("Wah, akun");
+  if (UserIsPrivate(theUser) &&!WordCmpWord(theUser.Nama, currentUser.Nama)) {
+    printf("Wah, akun ");
     PrintWord(theUser.Nama);
     printf(" diprivat nih. Ikuti dulu yuk untuk bisa melihat profil ");
     PrintWord(theUser.Nama);
@@ -226,11 +241,16 @@ void DoAturJenisAkun() {
 
   if (WordCmp(choice, "YA")) {
     ChangePrivacy(&currentUser, true);
+    int pos = GetPenggunaIndex(listUser,currentUser.Nama);
+    ChangePrivacy(&listUser.elements[pos],true);
     printf("Akun anda sudah diubah menjadi akun Privat.\n");
   } else {
     ChangePrivacy(&currentUser, false);
+    int pos = GetPenggunaIndex(listUser,currentUser.Nama);
+    ChangePrivacy(&listUser.elements[pos],false);
     printf("Akun anda sudah diubah menjadi akun Publik.\n");
   }
+
   printf("\n");
 }
 
@@ -247,6 +267,8 @@ void DoUbahFotoProfil() {
   GetUserByName(listUser, &currentUserInDatabase, currentUser.Nama);
   UpdateProfil(&currentUser, m);
   UpdateProfil(&currentUserInDatabase, m);
+  int pos = GetPenggunaIndex(listUser,currentUser.Nama);
+  UpdateProfil(&listUser.elements[pos],m);
   printf("\n");
   printf("Foto profil anda sudah berhasil diganti!\n");
 }
@@ -259,17 +281,38 @@ void DoTambahTeman() {
   boolean userAvailable =
       GetMutableUserByName(&listUser, &friend, namaPengguna);
   if (userAvailable) {
-    boolean success = TambahTeman(currentUser, friend);
-    if (success && !isTeman(networkPertemanan, currentUser.id, friend->id)) {
-      printf("Permintaan pertemanan kepada ");
+    if (currentUser.id == friend->id) {
+      printf("Anda tidak bisa berteman dengan diri sendiri.\n");
+    } else if (ELMT_GRAPH(networkPertemanan, currentUser.id, friend->id) == 1 &&
+               ELMT_GRAPH(networkPertemanan, friend->id, currentUser.id) == 0) {
+      printf("Anda sudah mengirim permintaan pertemanan kepada ");
       PrintWord(namaPengguna);
-      printf(" telah dikirim. Tunggu beberapa saat hingga permintaan Anda "
-             "disetujui.\n");
-    } else {
-      printf(
-          "Terdapat permintaan pertemanan yang belum Anda setujui. Silakan "
-          "kosongkan daftar permintaan pertemanan untuk Anda terlebih dahulu.");
-      printf("\n");
+      printf(" Silakan tunggu hingga permintaan Anda disetujui.");
+      printf(".\n");
+    } else if (isTeman(networkPertemanan, currentUser.id, friend->id)) {
+      printf("Anda sudah berteman dengan ");
+      PrintWord(namaPengguna);
+      printf(".\n");
+    } else if (ELMT_GRAPH(networkPertemanan, friend->id, currentUser.id) == 1) {
+      printf("Anda sudah menerima permintaan pertemanan dari ");
+      PrintWord(namaPengguna);
+      printf(". Silakan setujui permintaan pertemanan tersebut.");
+      printf(".\n");
+    } else if (!isTeman(networkPertemanan, currentUser.id, friend->id)) {
+      boolean success = TambahTeman(currentUser, friend);
+      if (success) {
+        printf("Permintaan pertemanan kepada ");
+        PrintWord(namaPengguna);
+        printf(" telah dikirim. Tunggu beberapa saat hingga permintaan Anda "
+               "disetujui.\n");
+        sendRequest(&networkPertemanan, currentUser.id, friend->id);
+      } else {
+        printf(
+            "Terdapat permintaan pertemanan yang belum Anda setujui. Silakan "
+            "kosongkan daftar permintaan pertemanan untuk Anda terlebih "
+            "dahulu.");
+        printf("\n");
+      }
     }
   } else {
     printf("Pengguna bernama ");
@@ -296,6 +339,7 @@ void DoSetujuiPertemanan() {
   if (banyakTeman) {
     Pengguna p;
     Address addressPenggunaTeratas = GetPermintaanTeratas(currentUser);
+    // PrintWord(DATA(addressPenggunaTeratas));
     GetUserByName(listUser, &p, DATA(addressPenggunaTeratas));
     Word namaPengguna = DATA(addressPenggunaTeratas);
     int jumlahTemanPengguna = PRIORITY(addressPenggunaTeratas);
@@ -312,11 +356,15 @@ void DoSetujuiPertemanan() {
     if (WordCmp(response, "YA")) {
       Pengguna penggunaTeratas;
       GetUserByName(listUser, &penggunaTeratas, namaPengguna);
-      addTeman(&networkPertemanan, currentUser.id, penggunaTeratas.id);
+      addTeman(&networkPertemanan, &kelompokTeman, currentUser.id,
+               penggunaTeratas.id);
       printf("Permintaan pertemanan dari ");
       PrintWord(namaPengguna);
       printf(" telah disetujui. Selamat! Anda telah berteman dengan ");
       PrintWord(namaPengguna);
+      // currentUser.PermintaanBerteman->priority++;
+      // penggunaTeratas.PermintaanBerteman->priority++;
+      dequeue(&currentUser.PermintaanBerteman);
       printf(".\n\n");
     } else {
       dequeue(&currentUser.PermintaanBerteman);
@@ -355,12 +403,13 @@ void DoHapusTeman() {
   Word response;
   printf("Apakah Anda yakin ingin menghapus ");
   PrintWord(namaPengguna);
-  PromptUser(" dari daftar teman Anda? (YA/TIDAK)",
-             &response);
+  PromptUser(" dari daftar teman Anda? (YA/TIDAK)", &response);
   printf("\n");
   if (WordCmp(response, "YA")) {
     hapusTeman(&networkPertemanan, currentUser.id, teman.id);
     PrintWord(namaPengguna);
+    // currentUser.PermintaanBerteman->priority--;
+    // teman.PermintaanBerteman->priority--;
     printf(" berhasil dihapus dari daftar teman Anda.\n");
   } else {
     printf("Penghapusan teman dibatalkan.\n");
@@ -373,8 +422,9 @@ void DoKicau() {
   PromptUser("Masukkan kicauan:\n", &text);
   PromptUser("Masukkan tagar:\n", &isiTagar);
   Kicauan kicauan;
-  createKicauan(&kicauan, currentUser.id, text);
+  createKicauan(&kicauan, currentUser.id, text, isiTagar);
   insertKicauanLast(&listKicauan, kicauan);
+  insertKicauanToHeap(&fyb, kicauan);
   if (!WordCmp(isiTagar, "")) {
     addKicauanPadaTagar(&listTagar, kicauan.id, isiTagar);
   }
@@ -415,6 +465,7 @@ void DoSukaKicauan(Word idKicauWord) {
   boolean dariSendiri = (currentUser.id == kicauan.idPembuat);
   if (!UserIsPrivate(pengkicau) || dariTeman || dariSendiri) {
     sukaKicauan(&listKicauan, kicauan.id);
+    updateLikeInHeap(&fyb, kicauan.id);
     getKicauanById(listKicauan, &kicauan, idKicau);
     printf("Selamat! kicauan telah disukai!\n");
     printf("Detil kicauan:\n");
@@ -535,7 +586,9 @@ void DoBuatDraf() {
     Push(&currentUser.Draf, drafkicauan);
   } else if (WordCmp(command, "TERBIT")) {
     Kicauan kicauan;
-    createKicauan(&kicauan, currentUser.id, textDrafKicauan);
+    // TODO: should it?
+    Word isiTagar;
+    createKicauan(&kicauan, currentUser.id, textDrafKicauan, isiTagar);
     insertKicauanLast(&listKicauan, kicauan);
     printf("Selamat! Draf kicauan telah diterbitkan!\n");
     printf("Detil kicauan:\n");
@@ -572,7 +625,8 @@ void DoLihatDraf() {
       DoBuatDraf();
     } else if (WordCmp(command, "TERBIT")) {
       Kicauan kicauan;
-      createKicauan(&kicauan, currentUser.id, drafkicauan.text);
+      Word isiTagar;
+      createKicauan(&kicauan, currentUser.id, drafkicauan.text, isiTagar);
       insertKicauanLast(&listKicauan, kicauan);
       printf("Selamat! Draf kicauan telah diterbitkan!\n");
       printf("Detil kicauan:\n");
@@ -629,15 +683,17 @@ void DoSambungUtas(Word IDUtasWord, Word indexWord) {
 
 void DoCetakUtas(Word IDUtasWord) {
   int IDUtas = IntFromWord(IDUtasWord);
-  Pengguna user;
+  Word Penulis;
   Kicauan K;
+  Pengguna InfoPenulis;
   // printf("===========\n");
-  if (indexOfListLinearUtas(ListUtas, IDUtas, &user) == IDX_UNDEF) {
+  if (indexOfListLinearUtas(ListUtas, IDUtas, &Penulis) == IDX_UNDEF) {
     printf("Utas tidak ditemukan!");
   } else {
-    boolean dariTeman = isTeman(networkPertemanan, currentUser.id, user.id);
-    boolean dariSendiri = (currentUser.id == user.id);
-    if (!UserIsPrivate(user) || dariTeman || dariSendiri) {
+    boolean found = GetUserByName(listUser, &InfoPenulis, Penulis);
+    boolean dariTeman = isTeman(networkPertemanan, currentUser.id, InfoPenulis.id);
+    boolean dariSendiri = (currentUser.id == InfoPenulis.id);
+    if (!UserIsPrivate(InfoPenulis) || dariTeman || dariSendiri) {
       Cetak_Utas(ListUtas, IDUtas, listKicauan, listUser);
     } else {
       printf("Akun yang membuat utas ini adalah akun privat! Ikuti dahulu akun "
@@ -655,19 +711,25 @@ void DoHapusUtas(Word IDUtasWord, Word indexWord) {
   boolean found = GetUserByName(listUser, &InfoPenulis, Penulis);
   if (pos == IDX_UNDEF) {
     printf("Utas tidak ditemukan!");
-  }
-  else{
-  if(InfoPenulis.id != currentUser.id){
-    printf("Anda tidak bisa menghapus kicauan dalam utas ini!");
-  }
-  else{
-    Hapus_Utas(IDUtas,index,&ListUtas);
-  }
+  } else {
+    if (InfoPenulis.id != currentUser.id) {
+      printf("Anda tidak bisa menghapus kicauan dalam utas ini!");
+    } else {
+      Hapus_Utas(IDUtas, index, &ListUtas);
+    }
   }
 }
 
 void DoCariKicauan(Word isiTagar) {
   showKicauanDenganTagar(listTagar, listUser, listKicauan, isiTagar);
+}
+
+void DoKelompokTeman() {
+  printKelompokTeman(listUser, kelompokTeman, currentUser);
+}
+
+void DoFYB() {
+  tampilkanKicauanTerbaik(fyb, listUser);
 }
 
 void DoPerintah() {
@@ -682,31 +744,96 @@ void DoPerintah() {
   } else if (WordCmp(action, "TUTUP_PROGRAM")) {
     DoTutupProgram();
   } else if (WordCmp(action, "GANTI_PROFIL")) {
-    DoGantiProfil();
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
+      DoGantiProfil();
+    }
   } else if (WordCmp(action, "LIHAT_PROFIL")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoLihatProfil(args1);
+    }
   } else if (WordCmp(action, "ATUR_JENIS_AKUN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoAturJenisAkun();
+    }
   } else if (WordCmp(action, "UBAH_FOTO_PROFIL")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoUbahFotoProfil();
+    }
   } else if (WordCmp(action, "TAMBAH_TEMAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoTambahTeman();
+    }
   } else if (WordCmp(action, "DAFTAR_PERMINTAAN_PERTEMANAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoDaftarPermintaanPertemanan();
+    }
   } else if (WordCmp(action, "SETUJUI_PERTEMANAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoSetujuiPertemanan();
+    }
   } else if (WordCmp(action, "DAFTAR_TEMAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoDaftarTeman();
+    }
   } else if (WordCmp(action, "HAPUS_TEMAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoHapusTeman();
+    }
   } else if (WordCmp(action, "KICAU")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoKicau();
+    }
   } else if (WordCmp(action, "KICAUAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoKicauan();
+    }
   } else if (WordCmp(action, "SUKA_KICAUAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoSukaKicauan(args1);
+    }
   } else if (WordCmp(action, "UBAH_KICAUAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoUbahKicauan(args1);
+    }
   } else if (WordCmp(action, "BALAS")) {
     DoBalas(args1, args2);
   } else if (WordCmp(action, "BALASAN")) {
@@ -714,21 +841,75 @@ void DoPerintah() {
   } else if (WordCmp(action, "HAPUS_BALASAN")) {
     DoHapusBalasan(args1, args2);
   } else if (WordCmp(action, "BUAT_DRAF")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoBuatDraf();
+    }
   } else if (WordCmp(action, "LIHAT_DRAF")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoLihatDraf();
+    }
   } else if (WordCmp(action, "UTAS")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoUtas(args1);
+    }
   } else if (WordCmp(action, "SAMBUNG_UTAS")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoSambungUtas(args1, args2);
+    }
   } else if (WordCmp(action, "CETAK_UTAS")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoCetakUtas(args1);
+    }
   } else if (WordCmp(action, "SIMPAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     SIMPANUTAS(ListUtas, "testing");
+    }
   } else if (WordCmp(action, "HAPUS_UTAS")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoHapusUtas(args1, args2);
+    }
   } else if (WordCmp(action, "CARI_KICAUAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
     DoCariKicauan(args1);
+    }
+  } else if (WordCmp(action, "KELOMPOK_TEMAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
+    DoKelompokTeman();
+    }
+  } else if (WordCmp(action, "FYB")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    }
+    else{
+    DoFYB();
+    }
   } else {
     printf("Perintah tidak valid!\n");
   }

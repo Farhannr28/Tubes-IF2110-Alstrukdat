@@ -72,3 +72,8 @@ int jumlahTeman(Graph graph, int user_index)
     }
     return jumlah;
 }
+
+void sendRequest(Graph *graph, int index_user_asal, int index_user_tujuan)
+{
+    ELMT_GRAPH(*graph, index_user_asal, index_user_tujuan) = 1;
+}

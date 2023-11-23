@@ -9,10 +9,9 @@
 /* Banyaknya pengguna maksimum */
 
 typedef int idPengguna;
-typedef struct
-{
-    idPengguna parent[MaxPengguna];
-    int size[MaxPengguna];
+typedef struct {
+  idPengguna parent[MaxPengguna];
+  int size[MaxPengguna];
 } DSU;
 
 /* ********** KONSTRUKTOR ********** */
@@ -35,5 +34,9 @@ boolean isSameRoot(DSU d, idPengguna s1, idPengguna s2);
 void mergeSet(DSU *d, idPengguna s1, idPengguna s2);
 /* I.S. kedua set berbeda */
 /* F.S. set dengan size terpendek disambung ke set terpanjang */
+
+int getLength(DSU d, idPengguna id);
+
+void printSet(DSU d, idPengguna id);
 
 #endif

@@ -1,10 +1,11 @@
 #ifndef PENGGUNA_METHODS_H
 #define PENGGUNA_METHODS_H
 
-#include "pengguna.h"
+#include "../DisjointSetUnion/DSU.h"
 #include "../ListStatik/liststatik.h"
+#include "pengguna.h"
 
-#define ELMTPengguna(l,i) ELMTStatikContent(l,i).p
+#define ELMTPengguna(l, i) ELMTStatikContent(l, i).p
 
 boolean UsernameTaken(ListStatik l, Word nama);
 boolean UserAndPasswordMatch(ListStatik l, Word nama, Word password);
@@ -28,8 +29,10 @@ Address GetPermintaanTeratas(Pengguna p);
 void PrintListTeman(Pengguna p);
 void hapusTeman(Graph *graph, int index_user_asal, int index_user_tujuan);
 void printTeman(ListStatik listUser, Graph graph, Pengguna p);
-void addTeman(Graph *graph, int index_user_asal, int index_user_tujuan);
+void addTeman(Graph *graph, DSU *kelompokTeman, int index_user_asal,
+              int index_user_tujuan);
 boolean validateNoHP(Word noHp);
 boolean validateWeton(Word weton);
-
+void printKelompokTeman(ListStatik listUser, DSU d, Pengguna currentUser);
+int GetPenggunaIndex(ListStatik l, Word nama);
 #endif
