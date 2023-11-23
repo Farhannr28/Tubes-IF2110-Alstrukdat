@@ -344,15 +344,12 @@ void DoHapusTeman() {
   Word response;
   printf("Apakah Anda yakin ingin menghapus ");
   PrintWord(namaPengguna);
-  PromptUser("Apakah anda yakin ingin menghapus dari daftar teman "
-             "anda?(YA/TIDAK) ",
+  PromptUser(" dari daftar teman Anda? (YA/TIDAK)",
              &response);
   printf("\n");
   if (WordCmp(response, "YA")) {
     hapusTeman(&networkPertemanan, currentUser.id, teman.id);
     PrintWord(namaPengguna);
-    currentUser.friendCount--;
-    teman.friendCount--;
     printf(" berhasil dihapus dari daftar teman Anda.\n");
   } else {
     printf("Penghapusan teman dibatalkan.\n");
