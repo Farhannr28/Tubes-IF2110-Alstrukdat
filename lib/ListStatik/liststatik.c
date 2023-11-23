@@ -78,11 +78,15 @@ void insertAtListStatik(ListStatik *l, ListStatikElType el, ListStatikIdxType id
 /* F.S. val adalah elemen yang disisipkan pada index idx l */
 /* *** Menambahkan elemen terakhir *** */
     if (!isFullListStatik(*l) && !isEmptyListStatik(*l) && isIdxValidListStatik(*l,idx)){
-        for(int i=ListStatikLength(*l)+1;i>IDXMINListStatik;i--){
+        for(int i=ListStatikLength(*l)+1;i>IDXMINListStatik && i > idx;i--){
             ELMTStatik(*l,i) = ELMTStatik(*l,(i-1));
         }
-        ELMTStatik(*l,idx) = el;
     }
+    ELMTStatik(*l,idx) = el;
+}
+
+void insertForceAtListStatik(ListStatik *l, ListStatikElType el, ListStatikIdxType idx) {
+    ELMTStatik(*l,idx) = el;
 }
 
 void insertLastListStatik(ListStatik *l, ListStatikElType user){
@@ -136,4 +140,8 @@ void deleteLastListStatik(ListStatik *l){
     if (!isEmptyListStatik(*l)){
          ELMTStatik(*l, getLastIdxListStatik(*l)).isValid = false; 
     }
+}
+
+boolean isListStatikEmptyAt(ListStatik l, int idx) {
+    return !ELMTStatik(l, idx).isValid;
 }

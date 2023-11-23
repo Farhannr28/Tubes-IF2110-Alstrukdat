@@ -1,24 +1,26 @@
+#include <Simpan.h>
+#include <Utasan.h>
 #include <boolean.h>
+#include <datetime.h>
 #include <graph.h>
 #include <kicauan.h>
-#include <liststatik.h>
-#include <listdin.h>
-#include <matriks.h>
-#include <prioqueue.h>
-#include <stdio.h>
-#include <wordmachine.h>
-#include <datetime.h>
-#include <stack.h>
-#include <Utasan.h>
-#include <listlinier.h>
-#include <Simpan.h>
 #include <kicauan_methods.h>
+#include <listdin.h>
+#include <listlinier.h>
+#include <liststatik.h>
+#include <matriks.h>
 #include <pengguna_methods.h>
+#include <prioqueue.h>
+#include <stack.h>
+#include <stdio.h>
+#include <tagar.h>
+#include <wordmachine.h>
 
 Word perintah;
 boolean isStop = false;
 Pengguna currentUser;
 ListStatik listUser;
+ListStatik listTagar;
 Graph networkPertemanan;
 ListDin listKicauan;
 ListLinearUtas ListUtas;
@@ -41,6 +43,7 @@ void greetings() {
   // TODO: load config
   // WARN: this should be ifNotLoaded
   CreateListStatik(&listUser, PENGGUNA);
+  CreateListStatik(&listTagar, TAGARNODE);
   CreateListDinamik(&listKicauan, 10, KICAUAN);
   InvalidateUser(&currentUser);
   // WARN: max user asumsi 20
@@ -71,8 +74,9 @@ void DoKeluar() {
 }
 
 void DoDaftar() {
-  if(IsUserValid(currentUser)) {
-    printf("Anda sudah masuk. Keluar terlebih dahulu untuk melakukan daftar.\n\n");
+  if (IsUserValid(currentUser)) {
+    printf(
+        "Anda sudah masuk. Keluar terlebih dahulu untuk melakukan daftar.\n\n");
     return;
   }
   Word nama, password;
@@ -93,7 +97,7 @@ void DoDaftar() {
 }
 
 void DoMasuk() {
-  if(IsUserValid(currentUser)) {
+  if (IsUserValid(currentUser)) {
     printf("Wah Anda sudah masuk. Keluar dulu yuk!\n\n");
     return;
   }
@@ -143,17 +147,21 @@ void DoGantiProfil() {
   printf("\n\n");
   Word newBioAkun, newNoHP, newWeton;
   PromptUser("Masukkan Bio Akun:", &newBioAkun);
-  while(true) {
+  while (true) {
     PromptUser("Masukkan No HP:", &newNoHP);
     boolean noHpValid = validateNoHP(newNoHP);
-    if(noHpValid) break;
-    else printf("No HP tidak valid. Masukkan lagi yuk!\n\n");
+    if (noHpValid)
+      break;
+    else
+      printf("No HP tidak valid. Masukkan lagi yuk!\n\n");
   }
-  while(true) {
+  while (true) {
     PromptUser("Masukkan Weton:", &newWeton);
     boolean wetonValid = validateWeton(newWeton);
-    if(wetonValid) break;
-    else printf("Weton anda tidak valid.\n\n");
+    if (wetonValid)
+      break;
+    else
+      printf("Weton anda tidak valid.\n\n");
   }
 
   ChangeUserInfo(&currentUser, currentUser.isValid, currentUser.Nama,
@@ -321,11 +329,12 @@ void DoSetujuiPertemanan() {
   }
 }
 
-void DoDaftarTeman() { 
-  if(IsUserValid(currentUser))
-    printTeman(listUser, networkPertemanan, currentUser); 
+void DoDaftarTeman() {
+  if (IsUserValid(currentUser))
+    printTeman(listUser, networkPertemanan, currentUser);
   else
-    printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan "
+           "BurBir.\n");
   printf("\n");
 }
 
@@ -358,30 +367,34 @@ void DoHapusTeman() {
 }
 
 void DoKicau() {
-  Word text;
+  Word text, isiTagar;
   PromptUser("Masukkan kicauan:\n", &text);
+  PromptUser("Masukkan tagar:\n", &isiTagar);
   Kicauan kicauan;
   createKicauan(&kicauan, currentUser.id, text);
   insertKicauanLast(&listKicauan, kicauan);
+  if (!WordCmp(isiTagar, "")) {
+    addKicauanPadaTagar(&listTagar, kicauan.id, isiTagar);
+  }
   printf("Selamat! kicauan telah diterbitkan!\n");
   printf("Detil kicauan:\n");
   showKicauan(kicauan, currentUser.Nama);
 }
 
 void DoKicauan() {
-  for (int i=0; i<listKicauan.nEff; i++){
+  for (int i = 0; i < listKicauan.nEff; i++) {
     int idPengkicau = ELMTDinamik(listKicauan, i).k.idPembuat;
     boolean dariTeman = isTeman(networkPertemanan, currentUser.id, idPengkicau);
     boolean dariSendiri = currentUser.id == idPengkicau;
-    if(dariSendiri || dariTeman) {
-            Pengguna Author;
-            if(dariSendiri) {
-              Author = currentUser;
-            } else {
-              GetUserById(listUser, &Author, idPengkicau);
-            } 
-            showKicauan(ELMTDinamik(listKicauan, i).k, Author.Nama);
-    } 
+    if (dariSendiri || dariTeman) {
+      Pengguna Author;
+      if (dariSendiri) {
+        Author = currentUser;
+      } else {
+        GetUserById(listUser, &Author, idPengkicau);
+      }
+      showKicauan(ELMTDinamik(listKicauan, i).k, Author.Nama);
+    }
   }
 }
 
@@ -389,22 +402,24 @@ void DoSukaKicauan(Word idKicauWord) {
   int idKicau = IntFromWord(idKicauWord);
   Kicauan kicauan;
   boolean found = getKicauanById(listKicauan, &kicauan, idKicau);
-  if(!found) {
+  if (!found) {
     printf("Tidak ditemukan kicauan dengan ID = %d;\n", idKicau);
     return;
-  } 
+  }
   Pengguna pengkicau;
   GetUserById(listUser, &pengkicau, kicauan.idPembuat);
-  boolean dariTeman = isTeman(networkPertemanan, currentUser.id, kicauan.idPembuat);
+  boolean dariTeman =
+      isTeman(networkPertemanan, currentUser.id, kicauan.idPembuat);
   boolean dariSendiri = (currentUser.id == kicauan.idPembuat);
-  if(!UserIsPrivate(pengkicau) || dariTeman || dariSendiri) {
+  if (!UserIsPrivate(pengkicau) || dariTeman || dariSendiri) {
     sukaKicauan(&listKicauan, kicauan.id);
     getKicauanById(listKicauan, &kicauan, idKicau);
     printf("Selamat! kicauan telah disukai!\n");
     printf("Detil kicauan:\n");
     showKicauan(kicauan, pengkicau.Nama);
   } else {
-    printf("Wah, kicauan tersebut dibuat oleh akun privat! Ikuti akun itu dulu ya\n");
+    printf("Wah, kicauan tersebut dibuat oleh akun privat! Ikuti akun itu dulu "
+           "ya\n");
   }
 }
 
@@ -412,12 +427,12 @@ void DoUbahKicauan(Word idKicauWord) {
   int idKicau = IntFromWord(idKicauWord);
   Kicauan kicauan;
   boolean found = getKicauanById(listKicauan, &kicauan, idKicau);
-  if(!found) {
+  if (!found) {
     printf("Tidak ditemukan kicauan dengan ID = %d;\n", idKicau);
     return;
-  } 
+  }
   boolean dariSendiri = (currentUser.id == kicauan.idPembuat);
-  if(dariSendiri) {
+  if (dariSendiri) {
     Word textKicauanBaru;
     PromptUser("Masukkan kicauan baru:\n", &textKicauanBaru);
     ubahKicauan(&listKicauan, kicauan.id, textKicauanBaru);
@@ -430,11 +445,13 @@ void DoUbahKicauan(Word idKicauWord) {
   }
 }
 
-void DoBuatDraf () {
+void DoBuatDraf() {
   Word textDrafKicauan;
   PromptUser("Masukkan draf:\n", &textDrafKicauan);
   Word command;
-  PromptUser("Apakah anda ingin menghapus, menyimpan, atau menerbitkan draf ini?\n", &command);
+  PromptUser(
+      "Apakah anda ingin menghapus, menyimpan, atau menerbitkan draf ini?\n",
+      &command);
   if (WordCmp(command, "HAPUS")) {
     printf("Draf telah berhasil dihapus!\n");
   } else if (WordCmp(command, "SIMPAN")) {
@@ -448,9 +465,15 @@ void DoBuatDraf () {
     printf("Selamat! Draf kicauan telah diterbitkan!\n");
     printf("Detil kicauan:\n");
     printf("| ID = %d\n", kicauan.id);
-    printf("| ");PrintWord(currentUser.Nama);printf("\n");
-    printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
-    printf("| ");PrintWord(kicauan.text);printf("\n");
+    printf("| ");
+    PrintWord(currentUser.Nama);
+    printf("\n");
+    printf("| ");
+    TulisDateTime(kicauan.waktu);
+    printf("\n");
+    printf("| ");
+    PrintWord(kicauan.text);
+    printf("\n");
     printf("| Disukai: %d\n", kicauan.like);
     printf("\n");
   }
@@ -465,7 +488,9 @@ void DoLihatDraf() {
     printf("Ini draf terakhir Anda:\n");
     DisplayDrafKicau(drafkicauan);
     Word command;
-    PromptUser("Apakah anda ingin mengubah, menghapus, atau menerbitkan draf ini? (KEMBALI jika ingin kembali)\n", &command);
+    PromptUser("Apakah anda ingin mengubah, menghapus, atau menerbitkan draf "
+               "ini? (KEMBALI jika ingin kembali)\n",
+               &command);
     if (WordCmp(command, "HAPUS")) {
       printf("Draf telah berhasil dihapus!\n");
     } else if (WordCmp(command, "UBAH")) {
@@ -477,9 +502,15 @@ void DoLihatDraf() {
       printf("Selamat! Draf kicauan telah diterbitkan!\n");
       printf("Detil kicauan:\n");
       printf("| ID = %d\n", kicauan.id);
-      printf("| ");PrintWord(currentUser.Nama);printf("\n");
-      printf("| ");TulisDateTime(kicauan.waktu);printf("\n");
-      printf("| ");PrintWord(kicauan.text);printf("\n");
+      printf("| ");
+      PrintWord(currentUser.Nama);
+      printf("\n");
+      printf("| ");
+      TulisDateTime(kicauan.waktu);
+      printf("\n");
+      printf("| ");
+      PrintWord(kicauan.text);
+      printf("\n");
       printf("| Disukai: %d\n", kicauan.like);
       printf("\n");
     } else if (WordCmp(command, "KEMBALI")) {
@@ -488,71 +519,66 @@ void DoLihatDraf() {
   }
 }
 
-void DoUtas(Word idKicauWord){
+void DoUtas(Word idKicauWord) {
   int idKicau = IntFromWord(idKicauWord);
   Kicauan K;
-  if(!getKicauanById(listKicauan,&K,idKicau)){
+  if (!getKicauanById(listKicauan, &K, idKicau)) {
     printf("Kicauan tidak ditemukan\n");
-  }
-  else{
-    if(currentUser.id != K.idPembuat){
+  } else {
+    if (currentUser.id != K.idPembuat) {
       // printf("IDnya %d dan %d\n",currentUser.id,K.id);
       printf("Utas ini bukan milik anda!\n");
-    }
-    else{
-      Utas(idKicau,&ListUtas,currentUser.Nama);
+    } else {
+      Utas(idKicau, &ListUtas, currentUser.Nama);
     }
   }
 }
 
-void DoSambungUtas(Word IDUtasWord, Word indexWord){
+void DoSambungUtas(Word IDUtasWord, Word indexWord) {
   int IDUtas = IntFromWord(IDUtasWord);
   int index = IntFromWord(indexWord);
   Word Penulis;
   Pengguna InfoPenulis;
-  int pos = indexOfListLinearUtas(ListUtas,IDUtas,&Penulis);
-  boolean found = GetUserByName(listUser,&InfoPenulis,Penulis);
-  if(pos == IDX_UNDEF){
+  int pos = indexOfListLinearUtas(ListUtas, IDUtas, &Penulis);
+  boolean found = GetUserByName(listUser, &InfoPenulis, Penulis);
+  if (pos == IDX_UNDEF) {
     printf("Utas tidak ditemukan!");
-  }
-  else{
-  if(InfoPenulis.id != currentUser.id){
-    printf("Anda tidak bisa menyambung utas ini!");
-  }
-  else{
-    Sambung_Utas(IDUtas,index,&ListUtas);
-  }
+  } else {
+    if (InfoPenulis.id != currentUser.id) {
+      printf("Anda tidak bisa menyambung utas ini!");
+    } else {
+      Sambung_Utas(IDUtas, index, &ListUtas);
+    }
   }
 }
 
-void DoCetakUtas(Word IDUtasWord){
+void DoCetakUtas(Word IDUtasWord) {
   int IDUtas = IntFromWord(IDUtasWord);
   Pengguna user;
   Kicauan K;
   // printf("===========\n");
-  if(indexOfListLinearUtas(ListUtas,IDUtas,&user) == IDX_UNDEF){
+  if (indexOfListLinearUtas(ListUtas, IDUtas, &user) == IDX_UNDEF) {
     printf("Utas tidak ditemukan!");
-  }
-  else{
-      boolean dariTeman = isTeman(networkPertemanan, currentUser.id, user.id);
-      boolean dariSendiri = (currentUser.id == user.id);
-      if(!UserIsPrivate(user) || dariTeman || dariSendiri){
-        Cetak_Utas(ListUtas,IDUtas,listKicauan,listUser);
-      }
-    else{
-        printf("Akun yang membuat utas ini adalah akun privat! Ikuti dahulu akun ini untuk melihat utasnya!");
+  } else {
+    boolean dariTeman = isTeman(networkPertemanan, currentUser.id, user.id);
+    boolean dariSendiri = (currentUser.id == user.id);
+    if (!UserIsPrivate(user) || dariTeman || dariSendiri) {
+      Cetak_Utas(ListUtas, IDUtas, listKicauan, listUser);
+    } else {
+      printf("Akun yang membuat utas ini adalah akun privat! Ikuti dahulu akun "
+             "ini untuk melihat utasnya!");
     }
   }
 }
 
-void DoHapusUtas(Word IDUtasWord, Word indexWord){
+void DoHapusUtas(Word IDUtasWord, Word indexWord) {
   int IDUtas = IntFromWord(IDUtasWord);
   int index = IntFromWord(indexWord);
   Word Penulis;
   Pengguna InfoPenulis;
-  int pos = indexOfListLinearUtas(ListUtas,IDUtas,&Penulis);
-  boolean found = GetUserByName(listUser,&InfoPenulis,Penulis);
-  if(pos == IDX_UNDEF){
+  int pos = indexOfListLinearUtas(ListUtas, IDUtas, &Penulis);
+  boolean found = GetUserByName(listUser, &InfoPenulis, Penulis);
+  if (pos == IDX_UNDEF) {
     printf("Utas tidak ditemukan!");
   }
   else{
@@ -564,12 +590,14 @@ void DoHapusUtas(Word IDUtasWord, Word indexWord){
   }
   }
 }
+
+void DoCariKicauan(Word isiTagar) {
+  showKicauanDenganTagar(listTagar, listUser, listKicauan, isiTagar);
+}
+
 void DoPerintah() {
-  Word action, args1,args2;
-  ParseWord(&perintah, ' ', &action, &args1,&args2);
-  // PrintWord(action);
-  // PrintWord(args1);
-  // PrintWord(args2);
+  Word action, args1, args2;
+  ParseWord(&perintah, ' ', &action, &args1, &args2);
   if (WordCmp(action, "KELUAR")) {
     DoKeluar();
   } else if (WordCmp(action, "DAFTAR")) {
@@ -608,23 +636,19 @@ void DoPerintah() {
     DoBuatDraf();
   } else if (WordCmp(action, "LIHAT_DRAF")) {
     DoLihatDraf();
-  }
-  else if (WordCmp(action,"UTAS")){
+  } else if (WordCmp(action, "UTAS")) {
     DoUtas(args1);
-  }
-  else if(WordCmp(action,"SAMBUNG_UTAS")){
-    DoSambungUtas(args1,args2);
-  } 
-  else if (WordCmp(action,"CETAK_UTAS")){
+  } else if (WordCmp(action, "SAMBUNG_UTAS")) {
+    DoSambungUtas(args1, args2);
+  } else if (WordCmp(action, "CETAK_UTAS")) {
     DoCetakUtas(args1);
-  }
-  else if (WordCmp(action,"SIMPAN")){
-    SIMPANUTAS(ListUtas,"testing");
-  }
-  else if (WordCmp(action,"HAPUS_UTAS")){
-    DoHapusUtas(args1,args2);
-  }
-  else {
+  } else if (WordCmp(action, "SIMPAN")) {
+    SIMPANUTAS(ListUtas, "testing");
+  } else if (WordCmp(action, "HAPUS_UTAS")) {
+    DoHapusUtas(args1, args2);
+  } else if (WordCmp(action, "CARI_KICAUAN")) {
+    DoCariKicauan(args1);
+  } else {
     printf("Perintah tidak valid!\n");
   }
   printf("\n");

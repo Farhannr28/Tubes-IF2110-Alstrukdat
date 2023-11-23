@@ -4,11 +4,12 @@
 #include "../Matriks/matriks.h"
 #include "../MesinKarakter/charmachine.h"
 #include "../MesinKata/wordmachine.h"
-#include "../PriorityQueue/prioqueue.h"
-#include "../utility/boolean.h"
-#include "../UndirectedGraph/graph.h"
-#include "../Stack/stack.h"
 #include "../Pengguna/pengguna.h"
+#include "../PriorityQueue/prioqueue.h"
+#include "../Stack/stack.h"
+#include "../Tagar/tagar.h"
+#include "../UndirectedGraph/graph.h"
+#include "../utility/boolean.h"
 
 /*  Kamus Umum */
 #define CAPACITYListStatik 20
@@ -24,13 +25,12 @@
 typedef struct listStatikElType {
   union {
     Pengguna p;
+    AddressTagar t;
   } content;
   boolean isValid;
 } ListStatikElType;
 
-typedef enum {
-  PENGGUNA,
-} ListStatikType;
+typedef enum { PENGGUNA, TAGARNODE } ListStatikType;
 
 typedef int ListStatikIdxType;
 
@@ -87,16 +87,19 @@ void insertFirstListStatik(ListStatik *l, ListStatikElType el);
 /* I.S. List l boleh kosong, tetapi tidak penuh */
 /* F.S. val adalah elemen pertama l yang baru */
 /* *** Menambahkan elemen pada index tertentu *** */
-void insertAtListStatik(ListStatik *l, ListStatikElType el, ListStatikIdxType idx);
+void insertAtListStatik(ListStatik *l, ListStatikElType el,
+                        ListStatikIdxType idx);
 /* Proses: Menambahkan val sebagai elemen pada index idx List */
 /* I.S. List l tidak kosong dan tidak penuh, idx merupakan index yang valid di l
  */
 /* F.S. val adalah elemen yang disisipkan pada index idx l */
 /* *** Menambahkan elemen terakhir *** */
-void insertLastListStatik(ListStatik *l, ListStatikElType user);
+void insertLastListStatik(ListStatik *l, ListStatikElType el);
 /* Proses: Menambahkan val sebagai elemen terakhir List */
 /* I.S. List l boleh kosong, tetapi tidak penuh */
 /* F.S. val adalah elemen terakhir l yang baru */
+void insertForceAtListStatik(ListStatik *l, ListStatikElType el,
+                             ListStatikIdxType idx);
 
 /* ********** MENGHAPUS ELEMEN ********** */
 /* *** Menghapus elemen pertama *** */
@@ -120,5 +123,7 @@ void deleteLastListStatik(ListStatik *l);
 /* F.S. val adalah nilai elemen terakhir l sebelum penghapusan, */
 /*      Banyaknya elemen List berkurang satu */
 /*      List l mungkin menjadi kosong */
+
+boolean isListStatikEmptyAt(ListStatik l, int idx);
 
 #endif
