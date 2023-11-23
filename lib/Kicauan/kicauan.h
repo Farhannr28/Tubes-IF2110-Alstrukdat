@@ -11,6 +11,7 @@ typedef struct kicauan{
     Word text;
     int like;
     DATETIME waktu;
+    Word tagar;
 } Kicauan;
 
 #endif

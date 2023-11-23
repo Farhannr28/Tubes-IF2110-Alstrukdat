@@ -9,13 +9,14 @@
 
 int idKicauan = 1;
 
-void createKicauan(Kicauan *k, int authorId, Word kicau){
+void createKicauan(Kicauan *k, int authorId, Word kicau, Word isiTagar){
     k->id = idKicauan;
     idKicauan++;
     k->text = kicau;
     k->idPembuat = authorId;
     k->like = 0;
     k->waktu = GetCurrentDateTime();
+    k->tagar = isiTagar;
 }
 
 void sukaKicauan(ListDin *l, int kicauanId) {
@@ -24,6 +25,7 @@ void sukaKicauan(ListDin *l, int kicauanId) {
             ELMTKicauan(*l, i).like++;
         }
     }
+
 }
 
 void ubahKicauan(ListDin *l, int kicauanId, Word kicauBaru) {
@@ -42,6 +44,9 @@ void showKicauan(Kicauan k, Word Author) {
     printf("\n");
     printf("| ");TulisDateTime(k.waktu);printf("\n");
     printf("| ");PrintWord(k.text);printf("\n");
+    if(!WordCmp(k.tagar, "")) {
+        printf("| #");PrintWord(k.tagar);printf("\n");
+    }
     printf("| Disukai: %d\n", k.like);
     printf("\n");
 }

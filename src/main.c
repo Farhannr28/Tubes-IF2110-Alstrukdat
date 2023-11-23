@@ -10,6 +10,7 @@
 #include <listlinier.h>
 #include <liststatik.h>
 #include <matriks.h>
+#include <maxheap.h>
 #include <pengguna_methods.h>
 #include <prioqueue.h>
 #include <stack.h>
@@ -26,6 +27,7 @@ Graph networkPertemanan;
 ListDin listKicauan;
 ListLinearUtas ListUtas;
 DSU kelompokTeman;
+MaxHeap fyb;
 
 void greetings() {
   Word configFile;
@@ -48,6 +50,7 @@ void greetings() {
   CreateListStatik(&listTagar, TAGARNODE);
   CreateListDinamik(&listKicauan, 10, KICAUAN);
   CreateDSU(&kelompokTeman);
+  createMaxHeap(&fyb);
   InvalidateUser(&currentUser);
   // WARN: max user asumsi 20
   createGraph(&networkPertemanan, 20);
@@ -262,37 +265,34 @@ void DoTambahTeman() {
   if (userAvailable) {
     if (currentUser.id == friend->id) {
       printf("Anda tidak bisa berteman dengan diri sendiri.\n");
-    }
-    else if (ELMT_GRAPH(networkPertemanan, currentUser.id, friend->id) == 1 && ELMT_GRAPH(networkPertemanan, friend->id, currentUser.id) == 0) {
+    } else if (ELMT_GRAPH(networkPertemanan, currentUser.id, friend->id) == 1 &&
+               ELMT_GRAPH(networkPertemanan, friend->id, currentUser.id) == 0) {
       printf("Anda sudah mengirim permintaan pertemanan kepada ");
       PrintWord(namaPengguna);
       printf(" Silakan tunggu hingga permintaan Anda disetujui.");
       printf(".\n");
-    }
-    else if (isTeman(networkPertemanan,currentUser.id,friend->id)){
+    } else if (isTeman(networkPertemanan, currentUser.id, friend->id)) {
       printf("Anda sudah berteman dengan ");
       PrintWord(namaPengguna);
       printf(".\n");
-    }
-    else if (ELMT_GRAPH(networkPertemanan, friend->id, currentUser.id) == 1) {
+    } else if (ELMT_GRAPH(networkPertemanan, friend->id, currentUser.id) == 1) {
       printf("Anda sudah menerima permintaan pertemanan dari ");
       PrintWord(namaPengguna);
       printf(". Silakan setujui permintaan pertemanan tersebut.");
       printf(".\n");
-    }
-    else if (!isTeman(networkPertemanan, currentUser.id, friend->id)) {
+    } else if (!isTeman(networkPertemanan, currentUser.id, friend->id)) {
       boolean success = TambahTeman(currentUser, friend);
-      if (success){
-      printf("Permintaan pertemanan kepada ");
-      PrintWord(namaPengguna);
-      printf(" telah dikirim. Tunggu beberapa saat hingga permintaan Anda "
-             "disetujui.\n");
-      sendRequest(&networkPertemanan, currentUser.id, friend->id);
-      }
-      else {
+      if (success) {
+        printf("Permintaan pertemanan kepada ");
+        PrintWord(namaPengguna);
+        printf(" telah dikirim. Tunggu beberapa saat hingga permintaan Anda "
+               "disetujui.\n");
+        sendRequest(&networkPertemanan, currentUser.id, friend->id);
+      } else {
         printf(
             "Terdapat permintaan pertemanan yang belum Anda setujui. Silakan "
-            "kosongkan daftar permintaan pertemanan untuk Anda terlebih dahulu.");
+            "kosongkan daftar permintaan pertemanan untuk Anda terlebih "
+            "dahulu.");
         printf("\n");
       }
     }
@@ -360,11 +360,12 @@ void DoSetujuiPertemanan() {
   }
 }
 
-void DoDaftarTeman() { 
-  if(IsUserValid(currentUser))
-    printTeman(listUser, networkPertemanan, currentUser); 
+void DoDaftarTeman() {
+  if (IsUserValid(currentUser))
+    printTeman(listUser, networkPertemanan, currentUser);
   else
-    printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan "
+           "BurBir.\n");
   printf("\n");
 }
 
@@ -402,8 +403,9 @@ void DoKicau() {
   PromptUser("Masukkan kicauan:\n", &text);
   PromptUser("Masukkan tagar:\n", &isiTagar);
   Kicauan kicauan;
-  createKicauan(&kicauan, currentUser.id, text);
+  createKicauan(&kicauan, currentUser.id, text, isiTagar);
   insertKicauanLast(&listKicauan, kicauan);
+  insertKicauanToHeap(&fyb, kicauan);
   if (!WordCmp(isiTagar, "")) {
     addKicauanPadaTagar(&listTagar, kicauan.id, isiTagar);
   }
@@ -444,6 +446,7 @@ void DoSukaKicauan(Word idKicauWord) {
   boolean dariSendiri = (currentUser.id == kicauan.idPembuat);
   if (!UserIsPrivate(pengkicau) || dariTeman || dariSendiri) {
     sukaKicauan(&listKicauan, kicauan.id);
+    updateLikeInHeap(&fyb, kicauan.id);
     getKicauanById(listKicauan, &kicauan, idKicau);
     printf("Selamat! kicauan telah disukai!\n");
     printf("Detil kicauan:\n");
@@ -491,7 +494,9 @@ void DoBuatDraf() {
     Push(&currentUser.Draf, drafkicauan);
   } else if (WordCmp(command, "TERBIT")) {
     Kicauan kicauan;
-    createKicauan(&kicauan, currentUser.id, textDrafKicauan);
+    // TODO: should it?
+    Word isiTagar;
+    createKicauan(&kicauan, currentUser.id, textDrafKicauan, isiTagar);
     insertKicauanLast(&listKicauan, kicauan);
     printf("Selamat! Draf kicauan telah diterbitkan!\n");
     printf("Detil kicauan:\n");
@@ -528,7 +533,8 @@ void DoLihatDraf() {
       DoBuatDraf();
     } else if (WordCmp(command, "TERBIT")) {
       Kicauan kicauan;
-      createKicauan(&kicauan, currentUser.id, drafkicauan.text);
+      Word isiTagar;
+      createKicauan(&kicauan, currentUser.id, drafkicauan.text, isiTagar);
       insertKicauanLast(&listKicauan, kicauan);
       printf("Selamat! Draf kicauan telah diterbitkan!\n");
       printf("Detil kicauan:\n");
@@ -630,6 +636,10 @@ void DoKelompokTeman() {
   printKelompokTeman(listUser, kelompokTeman, currentUser);
 }
 
+void DoFYB() {
+  tampilkanKicauanTerbaik(fyb, listUser);
+}
+
 void DoPerintah() {
   Word action, args1, args2;
   ParseWord(&perintah, ' ', &action, &args1, &args2);
@@ -685,6 +695,8 @@ void DoPerintah() {
     DoCariKicauan(args1);
   } else if (WordCmp(action, "KELOMPOK_TEMAN")) {
     DoKelompokTeman();
+  } else if (WordCmp(action, "FYB")) {
+    DoFYB();
   } else {
     printf("Perintah tidak valid!\n");
   }

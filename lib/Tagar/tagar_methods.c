@@ -67,7 +67,7 @@ void showKicauanDenganTagar(ListStatik listTagar, ListStatik listUser,
                             ListDin listKicauan, Word isiTagar) {
   int idx = hashFunction(isiTagar);
   if (isListStatikEmptyAt(listTagar, idx)) {
-    printf("Tidak ditemukan kicauan dengan tagar ");
+    printf("Tidak ditemukan kicauan dengan tagar #");
     PrintWord(isiTagar);
     printf("!\n");
   } else {
@@ -83,7 +83,7 @@ void showKicauanDenganTagar(ListStatik listTagar, ListStatik listUser,
     }
 
     if (!found) {
-      printf("Tidak ditemukan kicauan dengan tagar ");
+      printf("Tidak ditemukan kicauan dengan tagar #");
       PrintWord(isiTagar);
       printf("!\n");
     } else {

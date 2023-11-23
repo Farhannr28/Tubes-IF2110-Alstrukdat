@@ -12,7 +12,7 @@
 #define TIME(p) (p).waktu
 #define ELMTKicauan(l, i) ELMTDinamik(l, i).k
 
-void createKicauan(Kicauan *k, int authorId, Word kicau);
+void createKicauan(Kicauan *k, int authorId, Word kicau, Word isiTagar);
 void sukaKicauan(ListDin *l, int kicauanId);
 void ubahKicauan(ListDin *l, int kicauanId, Word kicauBaru);
 void showKicauan(Kicauan k, Word Author);
