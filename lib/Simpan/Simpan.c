@@ -30,7 +30,7 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
         fprintf(stderr, "Unable to open file %s for writing.\n", filePath);
         return;
     }
-    Address p = ListUtas;
+    AddressUtas p = ListUtas;
     int panjang = lengthListLinearUtas(ListUtas);
     fprintf(file, "%d\n", panjang); // Include newline
 
@@ -40,7 +40,7 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
         int banyakutas = BanyakUtasan(ListUtas, IDKicauan(p));
         fprintf(file, "%d\n", banyakutas); // Include newline
         // printf("IdKicau %d\n",banyakutas);
-        Paragraph *current_paragraph = TEXT(p);
+        Paragraph *current_paragraph = p->info.TextList;
         int utasCount = 1; // Keep track of the utas number
         while (current_paragraph != NULL) {
             char dateTimeStr[20];
@@ -53,8 +53,8 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
             format_datetime(&D, dateTimeStr, sizeof(dateTimeStr));
 
             // fprintf(file, "Utas ke-%d\n", utasCount); 
-            fprintf(file, "%s", ConfigText); 
-            fprintf(file, "%s", PenulisSTR); 
+            fprintf(file, "%s\n", ConfigText); 
+            fprintf(file, "%s\n", PenulisSTR); 
             fprintf(file, "%s\n", dateTimeStr); 
 
             current_paragraph = current_paragraph->next;

@@ -9,13 +9,16 @@
 #include <wordmachine.h>
 #include <datetime.h>
 #include <stack.h>
-
+#include <Utasan.h>
+#include <listlinier.h>
+#include <Simpan.h>
 Word perintah;
 boolean isStop = false;
 Pengguna currentUser;
 ListPengguna listUser;
 Graph networkPertemanan;
 ListDin listKicauan;
+ListLinearUtas ListUtas;
 
 void greetings() {
   Word configFile;
@@ -480,9 +483,88 @@ void DoLihatDraf() {
   }
 }
 
+void DoUtas(Word idKicauWord){
+  int idKicau = IntFromWord(idKicauWord);
+  Kicauan K;
+  if(!getKicauanById(listKicauan,&K,idKicau)){
+    printf("Kicauan tidak ditemukan\n");
+  }
+  else{
+    if(currentUser.id != K.idPembuat){
+      // printf("IDnya %d dan %d\n",currentUser.id,K.id);
+      printf("Utas ini bukan milik anda!\n");
+    }
+    else{
+      Utas(idKicau,&ListUtas,currentUser.Nama);
+    }
+  }
+}
+
+void DoSambungUtas(Word IDUtasWord, Word indexWord){
+  int IDUtas = IntFromWord(IDUtasWord);
+  int index = IntFromWord(indexWord);
+  Word Penulis;
+  Pengguna InfoPenulis;
+  int pos = indexOfListLinearUtas(ListUtas,IDUtas,&Penulis);
+  boolean found = GetUserByName(listUser,&InfoPenulis,Penulis);
+  if(pos == IDX_UNDEF){
+    printf("Utas tidak ditemukan!");
+  }
+  else{
+  if(InfoPenulis.id != currentUser.id){
+    printf("Anda tidak bisa menyambung utas ini!");
+  }
+  else{
+    Sambung_Utas(IDUtas,index,&ListUtas);
+  }
+  }
+}
+
+void DoCetakUtas(Word IDUtasWord){
+  int IDUtas = IntFromWord(IDUtasWord);
+  Pengguna user;
+  Kicauan K;
+  // printf("===========\n");
+  if(indexOfListLinearUtas(ListUtas,IDUtas,&user) == IDX_UNDEF){
+    printf("Utas tidak ditemukan!");
+  }
+  else{
+      boolean dariTeman = isTeman(networkPertemanan, currentUser.id, user.id);
+      boolean dariSendiri = (currentUser.id == user.id);
+      if(!UserIsPrivate(user) || dariTeman || dariSendiri){
+        Cetak_Utas(ListUtas,IDUtas,listKicauan,listUser);
+      }
+    else{
+        printf("Akun yang membuat utas ini adalah akun privat! Ikuti dahulu akun ini untuk melihat utasnya!");
+    }
+  }
+}
+
+void DoHapusUtas(Word IDUtasWord, Word indexWord){
+  int IDUtas = IntFromWord(IDUtasWord);
+  int index = IntFromWord(indexWord);
+  Word Penulis;
+  Pengguna InfoPenulis;
+  int pos = indexOfListLinearUtas(ListUtas,IDUtas,&Penulis);
+  boolean found = GetUserByName(listUser,&InfoPenulis,Penulis);
+  if(pos == IDX_UNDEF){
+    printf("Utas tidak ditemukan!");
+  }
+  else{
+  if(InfoPenulis.id != currentUser.id){
+    printf("Anda tidak bisa menyambung utas ini!");
+  }
+  else{
+    Hapus_Utas(IDUtas,index,&ListUtas);
+  }
+  }
+}
 void DoPerintah() {
-  Word action, args1;
-  ParseWord(&perintah, ' ', &action, &args1);
+  Word action, args1,args2;
+  ParseWord(&perintah, ' ', &action, &args1,&args2);
+  // PrintWord(action);
+  // PrintWord(args1);
+  // PrintWord(args2);
   if (WordCmp(action, "KELUAR")) {
     DoKeluar();
   } else if (WordCmp(action, "DAFTAR")) {
@@ -521,7 +603,23 @@ void DoPerintah() {
     DoBuatDraf();
   } else if (WordCmp(action, "LIHAT_DRAF")) {
     DoLihatDraf();
-  } else {
+  }
+  else if (WordCmp(action,"UTAS")){
+    DoUtas(args1);
+  }
+  else if(WordCmp(action,"SAMBUNG_UTAS")){
+    DoSambungUtas(args1,args2);
+  } 
+  else if (WordCmp(action,"CETAK_UTAS")){
+    DoCetakUtas(args1);
+  }
+  else if (WordCmp(action,"SIMPAN")){
+    SIMPANUTAS(ListUtas,"testing");
+  }
+  else if (WordCmp(action,"HAPUS_UTAS")){
+    DoHapusUtas(args1,args2);
+  }
+  else {
     printf("Perintah tidak valid!\n");
   }
   printf("\n");

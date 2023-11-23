@@ -7,7 +7,9 @@
 #include "../Sederhana/ctime.h"
 #include "../Sederhana/datetime.h"
 #include "../utility/boolean.h"
-
+#include "../ListDinamis/listdin.h"
+#include "../Kicauan/kicauan.h"
+#include "../ListStatik/liststatik.h"
 Paragraph *newParagraph(Word currentWord,DATETIME D);
 
 void insertLastParagraph(Utasan *u, Word text,DATETIME D);
@@ -21,13 +23,13 @@ void insertParagraphAtListPosition(ListLinearUtas *L, int IDUtasan, Word text, i
 void CreateUtas(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,
                 Word Penulis,DATETIME D);
 
-int indexOfListLinearUtas(ListLinearUtas l, int IdxUtasan);
+int indexOfListLinearUtas(ListLinearUtas l, int IdxUtasan,Word* Penulis);
 
-void Utas(int IDKicau, ListLinearUtas *l);
+void Utas(int IDKicau, ListLinearUtas *l,Word Penulis);
 
 void Sambung_Utas(int IDUtas, int index, ListLinearUtas *l);
 
-void Cetak_Utas(ListLinearUtas l, int IDUtas);
+void Cetak_Utas(ListLinearUtas l, int IDUtas,ListDin ListKicau,ListPengguna Users);
 
 void Hapus_Utas(int IDUtas, int index, ListLinearUtas *l);
 

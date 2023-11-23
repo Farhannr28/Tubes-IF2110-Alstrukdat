@@ -4,6 +4,7 @@
 #include "../MesinKarakter/charmachine.h"
 #include "Utasan.h"
 #include "../ListLinier/listlinier.h"
+
 Paragraph* newParagraph( Word currentWord,DATETIME D) {
     Paragraph* p = (Paragraph*)malloc(sizeof(Paragraph));  
     if (p != NULL) {;
@@ -82,12 +83,12 @@ void deleteParagraphAtPosition(ListLinearUtas *L, int IDUtasan, int position) {
     }
 
     // Access the TextList of the found Utasan
-    Paragraph *current = TEXT(utasanNode);
+    Paragraph *current = utasanNode->info.TextList;
     Paragraph *previous = NULL;
     int currentPosition = 1;
 
     if (position == 1) {
-        TEXT(utasanNode) = current->next;
+        utasanNode->info.TextList = current->next;
         free(current);
     } else {
         while (currentPosition < position && current != NULL) {
@@ -113,7 +114,7 @@ int GetUtasanIndex(ListLinearUtas l,int IDUtasan){
     while(IDUtasan(p) != IDUtasan){
         p = NEXT(p);
     }
-    Paragraph* paragraph = TEXT(p);
+    Paragraph* paragraph = p->info.TextList;
     while (paragraph!=NULL)
     {
         count++;
@@ -130,7 +131,7 @@ void CreateUtas(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,Word Penulis
     insertLastParagraph(u,Utasan,D);
 }
 
-int indexOfListLinearUtas(ListLinearUtas l, int IdUtasan){
+int indexOfListLinearUtas(ListLinearUtas l, int IdUtasan,Word* Penulis){
     //Pakai ini untuk cek IDXUtasan itu ada apa tidak
     int i = 0;
     int pos = IDX_UNDEF;
@@ -138,6 +139,7 @@ int indexOfListLinearUtas(ListLinearUtas l, int IdUtasan){
     while(p != NULL && pos == IDX_UNDEF){
         if(IDUtasan(p) == IdUtasan){
             pos = i;
+            *Penulis = p->info.Penulis;
         }else{
             i++;
             p = NEXT(p);
@@ -146,23 +148,19 @@ int indexOfListLinearUtas(ListLinearUtas l, int IdUtasan){
     return pos;
 }
 
-void Utas(int IDKicau,ListLinearUtas *l){
+void Utas(int IDKicau,ListLinearUtas *l,Word Penulis){
     Word Kicauan;
-    Word Penulis;
     Word Validasi;
     DATETIME D;
     Utasan U1;
     int IDUtas;
     IDUtas = lengthListLinearUtas(*l)+1;
-    printf("============\n");
-    printf("Ini IDUTAS:%d\n",IDUtas);
+    // printf("============\n");
+    // printf("Ini IDUTAS:%d\n",IDUtas);
     //Sementara enggak looping validasi ada apa tidak
     //Kkeurangan: Cek kicauan ada atau bukan , dan apakah kicauan milik sendiri
     printf("Masukkan Kicauan:\n");
     GetWord(&Kicauan);
-    //Sementara:
-    printf("Masukkan Nama:\n");
-    GetWord(&Penulis);
     D = GetCurrentDateTime();
     CreateUtas(&U1,IDUtas,IDKicau,Kicauan,Penulis,D);
     insertFirstListLinearUtas(l,U1);
@@ -185,7 +183,8 @@ void Sambung_Utas(int IDUtas,int index,ListLinearUtas *l){
     int pos;
     DATETIME D;
     int indexMax;
-    pos = indexOfListLinearUtas(*l,IDUtas);
+    Word Penulis;
+    pos = indexOfListLinearUtas(*l,IDUtas,&Penulis);
     if (pos!=IDX_UNDEF){
         indexMax = GetUtasanIndex(*l,IDUtas);
         if(indexMax < index){
@@ -207,22 +206,41 @@ void Sambung_Utas(int IDUtas,int index,ListLinearUtas *l){
     }
 }
 
-void Cetak_Utas(ListLinearUtas l,int IDUtas) {
+void Cetak_Utas(ListLinearUtas l,int IDUtas,ListDin ListKicau,ListPengguna Users) {
     //Kurang: Cari Kicauan utama, cari penulis, datetime
     AddressUtas p = l;
     int count =0;
+    int id,idpembuat;
+    Kicauan K;
+    Pengguna target;
     while (p!=NULL && IDUtasan(p)!=IDUtas)
     {
         // printf("IDutas%d\n",IDUtasan(p));
         p = NEXT(p);
         count++;
     }
+    id = p->info.IDKicauan;
+    idpembuat = K.idPembuat;
+    GetUserById(Users,&target,idpembuat);
+    getKicauanById(ListKicau,&K,id);
     if(p==NULL){
         printf("Utas tidak ditemukan\n");
     }
     else{
+        printf("|");
+        printf("ID = %d\n",id);
+        printf("|");
+        PrintWord(target.Nama);
+        printf("\n");
+        printf("|");
+        TulisDateTime(K.waktu);
+        printf("\n");
+        printf("|");
+        PrintWord(K.text);
+        printf("\n");
+        printf("\n");
         int index = 1;
-        Paragraph* paragraph = TEXT(p);
+        Paragraph* paragraph = p->info.TextList;
         while (paragraph !=NULL)
         {
             printf("    |");
@@ -249,7 +267,8 @@ void Hapus_Utas(int IDUtas,int index,ListLinearUtas*l){
     //Kekurangan, kalau milik orang lain harus dicek
     int pos;
     int indexMax;
-    pos = indexOfListLinearUtas(*l,IDUtas);
+    Word Penulis;
+    pos = indexOfListLinearUtas(*l,IDUtas,&Penulis);
     if (pos!=IDX_UNDEF){
         indexMax = GetUtasanIndex(*l,IDUtas);
         if(index == 0){
@@ -276,7 +295,7 @@ int BanyakUtasan(ListLinearUtas l,int IDKicau){
         // printf("Jalan %d\n",IDKicauan(p));
         // break;
         if(IDKicauan(p) == IDKicau){
-            Paragraph *currentParagraph = TEXT(p);
+            Paragraph *currentParagraph = p->info.TextList;
             int length = 0;
             while(currentParagraph !=NULL){
                 length++;
