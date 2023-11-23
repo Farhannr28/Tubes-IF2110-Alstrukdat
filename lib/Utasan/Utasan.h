@@ -14,14 +14,16 @@ Paragraph *newParagraph(Word currentWord,DATETIME D);
 
 void insertLastParagraph(Utasan *u, Word text,DATETIME D);
 
+void CreateUtas(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,
+                Word Penulis,DATETIME D);
+
 void deleteParagraphAtPosition(ListLinearUtas *L, int IDUtasan, int position);
 
-int GetUtasanIndex(ListLinearUtas l, int);
+int GetUtasanIndex(ListLinearUtas l, int IDUtasan);
 
 void insertParagraphAtListPosition(ListLinearUtas *L, int IDUtasan, Word text, int position,DATETIME D);
 
-void CreateUtas(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,
-                Word Penulis,DATETIME D);
+
 
 int indexOfListLinearUtas(ListLinearUtas l, int IdxUtasan,Word* Penulis);
 

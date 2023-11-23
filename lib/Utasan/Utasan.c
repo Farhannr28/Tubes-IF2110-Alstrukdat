@@ -17,6 +17,13 @@ Paragraph* newParagraph( Word currentWord,DATETIME D) {
     return p;
 }
 
+void CreateUtas(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,Word Penulis,DATETIME D) {
+    u->IDUtasan = IDUtasan;
+    u-> IDKicauan =IDKicauan;
+    u->Penulis = Penulis;
+    u->TextList = NULL;
+    insertLastParagraph(u,Utasan,D);
+}
 
 void insertLastParagraph(Utasan *u, Word text,DATETIME D) {
     Paragraph* InputParagraph = newParagraph(text,D); 
@@ -124,13 +131,6 @@ int GetUtasanIndex(ListLinearUtas l,int IDUtasan){
     return count;
 }
 
-void CreateUtas(Utasan *u, int IDUtasan, int IDKicauan, Word Utasan,Word Penulis,DATETIME D) {
-    u->IDUtasan = IDUtasan;
-    u-> IDKicauan =IDKicauan;
-    u->Penulis = Penulis;
-    u->TextList = NULL;
-    insertLastParagraph(u,Utasan,D);
-}
 
 int indexOfListLinearUtas(ListLinearUtas l, int IdUtasan,Word* Penulis){
     //Pakai ini untuk cek IDXUtasan itu ada apa tidak
