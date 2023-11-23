@@ -29,6 +29,9 @@ typedef Address PriorityQueue;
 /* Buat convert data user ke node */
 Address newNode(Word nama, int priority);
 
+/* Buat Priority Queue*/
+void CreatePriorityQueue(PriorityQueue *l);
+
 /* Cek apakah queue kosong*/
 boolean isEmpty(PriorityQueue l);
 
@@ -41,26 +44,5 @@ void enqueue(PriorityQueue *l, Word namaPengguna, int follower);
 /* Buat nyari berapa banyak user yang ada */
 int length_queue(PriorityQueue l);
 
-void CreatePriorityQueue(PriorityQueue *l);
-
-// /* Fungsi baut ngecek apakah ada pending request */
-// boolean isNoPendingRequest(User user);
-
-// /* Fungsi buat ngirim request pertemanan*/
-// void sendRequest(Graph *graph, User *user_asal, User *user_tujuan);
-// /* Fungsi buat nge cancel request pertemanan*/
-// void cancelRequest(User *user_asal, User *user_tujuan);
-
-// /* Fungsi untuk nyari jumlah pending request yang ada */
-// int jumlahPendingRequest(User user);
-
-// /* Fungsi buat print daftar teman yang ada */
-// void daftarPermintaanTeman(User user);
-
-// /* Fungsi buat menerima request pertemanan */
-// void acceptRequest(Graph *graph, User *user_asal, User *user_tujuan);
-
-// /* Fungsi buat request nolak pertemanan */
-// void declineRequest(User *user_asal, User *user_tujuan);
 
 #endif
