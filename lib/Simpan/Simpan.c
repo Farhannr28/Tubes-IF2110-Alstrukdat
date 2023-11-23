@@ -8,9 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
-#include <unistd.h>
 void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
     char dirPath[1024];
     snprintf(dirPath, sizeof(dirPath), "%s", folderName);
@@ -32,16 +30,15 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
     }
     AddressUtas p = ListUtas;
     int panjang = lengthListLinearUtas(ListUtas);
-    fprintf(file, "%d\n", panjang); // Include newline
+    fprintf(file, "%d\n", panjang); 
 
     while (p != NULL) {
         Utasan current_utasan = INFO(p);
-        fprintf(file, "%d\n", IDKicauan(p)); // Include newline
+        fprintf(file, "%d\n", IDKicauan(p)); 
         int banyakutas = BanyakUtasan(ListUtas, IDKicauan(p));
-        fprintf(file, "%d\n", banyakutas); // Include newline
-        // printf("IdKicau %d\n",banyakutas);
+        fprintf(file, "%d\n", banyakutas);
         Paragraph *current_paragraph = p->info.TextList;
-        int utasCount = 1; // Keep track of the utas number
+        int utasCount = 1; 
         while (current_paragraph != NULL) {
             char dateTimeStr[20];
             char ConfigText[281], PenulisSTR[281];
@@ -51,19 +48,14 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
             GetCharsFromWord(current_utasan.Penulis, PenulisSTR);
 
             format_datetime(&D, dateTimeStr, sizeof(dateTimeStr));
-
-            // fprintf(file, "Utas ke-%d\n", utasCount); 
             fprintf(file, "%s\n", ConfigText); 
             fprintf(file, "%s\n", PenulisSTR); 
             fprintf(file, "%s\n", dateTimeStr); 
 
             current_paragraph = current_paragraph->next;
             utasCount++;
-            // printf("It runs %d times\n",utasCount);
         }
         p = p->next;
-        // break;
-
     }
     fclose(file);
 }

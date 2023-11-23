@@ -22,9 +22,6 @@ void CreateListLinearUtas(ListLinearUtas *l){
 /* F.S. Terbentuk ListLinearUtas kosong */
     *l= NULL;
 }
-void CreateParagraphList(ListLinearUtas *l1){
-    *l1 = NULL;
-}
 boolean isEmptyListLinearUtas(ListLinearUtas l){
 /* Mengirim true jika ListLinearUtas kosong */
     return FIRST(l) == NULL;
@@ -79,9 +76,6 @@ void insertAtListLinearUtas(ListLinearUtas *l, Utasan val, int idx){
         }
     }
 }
-
-
-
 void deleteFirstListLinearUtas(ListLinearUtas *l){
     AddressUtas p = *l;
     *l = NEXT(p);

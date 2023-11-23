@@ -167,7 +167,6 @@ void Utas(int IDKicau,ListLinearUtas *l,Word Penulis){
     insertFirstListLinearUtas(l,U1);
     printf("Apakah Anda ingin melanjutkan utas ini? (YA/TIDAK):\n");
     GetWord(&Validasi);
-    PrintWord(Validasi);
     printf("\n");
     while(WordCmp(Validasi,"YA")){
         printf("Masukkan Kicauan:\n");
@@ -188,7 +187,7 @@ void Sambung_Utas(int IDUtas,int index,ListLinearUtas *l){
     pos = indexOfListLinearUtas(*l,IDUtas,&Penulis);
     if (pos!=IDX_UNDEF){
         indexMax = GetUtasanIndex(*l,IDUtas);
-        if(indexMax < index){
+        if(indexMax+1 < index){
             printf("Index terlalu tinggi!\n");
         }
         else{
@@ -221,9 +220,9 @@ void Cetak_Utas(ListLinearUtas l,int IDUtas,ListDin ListKicau, ListStatik Users)
         count++;
     }
     id = p->info.IDKicauan;
+    getKicauanById(ListKicau, &K, id);
     idpembuat = K.idPembuat;
     GetUserById(Users, &target, idpembuat);
-    getKicauanById(ListKicau, &K, id);
     if(p==NULL){
         printf("Utas tidak ditemukan\n");
     }
@@ -286,6 +285,7 @@ void Hapus_Utas(int IDUtas,int index,ListLinearUtas*l){
         Utasan U1;
         U1 = INFO(p);
         deleteParagraphAtPosition(l,IDUtas,index);
+        printf("Kicauan sambungan berhasil dihapus!\n");
         }
     }
 }
