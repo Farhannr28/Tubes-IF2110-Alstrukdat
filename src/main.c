@@ -554,7 +554,7 @@ void DoHapusUtas(Word IDUtasWord, Word indexWord){
   }
   else{
   if(InfoPenulis.id != currentUser.id){
-    printf("Anda tidak bisa menyambung utas ini!");
+    printf("Anda tidak bisa menghapus kicauan dalam utas ini!");
   }
   else{
     Hapus_Utas(IDUtas,index,&ListUtas);
