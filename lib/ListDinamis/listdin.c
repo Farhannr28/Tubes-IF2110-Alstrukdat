@@ -4,7 +4,7 @@
 
 /* ********** KONSTRUKTOR ********** */
 /* Konstruktor : create list kosong  */
-void CreateListKicauan(ListDin *l, int capacity){
+void CreateListDinamik(ListDin *l, int capacity, ListDinType type){
 /* I.S. l sembarang, capacity > 0 */
 /* F.S. Terbentuk list dinamis l kosong dengan kapasitas capacity */
 
@@ -18,11 +18,12 @@ void CreateListKicauan(ListDin *l, int capacity){
         BUFFER(*l) = ptr;
         CAPACITY(*l) = capacity;
         NEFF(*l) = 0;
+        ListDinType(*l) = type;
     }
 }
 
 
-void dealocateListKicauan(ListDin *l){
+void dealocateListDinamik(ListDin *l){
 /* I.S. l terdefinisi; */
 /* F.S. (l) dikembalikan ke system, CAPACITY(l)=0; NEFF(l)=0 */
 
@@ -37,7 +38,7 @@ void dealocateListKicauan(ListDin *l){
 
 /* ********** SELEKTOR (TAMBAHAN) ********** */
 /* *** Banyaknya elemen *** */
-int listKicauanLength(ListDin l){
+int listDinamikLength(ListDin l){
 /* Mengirimkan banyaknya elemen efektif list */
 /* Mengirimkan nol jika list l kosong */
 /* *** Daya tampung container *** */
@@ -50,7 +51,7 @@ int listKicauanLength(ListDin l){
 
 
 /* *** Selektor INDEKS *** */
-IdxType getFirstIdxListKicauan(ListDin l){
+IdxType getFirstIdxListDinamik(ListDin l){
 /* Prekondisi : List l tidak kosong */
 /* Mengirimkan indeks elemen l pertama */
     
@@ -60,7 +61,7 @@ IdxType getFirstIdxListKicauan(ListDin l){
     return ans;
 }
 
-IdxType getLastIdxListKicauan(ListDin l){
+IdxType getLastIdxListDinamik(ListDin l){
 /* Prekondisi : List l tidak kosong */
 /* Mengirimkan indeks elemen l terakhir */
     
@@ -71,29 +72,29 @@ IdxType getLastIdxListKicauan(ListDin l){
 }
 
 /* ********** Test Indeks yang valid ********** */
-boolean isIdxListKicauanValid(ListDin l, IdxType i){
+boolean isIdxListDinamikValid(ListDin l, IdxType i){
 /* Mengirimkan true jika i adalah indeks yang valid utk kapasitas list l */
 /* yaitu antara indeks yang terdefinisi utk container*/
 
     /* KAMUS */
     
     /* ALGORITMA */
-    return(i >= getFirstIdxListKicauan(l) && i < CAPACITY(l));
+    return(i >= getFirstIdxListDinamik(l) && i < CAPACITY(l));
 }
 
-boolean isIdxListKicauanEff(ListDin l, IdxType i){
+boolean isIdxListDinamikEff(ListDin l, IdxType i){
 /* Mengirimkan true jika i adalah indeks yang terdefinisi utk list */
 /* yaitu antara 0..NEFF(l) */
 
     /* KAMUS */
     
     /* ALGORITMA */
-    return(i >= getFirstIdxListKicauan(l) && i <= getLastIdxListKicauan(l));
+    return(i >= getFirstIdxListDinamik(l) && i <= getLastIdxListDinamik(l));
 }
 
 /* ********** TEST KOSONG/PENUH ********** */
 /* *** Test list kosong *** */
-boolean isListKicauanEmpty(ListDin l){
+boolean isListDinamikEmpty(ListDin l){
 /* Mengirimkan true jika list l kosong, mengirimkan false jika tidak */
 /* *** Test list penuh *** */
 
@@ -103,7 +104,7 @@ boolean isListKicauanEmpty(ListDin l){
     return(NEFF(l)==0);
 }
 
-boolean isListKicauanFull(ListDin l){
+boolean isListDinamikFull(ListDin l){
 /* Mengirimkan true jika list l penuh, mengirimkan false jika tidak */
 
     /* KAMUS */
@@ -114,7 +115,7 @@ boolean isListKicauanFull(ListDin l){
 
 /* ********** SEARCHING ********** */
 /* ***  Perhatian : list boleh kosong!! *** */
-IdxType indexOfListKicauan(ListDin l, int x){
+IdxType indexOfListDinamik(ListDin l, int x){
 /* Search apakah ada kicauan di List l yang memiliki id x */
 /* Jika ada, menghasilkan indeks i terkecil, dengan elemen ke-i = val */
 /* Jika tidak ada, mengirimkan IDX_UNDEF */
@@ -125,7 +126,7 @@ IdxType indexOfListKicauan(ListDin l, int x){
     IdxType ans;
     /* ALGORITMA */
     ans = IDX_UNDEF;
-    if (isListKicauanEmpty(l)){
+    if (isListDinamikEmpty(l)){
         return ans;
     }
     for (i=NEFF(l)-1; i>-1; i--){
@@ -138,7 +139,7 @@ IdxType indexOfListKicauan(ListDin l, int x){
 
 
 /* ********** OPERASI LAIN ********** */
-void copyListKicauan(ListDin lIn, ListDin *lOut){
+void copyListDinamik(ListDin lIn, ListDin *lOut){
 /* I.S. lIn terdefinisi tidak kosong, lOut sembarang */
 /* F.S. lOut berisi salinan dari lIn (identik, nEff dan capacity sama) */
 /* Proses : Menyalin isi lIn ke lOut */ 
@@ -146,16 +147,16 @@ void copyListKicauan(ListDin lIn, ListDin *lOut){
     /* KAMUS */
     IdxType i;
     /* ALGORITMA */
-    CreateListKicauan(lOut, CAPACITY(lIn));
+    CreateListDinamik(lOut, CAPACITY(lIn), ListDinType(lIn));
     NEFF(*lOut) = NEFF(lIn);
     for(i=0; i<NEFF(lIn); i++){
-        ELMTKicauan(*lOut, i) = ELMTKicauan(lIn, i);
+        ELMTDinamik(*lOut, i) = ELMTDinamik(lIn, i);
     }
 }
 
 /* ********** MENAMBAH DAN MENGHAPUS ELEMEN DI AKHIR ********** */
 /* ********* MENGUBAH UKURAN ARRAY ********* */
-void expandListKicauan(ListDin *l, int num){
+void expandListDinamik(ListDin *l, int num){
 /* Proses : Menambahkan capacity l sebanyak num */
 /* I.S. List sudah terdefinisi */
 /* F.S. Ukuran list bertambah sebanyak num */
@@ -164,17 +165,17 @@ void expandListKicauan(ListDin *l, int num){
     ListDin baru;
     int i;
     /* ALGORITMA */
-    CreateListKicauan(&baru, CAPACITY(*l)+num);
+    CreateListDinamik(&baru, CAPACITY(*l)+num, ListDinType(*l));
     // copyList(*l, &baru);
     for (i=0; i<NEFF(*l); i++){
-        ELMTKicauan(baru, i) = ELMTKicauan(*l, i);
+        ELMTDinamik(baru, i) = ELMTDinamik(*l, i);
     }
     NEFF(baru) = NEFF(*l);
-    copyListKicauan(baru, l);
-    dealocateListKicauan(&baru);
+    copyListDinamik(baru, l);
+    dealocateListDinamik(&baru);
 }
 
-void shrinkListKicauan(ListDin *l, int num){
+void shrinkListDinamik(ListDin *l, int num){
 /* Proses : Mengurangi capacity sebanyak num */
 /* I.S. List sudah terdefinisi, ukuran capacity > num, dan nEff < capacity - num. */
 /* F.S. Ukuran list berkurang sebanyak num. */
@@ -183,17 +184,17 @@ void shrinkListKicauan(ListDin *l, int num){
     ListDin baru;
     int i;
     /* ALGORITMA */
-    CreateListKicauan(&baru, CAPACITY(*l)-num);
+    CreateListDinamik(&baru, CAPACITY(*l)-num, ListDinType(*l));
     // copyList(*l, &baru);
     for (i=0; i<NEFF(*l); i++){
-        ELMTKicauan(baru, i) = ELMTKicauan(*l, i);
+        ELMTDinamik(baru, i) = ELMTDinamik(*l, i);
     }
     NEFF(baru) = NEFF(*l);
-    copyListKicauan(baru, l);
-    dealocateListKicauan(&baru);
+    copyListDinamik(baru, l);
+    dealocateListDinamik(&baru);
 }
 
-void compressListKicauan(ListDin *l){
+void compressListDinamik(ListDin *l){
 /* Proses : Mengubah capacity sehingga capacity = nEff */
 /* I.S. List tidak kosong */
 /* F.S. Ukuran capacity = nEff */
@@ -202,18 +203,18 @@ void compressListKicauan(ListDin *l){
     ListDin baru;
     int i;
     /* ALGORITMA */
-    CreateListKicauan(&baru, NEFF(*l));
+    CreateListDinamik(&baru, NEFF(*l), ListDinType(*l));
     // copyList(*l, &baru);
     for (i=0; i<NEFF(*l); i++){
-        ELMTKicauan(baru, i) = ELMTKicauan(*l, i);
+        ELMTDinamik(baru, i) = ELMTDinamik(*l, i);
     }
     NEFF(baru) = NEFF(*l);
-    copyListKicauan(baru, l);
-    dealocateListKicauan(&baru);
+    copyListDinamik(baru, l);
+    dealocateListDinamik(&baru);
 }
 
 /* *** Menambahkan elemen *** */
-void insertKicauanAt(ListDin *l, ElTypeListDin val, IdxType idx){
+void insertDinamikAt(ListDin *l, ElTypeListDin val, IdxType idx){
 /* Proses: Menambahkan val sebagai elemen list pada posisi idx, menggeser elemen setelahnya*/
 /* I.S. List l tidak kosong, mungkin penuh, idx effektif */
 /* F.S. Jika l penuh, kapasitas l menjadi 2 kalinya. Val adalah elemen terakhir l yang baru */
@@ -221,17 +222,17 @@ void insertKicauanAt(ListDin *l, ElTypeListDin val, IdxType idx){
     /* KAMUS */
     IdxType i;
     /* ALGORITMA */
-    if (isListKicauanFull(*l)){
-        expandListKicauan(l, CAPACITY(*l));
+    if (isListDinamikFull(*l)){
+        expandListDinamik(l, CAPACITY(*l));
     }
     NEFF(*l) = NEFF(*l) + 1;
-    for (i = getLastIdxListKicauan(*l); i > idx; i--){
-        ELMTKicauan(*l, i) = ELMTKicauan(*l, i-1);
+    for (i = getLastIdxListDinamik(*l); i > idx; i--){
+        ELMTDinamik(*l, i) = ELMTDinamik(*l, i-1);
     }
-    ELMTKicauan(*l, idx) = val;
+    ELMTDinamik(*l, idx) = val;
 }
 
-void insertKicauanLast(ListDin *l, ElTypeListDin val){
+void insertDinamikLast(ListDin *l, ElTypeListDin val){
 /* Proses: Menambahkan val sebagai elemen terakhir list */
 /* I.S. List l boleh kosong, mungkin penuh */
 /* F.S. Jika l penuh, kapasitas l menjadi 2 kalinya. Val adalah elemen terakhir l yang baru */
@@ -239,15 +240,15 @@ void insertKicauanLast(ListDin *l, ElTypeListDin val){
     /* KAMUS */
     
     /* ALGORITMA */
-    if (isListKicauanFull(*l)){
-        expandListKicauan(l, CAPACITY(*l));
+    if (isListDinamikFull(*l)){
+        expandListDinamik(l, CAPACITY(*l));
     }
     NEFF(*l) = NEFF(*l) + 1;
-    ELMTKicauan(*l, getLastIdxListKicauan(*l)) = val;
+    ELMTDinamik(*l, getLastIdxListDinamik(*l)) = val;
 }
 
 /* *** Menghapus elemen *** */
-void deleteKicauanAt(ListDin *l, ElTypeListDin *val, IdxType idx){
+void deleteDinamikAt(ListDin *l, ElTypeListDin *val, IdxType idx){
 /* Proses : Menghapus elemen list pada posisi idx, menggeser elemen setelahnya*/
 /* I.S. List tidak kosong, idx valid */
 /* F.S. val adalah nilai elemen terakhir l sebelum penghapusan, */
@@ -258,17 +259,17 @@ void deleteKicauanAt(ListDin *l, ElTypeListDin *val, IdxType idx){
     /* KAMUS */
     IdxType i;
     /* ALGORITMA */
-    *val = ELMTKicauan(*l, idx);
-    for (i = idx; i < getLastIdxListKicauan(*l); i++){
-        ELMTKicauan(*l, i) = ELMTKicauan(*l, i+1);
+    *val = ELMTDinamik(*l, idx);
+    for (i = idx; i < getLastIdxListDinamik(*l); i++){
+        ELMTDinamik(*l, i) = ELMTDinamik(*l, i+1);
     }
     NEFF(*l) = NEFF(*l) - 1;
-    if (listKicauanLength(*l) < (CAPACITY(*l) / 4)){
-        shrinkListKicauan(l, (CAPACITY(*l) / 2));
+    if (listDinamikLength(*l) < (CAPACITY(*l) / 4)){
+        shrinkListDinamik(l, (CAPACITY(*l) / 2));
     }
 }
 
-void deleteKicauanLast(ListDin *l, ElTypeListDin *val){
+void deleteDinamikLast(ListDin *l, ElTypeListDin *val){
 /* Proses : Menghapus elemen terakhir list */
 /* I.S. List tidak kosong */
 /* F.S. val adalah nilai elemen terakhir l sebelum penghapusan, */
@@ -279,34 +280,9 @@ void deleteKicauanLast(ListDin *l, ElTypeListDin *val){
     /* KAMUS */
     
     /* ALGORITMA */
-    *val = ELMTKicauan(*l, getLastIdxListKicauan(*l));
+    *val = ELMTDinamik(*l, getLastIdxListDinamik(*l));
     NEFF(*l) = NEFF(*l) - 1;
-    if (listKicauanLength(*l) < (CAPACITY(*l) / 4)){
-        shrinkListKicauan(l, (CAPACITY(*l) / 2));
+    if (listDinamikLength(*l) < (CAPACITY(*l) / 4)){
+        shrinkListDinamik(l, (CAPACITY(*l) / 2));
     }
-}
-
-/* ********** Get ********** */
-boolean getKicauanById(ListDin l, Kicauan *k, int id){
-    for (int i = 0; i < l.capacity; i++) {
-        if(ELMTKicauan(l, i).isValid) {
-            if(ELMTKicauan(l, i).id == id) {
-                *k = ELMTKicauan(l, i);
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-boolean getKicauanByUserId(ListDin l, Kicauan *k, int userId) {
-    for (int i = 0; i < l.capacity; i++) {
-        if(ELMTKicauan(l, i).isValid) {
-            if(ELMTKicauan(l, i).idPembuat == userId) {
-                *k = ELMTKicauan(l, i);
-                return true;
-            }
-        }
-    }
-    return false;
 }

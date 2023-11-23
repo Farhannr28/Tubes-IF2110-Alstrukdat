@@ -12,6 +12,8 @@
 #include <Utasan.h>
 #include <listlinier.h>
 #include <Simpan.h>
+#include <kicauan_methods.h>
+
 Word perintah;
 boolean isStop = false;
 Pengguna currentUser;
@@ -38,7 +40,7 @@ void greetings() {
   // TODO: load config
   // WARN: this should be ifNotLoaded
   CreateListPengguna(&listUser);
-  CreateListKicauan(&listKicauan, 10);
+  CreateListDinamik(&listKicauan, 10, KICAUAN);
   InvalidateUser(&currentUser);
   // WARN: max user asumsi 20
   createGraph(&networkPertemanan, 20);
@@ -363,22 +365,19 @@ void DoKicau() {
 }
 
 void DoKicauan() {
-  int i;
-  for (i=0; i<listKicauan.nEff; i++){
-		if(ELMTKicauan(listKicauan, i).isValid) {
-			int idPengkicau = ELMTKicauan(listKicauan, i).idPembuat;
-			boolean dariTeman = isTeman(networkPertemanan, currentUser.id, idPengkicau);
-			boolean dariSendiri = currentUser.id == idPengkicau;
-			if(dariSendiri || dariTeman) {
-				Pengguna Author;
-				if(dariSendiri) {
-						Author = currentUser;
-				} else {
-						GetUserById(listUser, &Author, idPengkicau);
-				} 
-				showKicauan(ELMTKicauan(listKicauan, i), Author.Nama);
-			} 
-		}
+  for (int i=0; i<listKicauan.nEff; i++){
+    int idPengkicau = ELMTDinamik(listKicauan, i).k.idPembuat;
+    boolean dariTeman = isTeman(networkPertemanan, currentUser.id, idPengkicau);
+    boolean dariSendiri = currentUser.id == idPengkicau;
+    if(dariSendiri || dariTeman) {
+            Pengguna Author;
+            if(dariSendiri) {
+              Author = currentUser;
+            } else {
+              GetUserById(listUser, &Author, idPengkicau);
+            } 
+            showKicauan(ELMTDinamik(listKicauan, i).k, Author.Nama);
+    } 
   }
 }
 
@@ -395,7 +394,8 @@ void DoSukaKicauan(Word idKicauWord) {
   boolean dariTeman = isTeman(networkPertemanan, currentUser.id, kicauan.idPembuat);
   boolean dariSendiri = (currentUser.id == kicauan.idPembuat);
   if(!UserIsPrivate(pengkicau) || dariTeman || dariSendiri) {
-		sukaKicauan(&kicauan);
+    sukaKicauan(&listKicauan, kicauan.id);
+    getKicauanById(listKicauan, &kicauan, idKicau);
     printf("Selamat! kicauan telah disukai!\n");
     printf("Detil kicauan:\n");
     showKicauan(kicauan, pengkicau.Nama);
@@ -416,7 +416,8 @@ void DoUbahKicauan(Word idKicauWord) {
   if(dariSendiri) {
     Word textKicauanBaru;
     PromptUser("Masukkan kicauan baru:\n", &textKicauanBaru);
-    ubahKicauan(&kicauan, textKicauanBaru);
+    ubahKicauan(&listKicauan, kicauan.id, textKicauanBaru);
+    getKicauanById(listKicauan, &kicauan, idKicau);
     printf("Selamat! kicauan telah diterbitkan!\n");
     printf("Detil kicauan:\n");
     showKicauan(kicauan, currentUser.Nama);
