@@ -288,7 +288,7 @@ void DoSetujuiPertemanan() {
     Address addressPenggunaTeratas = GetPermintaanTeratas(currentUser);
     GetUserByName(listUser, &p, DATA(addressPenggunaTeratas));
     Word namaPengguna = DATA(addressPenggunaTeratas);
-    int jumlahTemanPengguna = p.friendCount;
+    int jumlahTemanPengguna = PRIORITY(addressPenggunaTeratas);
 
     printf("| ");
     PrintWord(namaPengguna);
