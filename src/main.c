@@ -1,3 +1,4 @@
+#include <DSU.h>
 #include <Simpan.h>
 #include <Utasan.h>
 #include <boolean.h>
@@ -24,6 +25,7 @@ ListStatik listTagar;
 Graph networkPertemanan;
 ListDin listKicauan;
 ListLinearUtas ListUtas;
+DSU kelompokTeman;
 
 void greetings() {
   Word configFile;
@@ -45,6 +47,7 @@ void greetings() {
   CreateListStatik(&listUser, PENGGUNA);
   CreateListStatik(&listTagar, TAGARNODE);
   CreateListDinamik(&listKicauan, 10, KICAUAN);
+  CreateDSU(&kelompokTeman);
   InvalidateUser(&currentUser);
   // WARN: max user asumsi 20
   createGraph(&networkPertemanan, 20);
@@ -334,7 +337,8 @@ void DoSetujuiPertemanan() {
     if (WordCmp(response, "YA")) {
       Pengguna penggunaTeratas;
       GetUserByName(listUser, &penggunaTeratas, namaPengguna);
-      addTeman(&networkPertemanan, currentUser.id, penggunaTeratas.id);
+      addTeman(&networkPertemanan, &kelompokTeman, currentUser.id,
+               penggunaTeratas.id);
       printf("Permintaan pertemanan dari ");
       PrintWord(namaPengguna);
       printf(" telah disetujui. Selamat! Anda telah berteman dengan ");
@@ -379,8 +383,7 @@ void DoHapusTeman() {
   Word response;
   printf("Apakah Anda yakin ingin menghapus ");
   PrintWord(namaPengguna);
-  PromptUser(" dari daftar teman Anda? (YA/TIDAK)",
-             &response);
+  PromptUser(" dari daftar teman Anda? (YA/TIDAK)", &response);
   printf("\n");
   if (WordCmp(response, "YA")) {
     hapusTeman(&networkPertemanan, currentUser.id, teman.id);
@@ -608,19 +611,21 @@ void DoHapusUtas(Word IDUtasWord, Word indexWord) {
   boolean found = GetUserByName(listUser, &InfoPenulis, Penulis);
   if (pos == IDX_UNDEF) {
     printf("Utas tidak ditemukan!");
-  }
-  else{
-  if(InfoPenulis.id != currentUser.id){
-    printf("Anda tidak bisa menghapus kicauan dalam utas ini!");
-  }
-  else{
-    Hapus_Utas(IDUtas,index,&ListUtas);
-  }
+  } else {
+    if (InfoPenulis.id != currentUser.id) {
+      printf("Anda tidak bisa menghapus kicauan dalam utas ini!");
+    } else {
+      Hapus_Utas(IDUtas, index, &ListUtas);
+    }
   }
 }
 
 void DoCariKicauan(Word isiTagar) {
   showKicauanDenganTagar(listTagar, listUser, listKicauan, isiTagar);
+}
+
+void DoKelompokTeman() {
+  printKelompokTeman(listUser, kelompokTeman, currentUser);
 }
 
 void DoPerintah() {
@@ -676,6 +681,8 @@ void DoPerintah() {
     DoHapusUtas(args1, args2);
   } else if (WordCmp(action, "CARI_KICAUAN")) {
     DoCariKicauan(args1);
+  } else if (WordCmp(action, "KELOMPOK_TEMAN")) {
+    DoKelompokTeman();
   } else {
     printf("Perintah tidak valid!\n");
   }
