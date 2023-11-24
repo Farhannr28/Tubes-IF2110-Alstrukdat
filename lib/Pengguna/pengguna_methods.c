@@ -82,6 +82,17 @@ boolean GetMutableUserByName(ListStatik *l, Pengguna **p, Word nama) {
   return false;
 }
 
+boolean GetMutableUserById(ListStatik *l, Pengguna **p, int id) {
+  int length = ListStatikLength(*l);
+  for (int i = 0; i < length; i++) {
+    if (ELMTPengguna(*l, i).id == id) {
+      *p = &l->elements[i].content.p;
+      return true;
+    }
+  }
+  return false;
+}
+
 void DisplayProfile(Pengguna p) {
   Matriks m = p.FotoProfil;
   for (int i = 0; i < ROW_EFF(m); i++) {
@@ -274,4 +285,16 @@ int GetPenggunaIndex(ListStatik l, Word nama) {
         }
     }
     return -1; 
+}
+
+void CreatePenggunaFullInfo(Pengguna *p, Word nama, Word password, Word bio,
+                            Word noHP, Word weton, Word jenisAkun,
+                            Matriks fotoProfil) {
+  p->Nama = nama;
+  p->KataSandi = password;
+  p->BioAkun = bio;
+  p->NoHP = noHP;
+  p->Weton = weton;
+  p->JenisAkun = jenisAkun;
+  p->FotoProfil = fotoProfil;
 }
