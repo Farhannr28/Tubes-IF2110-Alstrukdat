@@ -175,6 +175,7 @@ boolean MuatKicau(char *namafolder, ListDin* ListKicauan, ListStatik ListUser, M
         Word Date,Month,Year,Hour,Minute,Second,DateText,TimeText;
         DATETIME D;
         Word null;
+        int dd,mm,yy,hh,minn,ss;
         for (i = 0; i < banyakKicau; i++) {
             ReadFileLine(&idKicau, fUser);
             ReadFileLine(&text, fUser);
@@ -182,7 +183,6 @@ boolean MuatKicau(char *namafolder, ListDin* ListKicauan, ListStatik ListUser, M
             ReadFileLine(&author, fUser);
             ReadFileLine(&dateTime, fUser);
             GetUserByName(ListUser, &Author, author);
-            int dd,mm,yy,hh,minn,ss;
             ParseWord(&dateTime,' ',&DateText,&TimeText);
             ParseWord(&DateText,'/',&Date,&Month,&Year);
             ParseWord(&TimeText,':',&Hour,&Minute,&Second);
@@ -207,8 +207,69 @@ boolean MuatKicau(char *namafolder, ListDin* ListKicauan, ListStatik ListUser, M
     fclose(fUser);
 }
 
-boolean MuatBalas(char *namafolder, ListDin* listKicauan){
-
+boolean MuatBalas(char *namafolder, ListDin* listKicauan, ListStatik ListUser){
+    FILE *fUser = fopen(namafolder, "r");
+    if (fUser == NULL) {
+        printf("Tidak ada file konfigurasi kicauan.\n");
+        return false;
+    } else {
+        Word banyakKicauWord;
+        ReadFileLine(&banyakKicauWord, fUser);
+        int banyakKicau;
+        banyakKicau = IntFromWord(banyakKicauWord);
+        int i;
+        Word idKicauWord;
+        Word banyakBalasWord;
+        int idKicau, banyakBalas;
+        int j;
+        Word firstLine;
+        Word parentWord, idWord;
+        int parent, idBalas;
+        Pengguna Author;
+        Word text, author, dateTime;
+        Word Date,Month,Year,Hour,Minute,Second,DateText,TimeText;
+        int dd,mm,yy,hh,minn,ss;
+        DATETIME D;
+        Balasan b;
+        TreeNode t;
+        Kicauan kicau;
+        for (i = 0; i < banyakKicau; i++) {
+            idKicau = IntFromWord(idKicauWord);
+            getKicauanById(*listKicauan, &kicau, idKicau);
+            banyakBalas = IntFromWord(banyakBalasWord);
+            for (j=0; j<banyakBalas; j++){
+                ReadFileLine(&firstLine, fUser);
+                ParseWord(&firstLine,' ',&parentWord,&idWord);
+                parent = IntFromWord(parentWord);
+                idBalas = IntFromWord(idWord);
+                ReadFileLine(&text, fUser);
+                ReadFileLine(&firstLine, fUser);
+                ReadFileLine(&author, fUser);
+                GetUserByName(ListUser, &Author, author);
+                ReadFileLine(&dateTime, fUser);
+                ParseWord(&dateTime,' ',&DateText,&TimeText);
+                ParseWord(&DateText,'/',&Date,&Month,&Year);
+                ParseWord(&TimeText,':',&Hour,&Minute,&Second);
+                dd = IntFromWord(Date);
+                mm = IntFromWord(Month);
+                yy = IntFromWord(Year);
+                hh = IntFromWord(Hour);
+                minn = IntFromWord(Minute);
+                ss = IntFromWord(Second);
+                CreateDateTime(&D,dd,mm,yy,hh,minn,ss);
+                b.id = idBalas;
+                b.idPembuat = Author.id;
+                b.author = Author.Nama;
+                b.text = text;
+                b.waktu = D;
+                t.info = b;
+                t.child = NULL;
+                t.sibling = NULL;
+                insertTreeNode(&t, kicau.treeBalasan, parent);
+            }
+        }
+    }
+    fclose(fUser);
 }
 
 boolean MuatDraf(char *namaFolder, ListStatik *listUser) {
