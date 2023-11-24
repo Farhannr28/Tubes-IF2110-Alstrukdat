@@ -28,10 +28,12 @@ void ReadFileLine(Word *w, FILE *file) {
   char currentChar;
   int i = 0;
   do {
-    w->TabWord[i] = currentChar;
-    currentChar = fgetc(file);
-    i++;
-    w->Length++;
+    if(currentChar != '\n') {
+      w->TabWord[i] = currentChar;
+      currentChar = fgetc(file);
+      i++;
+      w->Length++;
+    }
   } while (currentChar != '\n' && currentChar != EOF && w->Length < NMax);
 }
 

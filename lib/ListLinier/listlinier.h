@@ -32,7 +32,6 @@ typedef struct nodeUtas {
 #define IDUtasan(p) (p)->info.IDUtasan
 #define Variable(p) (p)->info.variable
 #define IDKicauan(p) (p)->info.IDKicauan
-#define TEXT(p) (p)->info.TextList
 #define KONTEN(p) (p)->text
 #define CurrTime(p) (p)->DateTime
 

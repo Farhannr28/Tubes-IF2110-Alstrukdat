@@ -121,7 +121,7 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
 }
 
 void simpanPengguna(char *namaFolder, ListStatik listUser, Graph networkPertemanan) {
-    FILE *fUser = createAndOpenFile(namaFolder, "/pengguna2.config");
+    FILE *fUser = createAndOpenFile(namaFolder, "/pengguna.config");
     if (fUser == NULL) {
         printf("Simpan gagal: file tidak dapat dibuat.\n");
     } else {

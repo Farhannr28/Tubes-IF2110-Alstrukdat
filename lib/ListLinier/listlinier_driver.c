@@ -7,9 +7,7 @@
 #include "../Stack/stack.h"
 #include "../Pengguna/pengguna.h"
 #include <stdio.h>
-#include "../Utasan/Utasan.h"
 #include "listlinier.h"
 int main(){
-    crea
     return 0;
 }

@@ -99,3 +99,48 @@ void GraphFromWord(Graph *graph, Word w) {
         wordIdx++;
     }
 }
+
+void SaveGraphToFile(Graph graph, FILE* file, int length) {
+    for (int i = 0; i < length; i++)
+    {
+        for (int j = 0; j < length; j++)
+        {
+            if((ELMT_GRAPH(graph, i, j) == 1) && (ELMT_GRAPH(graph, j, i) == 1)) {
+                fprintf(file, "1");
+            } else {
+                fprintf(file, "0");
+            }
+            if(j != length - 1) fprintf(file, " ");
+        }
+        fprintf(file, "\n");
+    }
+}
+
+int getRequestLength(Graph graph) {
+    int total = 0;
+    for (int i = 0; i < graph.simpul; i++)
+    {
+        for (int j = 0; j < graph.simpul; j++)
+        {
+            if(ELMT_GRAPH(graph, i, j) == 1) {
+                if(ELMT_GRAPH(graph, j, i) != 1) total++;
+            }
+        }
+    }
+    return total;
+}
+
+void SaveRequestToFile(Graph graph, FILE* file) {
+    int total = 0;
+    for (int i = 0; i < graph.simpul; i++)
+    {
+        for (int j = 0; j < graph.simpul; j++)
+        {
+            if(ELMT_GRAPH(graph, i, j) == 1) {
+                if(ELMT_GRAPH(graph, j, i) != 1) {
+                    fprintf(file, "%d %d 0", i, j);
+                }
+            }
+        }
+    }
+}

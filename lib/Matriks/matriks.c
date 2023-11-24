@@ -59,15 +59,16 @@ void MatriksFromWord(Matriks *m, Word w) {
 
 void saveMatrixToFile(Matriks m, FILE *file) {
     int i, j;
+    fprintf(file, "\n");
     for (i=0; i<ROW_EFF(m); i++) {
         for (j=0; j<COL_EFF(m)*2; j++) {
             if (j!=COL_EFF(m)-1) {
-                printf("%c", ELMT(m, i, j));
+                fprintf(file, "%c", ELMT(m, i, j));
             } else {
-                printf("%c", ELMT(m, i, j));
+                fprintf(file, "%c", ELMT(m, i, j));
             }
         }
-        printf("\n");
+        fprintf(file, "\n");
     }
 }
 

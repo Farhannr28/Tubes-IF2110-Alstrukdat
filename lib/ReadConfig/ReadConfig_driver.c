@@ -7,13 +7,12 @@
 #include "../MesinKarakter/charmachine.h"
 // #include "../Sederhana/ctime.h"
 #include "../Sederhana/datetime.h"
+#include "../ListStatik/liststatik.h"
+#include "../UndirectedGraph/graph.h"
 #include "string.h"
 //Contoh
 int main(){
-    ListLinearUtas listUtas;
-    CreateListLinearUtas(&listUtas);
-    MuatUtas("config",&listUtas);
-    printf("fungsi Selesai\n");
-    // PrintWord(W1);
-    Cetak_Utas(listUtas,1);
+    ListStatik listUser;
+    Graph networkPertemanan;
+    MuatPengguna("config/pengguna.config", &listUser, &networkPertemanan);
 }

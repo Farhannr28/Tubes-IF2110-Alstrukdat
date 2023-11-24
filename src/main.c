@@ -32,7 +32,7 @@ DSU kelompokTeman;
 MaxHeap fyb;
 
 void greetings() {
-  Word configFile;
+  Word configFolder;
   printf(".______    __    __  .______      .______    __  .______      \n"
          "|   _  \\  |  |  |  | |   _  \\     |   _  \\  |  | |   _  \\     \n"
          "|  |_)  | |  |  |  | |  |_)  |    |  |_)  | |  | |  |_)  |    \n"
@@ -44,18 +44,19 @@ void greetings() {
          "menggunakan metode (pengambilan data berupa) Focused Group "
          "Discussion kedua di zamannya.\n\n"
          "Silahkan masukan folder konfigurasi untuk dimuat: ");
-  GetWord(&configFile);
-  printf("\n");
-  // TODO: load config
-  // WARN: this should be ifNotLoaded
+  GetWord(&configFolder);
   CreateListStatik(&listUser, PENGGUNA);
   CreateListStatik(&listTagar, TAGARNODE);
   CreateListDinamik(&listKicauan, 10, KICAUAN);
   CreateDSU(&kelompokTeman);
   createMaxHeap(&fyb);
   InvalidateUser(&currentUser);
-  // WARN: max user asumsi 20
   createGraph(&networkPertemanan, 20);
+  printf("\n");
+  if(isDir(configFolder)) {
+    MuatPengguna(configFolder.TabWord, &listUser, &networkPertemanan);
+    MuatUtas(configFolder.TabWord, &ListUtas);
+  }   
   printf("File konfigurasi berhasil dimuat! Selamat berkicau!\n\n");
 }
 
@@ -921,7 +922,8 @@ void DoPerintah() {
       printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan "
              "BurBir.\n");
     } else {
-      SIMPANUTAS(ListUtas, "testing");
+      SIMPANUTAS(ListUtas, "config");
+      simpanPengguna("config", listUser, networkPertemanan);
     }
   } else if (WordCmp(action, "HAPUS_UTAS")) {
     if (!IsUserValid(currentUser)) {

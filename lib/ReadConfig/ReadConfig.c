@@ -13,6 +13,7 @@
 #include "../Stack/stack.h"
 #include "../MaxHeap/maxheap.h"
 #include "string.h"
+#include <sys/stat.h>
 // #include "../Sederhana/datetime.h"
 #include "ReadConfig.h"
 
@@ -25,9 +26,8 @@ boolean MuatUtas(char *namafolder, ListLinearUtas *l1){
     Word InputText;
     Word Penulis;
     Word jumlahutasan;
-    snprintf(configfile, sizeof(configfile), "../../config/utas.config");
     // printf("File %s\n",configfile);
-    fUtas = fopen(configfile,"r");
+    fUtas = fopen(namafolder,"r");
     if (fUtas == NULL) {
         printf("Tidak ada file konfigurasi utas.\n");
         sukses = false;
@@ -200,8 +200,8 @@ boolean MuatKicau(char *namafolder, ListDin* ListKicauan, ListStatik ListUser, M
             k.waktu = D;
             k.treeBalasan = NULL;
             k.tagar = null;
-            insertKicauanLast(&ListKicauan, k);
-            insertKicauanToHeap(&fyb, k);
+            insertKicauanLast(ListKicauan, k);
+            insertKicauanToHeap(fyb, k);
         }
     }
     fclose(fUser);
@@ -332,4 +332,13 @@ boolean MuatDraf(char *namaFolder, ListStatik *listUser) {
         }
     }
     fclose(fDraf);
+}
+
+boolean isDir(Word w) {
+    struct stat sb;
+    if (stat(w.TabWord, &sb) == 0 && S_ISDIR(sb.st_mode)) {
+        return true;
+    } else {
+        return false;
+    }
 }

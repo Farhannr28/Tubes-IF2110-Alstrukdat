@@ -38,4 +38,10 @@ void sendRequest(Graph *graph, int index_user_asal, int index_user_tujuan);
 
 void GraphFromWord(Graph *graph, Word w); 
 
+void SaveGraphToFile(Graph graph, FILE* file, int length);
+
+int getRequestLength(Graph graph);
+
+void SaveRequestToFile(Graph graph, FILE* file);
+
 #endif
