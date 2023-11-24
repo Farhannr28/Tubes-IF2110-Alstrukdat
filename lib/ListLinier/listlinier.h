@@ -6,6 +6,7 @@
 #include "../MesinKarakter/charmachine.h"
 #include "../Sederhana/ctime.h"
 #include "../Sederhana/datetime.h"
+#include "../utility/boolean.h"
 typedef struct nodeUtas* AddressUtas;
 typedef struct paragraph{
     DATETIME DateTime;
@@ -73,31 +74,7 @@ void insertLastListLinearUtas(ListLinearUtas *l, Utasan val);
 /* menambahkan elemen ListLinearUtas di akhir: elemen terakhir yang baru */
 /* bernilai val jika alokasi berhasil. Jika alokasi gagal: I.S.= F.S. */
 
-void insertAtListLinearUtas(ListLinearUtas *l, Utasan val, int idx);
-/* I.S. l tidak mungkin kosong, idx indeks yang valid dalam l, yaitu 0..length(l) */
-/* F.S. Melakukan alokasi sebuah elemen dan */
-/* menyisipkan elemen dalam ListLinearUtas pada indeks ke-idx (bukan menimpa elemen di i) */
-/* yang bernilai val jika alokasi berhasil. Jika alokasi gagal: I.S.= F.S. */
-
-/*** PENGHAPUSAN ELEMEN ***/
-void deleteFirstListLinearUtas(ListLinearUtas *l);
-/* I.S. ListLinearUtas l tidak kosong  */
-/* F.S. Elemen pertama ListLinearUtas dihapus: nilai info disimpan pada x */
-/*      dan alamat elemen pertama di-dealokasi */
-void deleteLastListLinearUtas(ListLinearUtas *l);
-/* I.S. ListLinearUtas tidak kosong */
-/* F.S. Elemen terakhir ListLinearUtas dihapus: nilai info disimpan pada x */
-/*      dan alamat elemen terakhir di-dealokasi */
-
-void deleteAtListLinearUtas(ListLinearUtas *l, int idx);
-/* I.S. ListLinearUtas tidak kosong, idx indeks yang valid dalam l, yaitu 0..length(l) */
-/* F.S. val diset dengan elemen l pada indeks ke-idx. */
-/*      Elemen l pada indeks ke-idx dihapus dari l */
-
-
-/****************** PROSES SEMUA ELEMEN ListLinearUtas ******************/
-
 int lengthListLinearUtas(ListLinearUtas l);
 /* Mengirimkan banyaknya elemen ListLinearUtas; mengirimkan 0 jika ListLinearUtas kosong */
-
+boolean isInList (ListLinearUtas l, int IDKicau);
 #endif

@@ -662,7 +662,11 @@ void DoUtas(Word idKicauWord) {
     if (currentUser.id != K.idPembuat) {
       // printf("IDnya %d dan %d\n",currentUser.id,K.id);
       printf("Utas ini bukan milik anda!\n");
-    } else {
+    }
+    else if (isInList(ListUtas,idKicau)){
+    printf("Utas sudah dibuat");
+  } 
+    else {
       Utas(idKicau, &ListUtas, currentUser.Nama);
     }
   }
