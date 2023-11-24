@@ -2,6 +2,7 @@
 #include "../DisjointSetUnion/DSU.h"
 #include "../PriorityQueue/prioqueue.h"
 #include "../pcolor/pcolor.h"
+#include "../UndirectedGraph/graph.h"
 #include "pengguna.h"
 
 int userId = 0;
@@ -145,10 +146,10 @@ void UpdateProfil(Pengguna *p, Matriks m) {
   }
 }
 
-boolean TambahTeman(Pengguna from, Pengguna *to) {
+boolean TambahTeman(Graph network, Pengguna from, Pengguna *to) {
   if (isEmpty(from.PermintaanBerteman)) {
     enqueue(&to->PermintaanBerteman, from.Nama,
-            length_queue(from.PermintaanBerteman));
+            jumlahTeman(network, from.id));
     return true;
   }
   return false;
@@ -168,25 +169,6 @@ void PrintListTeman(Pengguna p) {
     printf("\n");
     current = current->next;
   }
-
-
-  // PriorityQueue temp;
-  // CreatePriorityQueue(&temp);
-  // while (!isEmpty(p.PermintaanBerteman)) {
-  //   Address teman = GetPermintaanTeratas(p);
-  //   printf("| ");
-  //   PrintWord(DATA(teman));
-  //   printf("\n");
-  //   printf("| Jumlah teman: %d \n", PRIORITY(teman));
-  //   printf("\n");
-  //   enqueue(&temp, DATA(teman), PRIORITY(teman));
-  //   dequeue(&p.PermintaanBerteman);
-  // }
-  // while (!isEmpty(temp)) {
-  //   Address teman = FIRST_QUEUE(temp);
-  //   enqueue(&p.PermintaanBerteman, DATA(teman), PRIORITY(teman));
-  //   dequeue(&temp);
-  // }
 }
 
 /* Fungsi untuk menambahkan edge/sisi (hubungan pertemanan) pada graph */

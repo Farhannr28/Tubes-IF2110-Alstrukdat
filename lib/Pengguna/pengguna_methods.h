@@ -3,6 +3,7 @@
 
 #include "../DisjointSetUnion/DSU.h"
 #include "../ListStatik/liststatik.h"
+#include "../UndirectedGraph/graph.h"
 #include "pengguna.h"
 
 #define ELMTPengguna(l, i) ELMTStatikContent(l, i).p
@@ -24,7 +25,7 @@ void ChangePrivacy(Pengguna *p, boolean private_);
 boolean UserIsPrivate(Pengguna p);
 void CreateProfil(Matriks *m);
 void UpdateProfil(Pengguna *p, Matriks m);
-boolean TambahTeman(Pengguna from, Pengguna *to);
+boolean TambahTeman(Graph network, Pengguna from, Pengguna *to);
 Address GetPermintaanTeratas(Pengguna p);
 void PrintListTeman(Pengguna p);
 void hapusTeman(Graph *graph, int index_user_asal, int index_user_tujuan);

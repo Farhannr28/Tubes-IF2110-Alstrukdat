@@ -299,7 +299,7 @@ void DoTambahTeman() {
       printf(". Silakan setujui permintaan pertemanan tersebut.");
       printf(".\n");
     } else if (!isTeman(networkPertemanan, currentUser.id, friend->id)) {
-      boolean success = TambahTeman(currentUser, friend);
+      boolean success = TambahTeman(networkPertemanan, currentUser, friend);
       if (success) {
         printf("Permintaan pertemanan kepada ");
         PrintWord(namaPengguna);
@@ -362,8 +362,6 @@ void DoSetujuiPertemanan() {
       PrintWord(namaPengguna);
       printf(" telah disetujui. Selamat! Anda telah berteman dengan ");
       PrintWord(namaPengguna);
-      // currentUser.PermintaanBerteman->priority++;
-      // penggunaTeratas.PermintaanBerteman->priority++;
       dequeue(&currentUser.PermintaanBerteman);
       printf(".\n\n");
     } else {
