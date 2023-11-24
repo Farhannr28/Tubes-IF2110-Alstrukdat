@@ -28,11 +28,11 @@ boolean isIdxEff(Matriks m, IdxType i, IdxType j) {
 void displayMatrix(Matriks m) {
     int i, j;
     for (i=0; i<ROW_EFF(m); i++) {
-        for (j=0; j<COL_EFF(m); j++) {
-            if (j==0) {
-                printf("%d", ELMT(m, i, j));
+        for (j=0; j<COL_EFF(m)*2; j++) {
+            if (j!=COL_EFF(m)-1) {
+                printf("%c", ELMT(m, i, j));
             } else {
-                printf(" %d", ELMT(m, i, j));
+                printf("%c", ELMT(m, i, j));
             }
         }
         printf("\n");
@@ -56,3 +56,18 @@ void MatriksFromWord(Matriks *m, Word w) {
         } wordIdx++;
     }
 }
+
+void saveMatrixToFile(Matriks m, FILE *file) {
+    int i, j;
+    for (i=0; i<ROW_EFF(m); i++) {
+        for (j=0; j<COL_EFF(m)*2; j++) {
+            if (j!=COL_EFF(m)-1) {
+                printf("%c", ELMT(m, i, j));
+            } else {
+                printf("%c", ELMT(m, i, j));
+            }
+        }
+        printf("\n");
+    }
+}
+

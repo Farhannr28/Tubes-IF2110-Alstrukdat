@@ -47,7 +47,7 @@ FILE* createAndOpenFile(const char* folderName, const char* fileName) {
         if (mkdir(dirPath, 777) != 0) {
         #endif
             fprintf(stderr, "Failed to create directory: %s\n", dirPath);
-            return;
+            return NULL;
         }
     }
 
@@ -137,9 +137,8 @@ void simpanPengguna(char *namaFolder, ListStatik listUser, Graph networkPerteman
             WriteToFile(p.NoHP, fUser);
             WriteToFile(p.Weton, fUser);
             WriteToFile(p.JenisAkun, fUser);
-            Word fotoProfil;
-            WordFromMatriksProfil(&fotoProfil, p.FotoProfil);
-            PrintWord(fotoProfil);
+            /* Word fotoProfil = WordFromMatriksProfil(p.FotoProfil); */
+            /* PrintWord(fotoProfil); */
             /* WriteToFile(fotoProfil, fUser); */
         }
         /* Word pertemanan; */
@@ -168,7 +167,12 @@ void SimpanDraf (ListStatik listUser, const char *folderName) {
     str_copy(dirPath, folderName, sizeof(dirPath));
     struct stat st = {0};
     if (stat(dirPath, &st) == -1) {
+        #ifdef _WIN64
         if (mkdir(dirPath) != 0) {
+        #endif
+        #ifdef unix
+        if (mkdir(dirPath, 777) != 0) {
+        #endif
             fprintf(stderr, "Failed to create directory: %s\n", dirPath);
             return;
         }

@@ -46,5 +46,6 @@ void displayMatrix(Matriks m);
    dipisahkan sebuah spasi. Baris terakhir tidak diakhiri dengan newline */
 
 void MatriksFromWord(Matriks *m, Word w);
+void saveMatrixToFile(Matriks m, FILE *file);
 
 #endif
