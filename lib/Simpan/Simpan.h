@@ -17,5 +17,7 @@ void str_copy(char *dest, const char *src, size_t dest_size);
 void str_concat(char *dest, const char *src, size_t dest_size);
 void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName);
 void simpanPengguna(char *namafolder, ListStatik listUser, Graph networkPertemanan);
+void simpanKicauan(char *namafolder, ListDin* ListKicauan, ListStatik ListUser, MaxHeap* fyb);
 void SimpanDraf (ListStatik listUser, const char *folderName);
+void simpanBalasan(char *namafolder, ListDin* listKicauan, ListStatik ListUser);
 #endif

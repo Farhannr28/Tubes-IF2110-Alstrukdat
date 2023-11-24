@@ -1,6 +1,7 @@
 #include "../ListLinier/listlinier.h"
 #include "../MesinKarakter/charmachine.h"
 #include "../MesinKata/wordmachine.h"
+#include "../MaxHeap/maxheap.h"
 #include "../Pengguna/pengguna_methods.h"
 #include "../Sederhana/ctime.h"
 #include "../Sederhana/datetime.h"
@@ -144,6 +145,8 @@ void simpanPengguna(char *namaFolder, ListStatik listUser, Graph networkPerteman
     fclose(fUser);
 }
 
+void simpanKicauan(char *namafolder, ListDin* ListKicauan, ListStatik ListUser, MaxHeap* fyb){}
+
 void SimpanDraf (ListStatik listUser, const char *folderName) {
     char dirPath[1024];
     str_copy(dirPath, folderName, sizeof(dirPath));
@@ -195,3 +198,5 @@ void SimpanDraf (ListStatik listUser, const char *folderName) {
     }
     fclose(file);
 }
+
+void simpanBalasan(char *namafolder, ListDin* listKicauan, ListStatik ListUser){}
