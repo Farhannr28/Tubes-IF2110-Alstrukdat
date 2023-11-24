@@ -1,4 +1,3 @@
-# Compiler and compiler flags
 CC = gcc
 CFLAGS = -Wall
 
@@ -7,24 +6,14 @@ LIB_DIR = lib
 
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
 LIB_FILES = $(wildcard $(LIB_DIR)/**/*.c)
-
-OBJ_FILES = $(LIB_FILES:.c=.o)
+LIB_FILES_NON_DRIVER=$(filter-out %_driver.c,$(LIB_FILES)) 
 
 INCLUDES = $(addprefix -I, $(dir $(wildcard lib/*/)))
 
-all: $(OBJ_FILES)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ 
+all: $(LIB_FILES)
+	$(CC) $(CFLAGS) $(INCLUDES) -o tubes $(LIB_FILES_NON_DRIVER) $(SRC_DIR)/main.c
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
-
-test:
-	echo $(DIRECTORY)
-
-main: $(LIB_FILES)
-	$(CC) $(CFLAGS) $(INCLUDES) -o tubes $(filter-out %_driver.c,$(LIB_FILES)) $(SRC_DIR)/main.c
-
-clean:
-	rm -f $(OBJ_FILES) $(TARGET)
-
-.PHONY: all clean
+test: $(filter %_driver.c,$(LIB_FILES))
+	@$(foreach driver, $^, \
+		$(CC) $(CFLAGS) $(INCLUDES) -o $(patsubst %.c,%,$(notdir $(driver))) $(LIB_FILES_NON_DRIVER) $(driver); \
+	)
