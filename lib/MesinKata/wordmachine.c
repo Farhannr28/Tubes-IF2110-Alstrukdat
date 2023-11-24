@@ -30,7 +30,6 @@ void ReadFileLine(Word *w, FILE *file) {
   do {
     w->TabWord[i] = currentChar;
     currentChar = fgetc(file);
-    printf("%c", currentChar);
     i++;
     w->Length++;
   } while (currentChar != '\n' && currentChar != EOF && w->Length < NMax);
