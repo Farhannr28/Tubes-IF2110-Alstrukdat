@@ -35,6 +35,21 @@ void ReadFileLine(Word *w, FILE *file) {
   } while (currentChar != '\n' && currentChar != EOF && w->Length < NMax);
 }
 
+void ReadFileNLine(Word *w, FILE *file, int nLine) {
+  if (w->Length != 0)
+    w->Length = 0;
+  char currentChar;
+  for (int i = 0; i<nLine; i++) {
+    int j = w->Length;
+    do {
+      w->TabWord[j] = currentChar;
+      currentChar = fgetc(file);
+      j++;
+      w->Length++;
+    } while (currentChar != '\n' && currentChar != EOF && w->Length < NMax);
+  }
+}
+
 void GetWordButTrim(Word *w, char delim) {
   if (w->Length != 0)
     w->Length = 0;
@@ -189,4 +204,11 @@ Word WordFromInt(int num) {
   result.Length = numDigits;
 
   return result;
+}
+
+boolean isWordNumeric(Word w) {
+  for (int i = 0; i < w.Length; ++i) {
+    if (!(w.TabWord[i] >= '0' && w.TabWord[i] <= '9')) return false;
+  }
+  return true;
 }

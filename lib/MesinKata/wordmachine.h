@@ -36,5 +36,7 @@ void GetWordButTrim(Word *w, char delim);
 int IntFromWord(Word w);
 Word WordFromInt(int i);
 void ReadFileLine(Word *w, FILE *file);
+boolean isWordNumeric(Word w);
+void ReadFileNLine(Word *w, FILE *file, int nLine);
 
 #endif
