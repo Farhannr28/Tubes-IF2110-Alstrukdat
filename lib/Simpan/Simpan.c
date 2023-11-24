@@ -38,7 +38,12 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
     str_copy(dirPath, folderName, sizeof(dirPath));
     struct stat st = {0};
     if (stat(dirPath, &st) == -1) {
+        #ifdef _WIN64
         if (mkdir(dirPath) != 0) {
+        #endif
+        #ifdef unix
+        if (mkdir(dirPath, 777) != 0) {
+        #endif
             fprintf(stderr, "Failed to create directory: %s\n", dirPath);
             return;
         }
@@ -83,4 +88,7 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
         p = p->next;
     }
     fclose(file);
+}
+
+void simpanPengguna(char *namafolder, ListStatik listUser, Graph networkPertemanan) {
 }
