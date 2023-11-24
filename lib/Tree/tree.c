@@ -59,29 +59,6 @@ void deleteTree (BinTree p){
 	}
 }
 
-void insertTreeNode(TreeNode* n, BinTree t, int idParent){
-	if (isTreeEmpty(t)){
-		t = n;
-	} else {
-		AddressTreeNode parent;
-		AddressTreeNode temp;
-		if (idParent == -1){
-			parent = t;
-		} else {
-			parent = searchBalasanById(t, idParent);
-		}
-		if (noChild(parent)){
-			CHILD(parent) = n;
-		} else {
-			temp = CHILD(parent);
-			while (!noSibling(temp)){
-				temp = SIBL(temp);
-			}
-			SIBL(temp) = n;
-		}
-	}
-}
-
 /* ****** Display Tree ***** */
 void recursivePrint(BinTree p, int level, boolean* list){
 	if(!isTreeEmpty(p)){
@@ -114,4 +91,27 @@ AddressTreeNode searchBalasanById(BinTree t, int x){
 		ans = searchBalasanById(SIBL(t), x);
 	}
 	return ans;
+}
+
+void insertTreeNode(TreeNode* n, BinTree t, int idParent){
+	if (isTreeEmpty(t)){
+		t = n;
+	} else {
+		AddressTreeNode parent;
+		AddressTreeNode temp;
+		if (idParent == -1){
+			parent = t;
+		} else {
+			parent = searchBalasanById(t, idParent);
+		}
+		if (noChild(parent)){
+			CHILD(parent) = n;
+		} else {
+			temp = CHILD(parent);
+			while (!noSibling(temp)){
+				temp = SIBL(temp);
+			}
+			SIBL(temp) = n;
+		}
+	}
 }
