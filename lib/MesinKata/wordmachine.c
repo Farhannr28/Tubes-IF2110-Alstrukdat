@@ -50,6 +50,12 @@ void ReadFileNLine(Word *w, FILE *file, int nLine) {
   }
 }
 
+void WriteToFile(Word w, FILE *file) {
+  for (int i = 0; i < w.Length; i++) {
+    fprintf(file, "%c", w.TabWord[i]);
+  }
+}
+
 void GetWordButTrim(Word *w, char delim) {
   if (w->Length != 0)
     w->Length = 0;

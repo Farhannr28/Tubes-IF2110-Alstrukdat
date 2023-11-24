@@ -37,6 +37,7 @@ void CopyWordButTrim(char *currentChar, Word *w, char delim);
 void GetWordButTrim(Word *w, char delim);
 int IntFromWord(Word w);
 Word WordFromInt(int i);
+void WriteToFile(Word w, FILE *file);
 void ReadFileLine(Word *w, FILE *file);
 boolean isWordNumeric(Word w);
 void ReadFileNLine(Word *w, FILE *file, int nLine);
