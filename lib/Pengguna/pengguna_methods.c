@@ -159,23 +159,34 @@ Address GetPermintaanTeratas(Pengguna p) {
 }
 
 void PrintListTeman(Pengguna p) {
-  PriorityQueue temp;
-  CreatePriorityQueue(&temp);
-  while (!isEmpty(p.PermintaanBerteman)) {
-    Address teman = GetPermintaanTeratas(p);
+  Address current = p.PermintaanBerteman;
+  while (current != NULL) {
     printf("| ");
-    PrintWord(DATA(teman));
+    PrintWord(DATA(current));
     printf("\n");
-    printf("| Jumlah teman: %d \n", PRIORITY(teman));
+    printf("| Jumlah teman: %d \n", PRIORITY(current));
     printf("\n");
-    enqueue(&temp, DATA(teman), PRIORITY(teman));
-    dequeue(&p.PermintaanBerteman);
+    current = current->next;
   }
-  while (!isEmpty(temp)) {
-    Address teman = FIRST_QUEUE(temp);
-    enqueue(&p.PermintaanBerteman, DATA(teman), PRIORITY(teman));
-    dequeue(&temp);
-  }
+
+
+  // PriorityQueue temp;
+  // CreatePriorityQueue(&temp);
+  // while (!isEmpty(p.PermintaanBerteman)) {
+  //   Address teman = GetPermintaanTeratas(p);
+  //   printf("| ");
+  //   PrintWord(DATA(teman));
+  //   printf("\n");
+  //   printf("| Jumlah teman: %d \n", PRIORITY(teman));
+  //   printf("\n");
+  //   enqueue(&temp, DATA(teman), PRIORITY(teman));
+  //   dequeue(&p.PermintaanBerteman);
+  // }
+  // while (!isEmpty(temp)) {
+  //   Address teman = FIRST_QUEUE(temp);
+  //   enqueue(&p.PermintaanBerteman, DATA(teman), PRIORITY(teman));
+  //   dequeue(&temp);
+  // }
 }
 
 /* Fungsi untuk menambahkan edge/sisi (hubungan pertemanan) pada graph */
