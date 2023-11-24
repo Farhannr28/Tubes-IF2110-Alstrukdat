@@ -3,9 +3,9 @@
 #include "../Sederhana/datetime.h"
 #include "stack.h"
 
-void CreateDrafKicau(DrafKicau *D, Word text) {
+void CreateDrafKicau(DrafKicau *D, Word text, DATETIME date) {
     D->text = text;
-    D->waktu = GetCurrentDateTime();
+    D->waktu = date;
 }
 
 void DisplayDrafKicau(DrafKicau D) {

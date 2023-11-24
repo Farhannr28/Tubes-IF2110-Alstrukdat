@@ -28,7 +28,7 @@ typedef struct {
 #define InfoTop(S) (S).T[(S).TOP]
 
 /* Konstruktor DrafKicau */
-void CreateDrafKicau(DrafKicau *D, Word text);
+void CreateDrafKicau(DrafKicau *D, Word text, DATETIME date);
 
 /* Menampilkan Elemen stack */
 void DisplayDrafKicau(DrafKicau D);

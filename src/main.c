@@ -581,7 +581,7 @@ void DoBuatDraf() {
     printf("Draf telah berhasil dihapus!\n");
   } else if (WordCmp(command, "SIMPAN")) {
     DrafKicau drafkicauan;
-    CreateDrafKicau(&drafkicauan, textDrafKicauan);
+    CreateDrafKicau(&drafkicauan, textDrafKicauan, GetCurrentDateTime());
     Push(&currentUser.Draf, drafkicauan);
   } else if (WordCmp(command, "TERBIT")) {
     Kicauan kicauan;
