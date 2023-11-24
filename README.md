@@ -19,7 +19,7 @@ Program simulasi berbasis CLI (command-line interface). Program ini dibuat dalam
 - ADT Matriks
 - ADT List dengan Struktur Data Array Dinamik
 - ADT Mesin Karakter dan Mesin Kata
-- ADT Priority Queue/ADT Queue (pilih salah satu)
+- ADT Priority Queue
 - ADT Stack
 - ADT List dengan Struktur Data Berkait
 - ADT Tree
@@ -33,12 +33,16 @@ Program simulasi berbasis CLI (command-line interface). Program ini dibuat dalam
     git clone https://github.com/Farhannr28/Tubes-IF2110-Alstrukdat.git 
 
 2. Open WSL if you are using windows
-3. Change directory to the location where you clone the code
-4. Run command "make"
-5. If there's no error, there will be a file called "tubes"
-6. Run the file by typing "./tubes"
-7. Enjoy the application!
 
+3. Change directory to the location where you clone the code
+
+4. Run command "make"
+
+5. If there's no error, there will be a file called "tubes"
+
+6. Run the file by typing "./tubes"
+
+7. Enjoy the application!
 
 ## Contributors
 - 13320028 [Muhammad Sulthan Mazaya](#https://github.com/MSMazaya)
