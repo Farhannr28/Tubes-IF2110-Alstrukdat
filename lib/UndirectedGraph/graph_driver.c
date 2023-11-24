@@ -18,10 +18,21 @@ int main()
         printf("Test untuk isNoTeman\n");
         Graph G;
         CreateEmptyGraph(&G);
-        print("IsNoTeman User 1: ", isNoTeman(G,1));
-        printf("IsNoTeman User 1: ", isNoTeman(G,0));
-        printf("isNoTeman User 2: ", isNoTeman(G,1));
-        print("IsNoTeman User 20: ", isNoTeman(G,19));
+        if (isNoTeman(G,0) == true){
+            printf("IsNoTeman User 1: true\n");
+        } else {
+            printf("IsNoTeman User 1: false\n");
+        }
+        if (isNoTeman(G,1) == true){
+            printf("IsNoTeman User 2: true\n");
+        } else {
+            printf("IsNoTeman User 2: false\n");
+        }
+        if (isNoTeman(G,19) == true){
+            printf("IsNoTeman User 20: true\n");
+        } else {
+            printf("IsNoTeman User 20: false\n");
+        }
         break;
 
     case 2 :
@@ -35,11 +46,36 @@ int main()
                 printf("%d", ELMT_GRAPH(G,i,j));
             }
         }
-        printf("IsTeman User 1 with User 2: ", isTeman(G,0,1));
-        printf("isTeman User 2 with User 1: ", isTeman(G,1,0));
-        printf("IsTeman User 20 with User 19: ", isNoTeman(G,19,18));
-        printf("IsTeman User 6 with User 7: ", isNoTeman(G,5,6));
-        printf("IsTeman User 7 with User 6: ", isNoTeman(G,6,5));
+        if(isTeman(G,5,6) == true){
+            printf("User 6 dan user 7 adalah teman\n");
+        } else {
+            printf("User 6 dan user 7 bukan teman\n");
+        }
+        if(isTeman(G,6,5) == true){
+            printf("User 7 dan user 6 adalah teman\n");
+        } else {
+            printf("User 7 dan user 6 bukan teman\n");
+        }
+        if(isTeman(G,5,7) == true){
+            printf("User 6 dan user 8 adalah teman\n");
+        } else {
+            printf("User 6 dan user 8 bukan teman\n");
+        }
+        if(isTeman(G,7,5) == true){
+            printf("User 8 dan user 6 adalah teman\n");
+        } else {
+            printf("User 8 dan user 6 bukan teman\n");
+        }
+        if(isTeman(G,5,8) == true){
+            printf("User 6 dan user 9 adalah teman\n");
+        } else {
+            printf("User 6 dan user 9 bukan teman\n");
+        }
+        if(isTeman(G,8,5) == true){
+            printf("User 9 dan user 6 adalah teman\n");
+        } else {
+            printf("User 9 dan user 6 bukan teman\n");
+        }
         break;
     case 3:
         printf("Test case untuk jumlahTeman\n");
