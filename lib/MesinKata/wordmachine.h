@@ -6,6 +6,7 @@
 
 #include "../MesinKarakter/charmachine.h"
 #include "../utility/boolean.h"
+#include <stdio.h>
 
 #define NMax 280
 #define BLANK ' '
@@ -34,5 +35,6 @@ void CopyWordButTrim(char *currentChar, Word *w, char delim);
 void GetWordButTrim(Word *w, char delim);
 int IntFromWord(Word w);
 Word WordFromInt(int i);
+void ReadFileLine(Word *w, FILE *file);
 
 #endif
