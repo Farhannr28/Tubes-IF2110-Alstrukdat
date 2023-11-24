@@ -834,11 +834,26 @@ void DoPerintah() {
     DoUbahKicauan(args1);
     }
   } else if (WordCmp(action, "BALAS")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    } 
+    else{
     DoBalas(args1, args2);
+    }
   } else if (WordCmp(action, "BALASAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    } 
+    else{
     DoBalasan(args1);
+    }
   } else if (WordCmp(action, "HAPUS_BALASAN")) {
+    if(!IsUserValid(currentUser)){
+      printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
+    } 
+    else{
     DoHapusBalasan(args1, args2);
+    }
   } else if (WordCmp(action, "BUAT_DRAF")) {
     if(!IsUserValid(currentUser)){
       printf("Anda belum masuk! Masuk terlebih dahulu untuk menikmati layanan BurBir.\n");
