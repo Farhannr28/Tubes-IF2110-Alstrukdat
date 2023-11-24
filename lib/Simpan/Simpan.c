@@ -38,7 +38,7 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
     str_copy(dirPath, folderName, sizeof(dirPath));
     struct stat st = {0};
     if (stat(dirPath, &st) == -1) {
-        if (mkdir(dirPath) != 0) {
+        if (mkdir(dirPath, 777) != 0) {
             fprintf(stderr, "Failed to create directory: %s\n", dirPath);
             return;
         }
