@@ -129,35 +129,17 @@ void simpanPengguna(char *namaFolder, ListStatik listUser, Graph networkPerteman
         WriteToFile(jumlahUser, fUser);fprintf(fUser, "\n");
         for (int i = 0; i < IntFromWord(jumlahUser); i++) {
             Pengguna p = ELMTPengguna(listUser, i);
-            printf("INI NAMA DI SIMPAN:");
-            PrintWord(p.Nama);printf("\n");
             WriteToFile(p.Nama, fUser);
             WriteToFile(p.KataSandi, fUser);
             WriteToFile(p.BioAkun, fUser);
             WriteToFile(p.NoHP, fUser);
             WriteToFile(p.Weton, fUser);
             WriteToFile(p.JenisAkun, fUser);
-            /* Word fotoProfil = WordFromMatriksProfil(p.FotoProfil); */
-            /* PrintWord(fotoProfil); */
-            /* WriteToFile(fotoProfil, fUser); */
+            saveMatrixToFile(p.FotoProfil, fUser);
         }
-        /* Word pertemanan; */
-        /* ReadFileNLine(&pertemanan, fUser, IntFromWord(jumlahUser)); */
-        /* PrintWord(pertemanan); */
-        /* GraphFromWord(networkPertemanan, pertemanan); */
-        /* Word jumlahPermintaanTeman; */
-        /* ReadFileLine(&jumlahPermintaanTeman, fUser); */
-        /* for (int i = 0; i < IntFromWord(jumlahPermintaanTeman); i++) { */
-        /*     Word line, from, to, _; */
-        /*     ReadFileLine(&line, fUser); */
-        /*     ParseWord(&line, ' ', &from, &to, &_); */
-        /*     Pengguna *friend; */
-        /*     Pengguna currentUser; */
-        /*     GetMutableUserById(listUser, &friend, IntFromWord(from)); */
-        /*     GetUserById(*listUser, &currentUser, IntFromWord(to)); */
-        /*     TambahTeman(*networkPertemanan, currentUser, friend); */
-        /*     sendRequest(networkPertemanan, IntFromWord(from), IntFromWord(to)); */
-        /* } */
+        SaveGraphToFile(networkPertemanan, fUser, ListStatikLength(listUser));
+        fprintf(fUser, "%d\n", getRequestLength(networkPertemanan));
+        SaveRequestToFile(networkPertemanan, fUser);
     }
     fclose(fUser);
 }
