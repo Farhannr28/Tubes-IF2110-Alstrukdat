@@ -6,8 +6,8 @@
 #ifndef TREE_H
 #define TREE_H
 
-#include "boolean.h"
 #include "../Balasan/balasan.h"
+#include "boolean.h"
 
 /* Selektor */
 #define INFO(p) (p)->info
@@ -15,11 +15,11 @@
 #define CHILD(p) (p)->child
 
 typedef Balasan ElTypeTree;
-typedef struct treeNode* AddressTreeNode;
-typedef struct treeNode { 
-     ElTypeTree info;
-     AddressTreeNode sibling;
-     AddressTreeNode child;
+typedef struct treeNode *AddressTreeNode;
+typedef struct treeNode {
+  ElTypeTree info;
+  AddressTreeNode sibling;
+  AddressTreeNode child;
 } TreeNode;
 
 /* Definisi Tree */
@@ -27,38 +27,36 @@ typedef struct treeNode {
 
 typedef AddressTreeNode BinTree;
 
-boolean friendList[20];
-
 AddressTreeNode newTreeNode(ElTypeTree val);
 /* Alokasi sebuah address p, bernilai tidak NULL jika berhasil */
 /* Mengirimkan address hasil alokasi sebuah elemen bernilai val
-   Jika alokasi berhasil, maka address tidak NULL, dan misalnya 
-   menghasilkan p, maka p↑.info=val, p↑.left=NULL, p↑.right=NULL 
+   Jika alokasi berhasil, maka address tidak NULL, dan misalnya
+   menghasilkan p, maka p↑.info=val, p↑.left=NULL, p↑.right=NULL
    Jika alokasi gagal, mengirimkan NULL */
 
-void deallocTreeNode (AddressTreeNode p);
-/* I.S. p terdefinisi 
-   F.S. p dikembalikan ke sistem 
+void deallocTreeNode(AddressTreeNode p);
+/* I.S. p terdefinisi
+   F.S. p dikembalikan ke sistem
    Melakukan dealokasi/pengembalian address p */
 
-boolean isTreeEmpty (BinTree p);
+boolean isTreeEmpty(BinTree p);
 /* Mengirimkan true jika p adalah pohon biner yang kosong */
 
-boolean isOneElmt (BinTree p);
+boolean isOneElmt(BinTree p);
 /* Mengirimkan true jika p tidak kosong dan hanya terdiri atas 1 elemen */
 
-boolean noSibling (BinTree p);
+boolean noSibling(BinTree p);
 
-boolean noChild (BinTree p);
+boolean noChild(BinTree p);
 
-boolean isBinary (BinTree p);
-/* Mengirimkan true jika pohon biner tidak kosong, p adalah pohon biner: 
+boolean isBinary(BinTree p);
+/* Mengirimkan true jika pohon biner tidak kosong, p adalah pohon biner:
   mempunyai subpohon kiri dan subpohon kanan */
 
-void deleteTree (BinTree p);
+void deleteTree(BinTree p);
 /* Menghapus Tree secara cascade */
 
-void insertTreeNode(TreeNode* n, BinTree t, int idParent);
+void insertTreeNode(TreeNode *n, BinTree t, int idParent);
 
 /* ****** Display Tree ***** */
 void recursivePrint(BinTree p, int level);
