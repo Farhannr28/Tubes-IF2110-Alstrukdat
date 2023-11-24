@@ -56,69 +56,6 @@ void insertLastListLinearUtas(ListLinearUtas *l, Utasan val){
     }
 }
 
-void insertAtListLinearUtas(ListLinearUtas *l, Utasan val, int idx){
-    int i = 0;
-    if (idx== 0){
-        insertFirstListLinearUtas(l,val);
-    }else{
-        AddressUtas p= newNodeUtas(val);
-        if(p!= NULL){
-            AddressUtas insert = *l;
-            while (insert != NULL && i < idx -1)
-            {
-                i++;
-                insert= NEXT(insert);
-            }
-            if(insert != NULL){
-                NEXT(p)= NEXT(insert);
-                NEXT(insert) = p;
-            }
-        }
-    }
-}
-void deleteFirstListLinearUtas(ListLinearUtas *l){
-    AddressUtas p = *l;
-    *l = NEXT(p);
-    // *val = INFO(p);
-    free(p);
-}
-
-void deleteLastListLinearUtas(ListLinearUtas *l){
-    AddressUtas p = *l;
-    AddressUtas mark = NULL;
-    while (NEXT(p) != NULL){
-        mark = p;
-        p = NEXT (p);
-    }
-    if(mark==NULL){
-        *l = NULL;
-    }else{
-        NEXT(mark) =  NULL;
-    }
-    // *val= INFO(p);
-    free(p);
-}
-
-void deleteAtListLinearUtas(ListLinearUtas *l, int idx){
-    if(idx == 0){
-        deleteFirstListLinearUtas(l);
-    }else{
-        int i = 0;
-        AddressUtas p = *l;
-        AddressUtas mark = NULL;
-        while (p != NULL && i < idx){
-            i++;
-            mark = p;
-            p = NEXT(p);
-        }
-
-        if(p != NULL){
-            NEXT(mark) = NEXT(p);
-            free(p);
-        }
-    }
-}
-
 int lengthListLinearUtas(ListLinearUtas l){
 /* Mengirimkan banyaknya elemen ListLinearUtas; mengirimkan 0 jika ListLinearUtas kosong */
     int count = 0;
@@ -128,6 +65,20 @@ int lengthListLinearUtas(ListLinearUtas l){
         p = NEXT(p);
     }
     return count;
+}
+
+boolean isInList (ListLinearUtas l, int IDKicau){
+    int i = 0;
+    int pos = IDX_UNDEF;
+    AddressUtas p = l;
+    while(p != NULL && pos == IDX_UNDEF){
+        if(IDKicauan(p) == IDKicau){
+            return true;
+        }else{
+            p = NEXT(p);
+        }
+    }
+    return false;
 }
 
 

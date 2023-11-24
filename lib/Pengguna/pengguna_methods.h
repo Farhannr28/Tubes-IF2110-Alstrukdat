@@ -17,6 +17,7 @@ boolean IsUserValid(Pengguna p);
 boolean GetUserByName(ListStatik l, Pengguna *p, Word nama);
 boolean GetUserById(ListStatik l, Pengguna *p, int id);
 boolean GetMutableUserByName(ListStatik *l, Pengguna **p, Word nama);
+boolean GetMutableUserById(ListStatik *l, Pengguna **p, int id);
 void DisplayProfile(Pengguna p);
 void ChangeUserInfo(Pengguna *p, boolean isValid, Word Nama, Word KataSandi,
                     Word NoHP, Word BioAkun, Word Weton, Word JenisAkun,
@@ -36,4 +37,8 @@ boolean validateNoHP(Word noHp);
 boolean validateWeton(Word weton);
 void printKelompokTeman(ListStatik listUser, DSU d, Pengguna currentUser);
 int GetPenggunaIndex(ListStatik l, Word nama);
+void CreatePenggunaFullInfo(Pengguna *p, Word nama, Word password, Word bio,
+                            Word noHP, Word weton, Word jenisAkun,
+                            Matriks fotoProfil);
+
 #endif

@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "../utility/boolean.h"
+#include "../MesinKata/wordmachine.h"
 /*Max user hanya 20, maka jumlah teman max hanya 19 (dibulatkan ke 20). */
 #define MAX_SIMPUL 20
 
@@ -76,4 +77,25 @@ int jumlahTeman(Graph graph, int user_index)
 void sendRequest(Graph *graph, int index_user_asal, int index_user_tujuan)
 {
     ELMT_GRAPH(*graph, index_user_asal, index_user_tujuan) = 1;
+}
+
+void GraphFromWord(Graph *graph, Word w) {
+    // I.S assuming kalau misalnya m ini fixed size dan input selalu bener
+    createGraph(graph, 20);
+    int i = 0;
+    int j = 0;
+
+    int wordIdx = 0;
+    while (wordIdx < w.Length) {
+        if(w.TabWord[wordIdx] == '\n') {
+            j = 0;
+            i++;
+        } else {
+            if(w.TabWord[i] >= '0' && w.TabWord[i] <= '9') {
+                ELMT_GRAPH(*graph, i, j) = w.TabWord[wordIdx] - '0';
+                j++;
+            }
+        } 
+        wordIdx++;
+    }
 }

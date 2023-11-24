@@ -6,7 +6,7 @@
 #ifndef TREE_H
 #define TREE_H
 
-#include "boolean.h"
+#include "../utility/boolean.h"
 #include "../Balasan/balasan.h"
 
 /* Selektor */
@@ -26,8 +26,6 @@ typedef struct treeNode {
 /* Tree kosong p = NULL */
 
 typedef AddressTreeNode BinTree;
-
-boolean friendList[20];
 
 AddressTreeNode newTreeNode(ElTypeTree val);
 /* Alokasi sebuah address p, bernilai tidak NULL jika berhasil */
