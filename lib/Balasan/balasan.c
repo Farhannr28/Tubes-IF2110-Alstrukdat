@@ -6,7 +6,7 @@
 #include "../MesinKarakter/charmachine.h"
 #include "../Sederhana/datetime.h"
 
-int idBalasan = 0;
+int idBalasan = 1;
 
 void createBalasan(Balasan *b, int authorId, Word Author, Word balas){
     b->id = idBalasan;

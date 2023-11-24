@@ -56,8 +56,6 @@ boolean isBinary (BinTree p);
 void deleteTree (BinTree p);
 /* Menghapus Tree secara cascade */
 
-void insertTreeNode(TreeNode* n, BinTree t, int idParent);
-
 /* ****** Display Tree ***** */
 void recursivePrint(BinTree p, int level, boolean* list);
 
@@ -67,4 +65,6 @@ void printTree(BinTree p, boolean* list);
 
 /* Search Balasan */
 AddressTreeNode searchBalasanById(BinTree t, int id);
+
+void insertTreeNode(TreeNode* n, BinTree t, int idParent);
 #endif

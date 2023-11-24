@@ -172,10 +172,9 @@ boolean MuatKicau(char *namafolder, ListDin* ListKicauan, ListStatik ListUser, M
         Kicauan k;
         Pengguna Author;
         Word idKicau, text, like, author, dateTime;
-        Word DateText, TimeText;
         Word Date,Month,Year,Hour,Minute,Second,DateText,TimeText;
         DATETIME D;
-        Word Blank;
+        Word null;
         for (i = 0; i < banyakKicau; i++) {
             ReadFileLine(&idKicau, fUser);
             ReadFileLine(&text, fUser);
@@ -200,7 +199,7 @@ boolean MuatKicau(char *namafolder, ListDin* ListKicauan, ListStatik ListUser, M
             k.like = IntFromWord(like);
             k.waktu = D;
             k.treeBalasan = NULL;
-            k.tagar = Blank;
+            k.tagar = null;
             insertKicauanLast(&ListKicauan, k);
             insertKicauanToHeap(&fyb, k);
         }
