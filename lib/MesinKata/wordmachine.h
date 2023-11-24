@@ -28,6 +28,8 @@ boolean WordCmp(Word word, const char compare[]);
 void readParagraph(Word *input);
 void AssignWord(Word *word, const char chars[]);
 void AssignWordFromWord(Word from, Word *to);
+/* Fungsi untuk menggabungkan Word result dan concat dan menyimpan ke result */
+void ConcatWordWithSpace(Word *result, Word concat);
 void GetCharsFromWord(Word word, char *chars);
 void ParseWord(Word *source, char delimiter, ...);
 boolean WordCmpWord(Word w1, Word w2);

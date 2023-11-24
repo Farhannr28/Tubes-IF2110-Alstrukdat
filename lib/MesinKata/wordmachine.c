@@ -179,6 +179,15 @@ void AssignWordFromWord(Word from, Word *to) {
   to->Length = from.Length;
 }
 
+void ConcatWordWithSpace(Word *result, Word concat) {
+  result->TabWord[result->Length+1] = ' ';
+  result->Length++;
+  for (int i = 0; i < concat.Length; i++) {
+    result->TabWord[i+result->Length] = concat.TabWord[i];
+  }
+  result->Length += concat.Length;
+}
+
 int IntFromWord(Word w) {
   int result = 0;
   for (int i = 0; i < w.Length; ++i) {
