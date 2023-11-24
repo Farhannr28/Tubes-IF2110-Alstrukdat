@@ -16,6 +16,6 @@ test: $(filter %_driver.c,$(LIB_FILES))
 	)
 
 all: $(LIB_FILES)
-	echo "$(CC) $(CFLAGS) $(INCLUDES) -o tubes $(filter-out %_driver.c,$(LIB_FILES)) $(SRC_DIR)/main.c"
+	$(CC) $(CFLAGS) $(INCLUDES) -o tubes $(filter-out %_driver.c,$(LIB_FILES)) $(SRC_DIR)/main.c
 
 .PHONY: all clean
