@@ -22,6 +22,20 @@ void GetWord(Word *w) {
   }
 }
 
+void ReadFileLine(Word *w, FILE *file) {
+  if (w->Length != 0)
+    w->Length = 0;
+  char currentChar;
+  int i = 0;
+  do {
+    w->TabWord[i] = currentChar;
+    currentChar = fgetc(file);
+    printf("%c", currentChar);
+    i++;
+    w->Length++;
+  } while (currentChar != '\n' && currentChar != EOF && w->Length < NMax);
+}
+
 void GetWordButTrim(Word *w, char delim) {
   if (w->Length != 0)
     w->Length = 0;

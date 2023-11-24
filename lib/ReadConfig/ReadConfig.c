@@ -10,7 +10,7 @@
 // #include "../Sederhana/datetime.h"
 #include "ReadConfig.h"
 
-boolean MuatUtas(char *namafolder,ListLinearUtas *l1){
+boolean MuatUtas(char *namafolder, ListLinearUtas *l1){
     FILE *fUtas;
     boolean sukses = true;
     Utasan Utas;
@@ -106,4 +106,22 @@ boolean MuatUtas(char *namafolder,ListLinearUtas *l1){
     }
     fclose(fUtas);
     return sukses;
+}
+
+boolean MuatPengguna(char *namafolder, ListStatik* listUser) {
+    FILE *fUser = fopen(namafolder, "r");
+    if (fUser == NULL) {
+        printf("Tidak ada file konfigurasi pengguna.\n");
+        return false;
+    } else {
+        Word jumlahUser;
+        ReadFileLine(&jumlahUser, fUser);
+        for (int i = 0; i < IntFromWord(jumlahUser); i++) {
+            Word nama, password, bio, noHP, weton, jenisAkun;
+            ReadFileLine(&nama, fUser);
+            ReadFileLine(&password, fUser);
+            ReadFileLine(&bio, fUser);
+        }
+    }
+    fclose(fUser);
 }
