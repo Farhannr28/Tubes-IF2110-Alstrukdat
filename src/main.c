@@ -542,12 +542,13 @@ void DoBalasan(Word idKicauWord){
       printf("Belum terdapat balasan apapun pada kicauan tersebut. Yuk balas kicauan tersebut!");
     } else {
       int i;
+      boolean friendList[20];
       for (i=0; i<20; i++){
         friendList[i] = isTeman(networkPertemanan, currentUser.id, ELMTPengguna(listUser, i).id);
       }
       friendList[currentUser.id] = true;
       printf("\n");
-      printTree(tree);
+      printTree(tree, &friendList);
     }
   }
 }
@@ -567,7 +568,7 @@ void DoHapusBalasan(Word idKicauWord, Word idBalasWord){
     printf("Hei, ini balasan punya siapa? Jangan dihapus ya!");
   } else {
     deleteTree(nodeAddress);
-    print("Balasan berhasil dihapus\n");
+    printf("Balasan berhasil dihapus\n");
   }
 }
 

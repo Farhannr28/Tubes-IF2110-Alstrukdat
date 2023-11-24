@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "tree.h"
 
-boolean friendList[20];
-
 AddressTreeNode newTreeNode(ElTypeTree val){
 /* Alokasi sebuah address p, bernilai tidak NULL jika berhasil */
 /* Mengirimkan address hasil alokasi sebuah elemen bernilai val
@@ -85,19 +83,19 @@ void insertTreeNode(TreeNode* n, BinTree t, int idParent){
 }
 
 /* ****** Display Tree ***** */
-void recursivePrint(BinTree p, int level){
+void recursivePrint(BinTree p, int level, boolean* list){
 	if(!isTreeEmpty(p)){
 		Balasan b = INFO(p);
-		showBalasan(b, level, friendList[b.idPembuat]);
-		recursivePrint(CHILD(p), level + 1);
-		recursivePrint(SIBL(p), level);
+		showBalasan(b, level, list[b.idPembuat]);
+		recursivePrint(CHILD(p), level + 1, list);
+		recursivePrint(SIBL(p), level, list);
 	}
 }
 
-void printTree(BinTree p){
+void printTree(BinTree p, boolean* list){
 /* I.S. p terdefinisi, ada jarak indentasi (spasi) */
 /* F.S. Semua simpul p sudah ditulis dengan indentasi (spasi) */
-	recursivePrint(p, 0);
+	recursivePrint(p, 0, list);
 }
 
 /* Searching Balasan */

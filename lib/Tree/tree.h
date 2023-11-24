@@ -61,9 +61,9 @@ void deleteTree (BinTree p);
 void insertTreeNode(TreeNode* n, BinTree t, int idParent);
 
 /* ****** Display Tree ***** */
-void recursivePrint(BinTree p, int level);
+void recursivePrint(BinTree p, int level, boolean* list);
 
-void printTree(BinTree p);
+void printTree(BinTree p, boolean* list);
 /* I.S. p terdefinisi, ada jarak indentasi (spasi) */
 /* F.S. Semua simpul p sudah ditulis dengan indentasi (spasi) */
 
