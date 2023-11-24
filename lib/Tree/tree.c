@@ -84,18 +84,25 @@ AddressTreeNode searchBalasanById(BinTree t, int x){
 		return t;
 	}
 	AddressTreeNode ans = NULL;
+	AddressTreeNode temp;
 	if(!noChild(t)){
-		ans = searchBalasanById(CHILD(t), x);
+		temp = searchBalasanById(CHILD(t), x);
+		if (temp != NULL){
+			ans = temp;
+		}
 	}
 	if(!noSibling(t)){
-		ans = searchBalasanById(SIBL(t), x);
+		temp = searchBalasanById(SIBL(t), x);
+		if (temp != NULL){
+			ans = temp;
+		}
 	}
 	return ans;
 }
 
-void insertTreeNode(TreeNode* n, BinTree t, int idParent){
-	if (isTreeEmpty(t)){
-		t = n;
+void insertTreeNode(TreeNode* n, BinTree* t, int idParent){
+	if (isTreeEmpty(*t)){
+		*t = n;
 	} else {
 		AddressTreeNode parent;
 		AddressTreeNode temp;

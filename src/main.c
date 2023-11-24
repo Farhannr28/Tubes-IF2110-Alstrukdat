@@ -518,7 +518,7 @@ void DoBalas(Word idKicauWord, Word idBalasWord){
         Word author = currentUser.Nama;
         createBalasan(&newBalasan, currentUser.id, author, inputBalasan);
         AddressTreeNode newNode = newTreeNode(newBalasan);
-        insertTreeNode(newNode, kicau.treeBalasan, idBalas);
+        insertTreeNode(newNode, &kicau.treeBalasan, idBalas);
         printf("Selamat! balasan telah diterbitkan!\n");
         printf("Detil balasan: ");
         showBalasan(newBalasan, 0, true);
@@ -536,7 +536,7 @@ void DoBalas(Word idKicauWord, Word idBalasWord){
       Word author = currentUser.Nama;
       createBalasan(&newBalasan, currentUser.id, author, inputBalasan);
       AddressTreeNode newNode = newTreeNode(newBalasan);
-      insertTreeNode(newNode, kicau.treeBalasan, idBalas);
+      insertTreeNode(newNode, &kicau.treeBalasan, idBalas);
       printf("Selamat! balasan telah diterbitkan!\n");
       printf("Detil balasan: ");
       showBalasan(newBalasan, 0, true);

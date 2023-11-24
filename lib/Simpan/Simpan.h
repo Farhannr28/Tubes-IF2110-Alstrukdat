@@ -3,6 +3,7 @@
 #include "../ListLinier/listlinier.h"
 #include "../MesinKarakter/charmachine.h"
 #include "../MesinKata/wordmachine.h"
+#include "../MaxHeap/maxheap.h"
 #include "../Sederhana/ctime.h"
 #include "../Sederhana/datetime.h"
 #include "../utility/boolean.h"
