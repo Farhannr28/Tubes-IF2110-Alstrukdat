@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "../utility/boolean.h"
+#include "../MesinKata/wordmachine.h"
 /*Max user hanya 20, maka jumlah teman max hanya 19 (dibulatkan ke 20). */
 #define MAX_SIMPUL 20
 
@@ -34,5 +35,7 @@ boolean isTeman(Graph graph, int index_user_asal, int index_user_tujuan);
 int jumlahTeman(Graph graph, int user_index);
 
 void sendRequest(Graph *graph, int index_user_asal, int index_user_tujuan);
+
+void GraphFromWord(Graph *graph, Word w); 
 
 #endif

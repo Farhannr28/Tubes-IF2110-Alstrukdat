@@ -6,6 +6,8 @@
 #include "../MesinKarakter/charmachine.h"
 #include "../Sederhana/ctime.h"
 #include "../Sederhana/datetime.h"
+#include "../Pengguna/pengguna_methods.h"
+#include "../UndirectedGraph/graph.h"
 #include "string.h"
 // #include "../Sederhana/datetime.h"
 #include "ReadConfig.h"
@@ -108,7 +110,7 @@ boolean MuatUtas(char *namafolder, ListLinearUtas *l1){
     return sukses;
 }
 
-boolean MuatPengguna(char *namafolder, ListStatik* listUser) {
+boolean MuatPengguna(char *namafolder, ListStatik* listUser, Graph* networkPertemanan) {
     FILE *fUser = fopen(namafolder, "r");
     if (fUser == NULL) {
         printf("Tidak ada file konfigurasi pengguna.\n");
@@ -117,10 +119,36 @@ boolean MuatPengguna(char *namafolder, ListStatik* listUser) {
         Word jumlahUser;
         ReadFileLine(&jumlahUser, fUser);
         for (int i = 0; i < IntFromWord(jumlahUser); i++) {
-            Word nama, password, bio, noHP, weton, jenisAkun;
+            Word nama, password, bio, noHP, weton, jenisAkun, fotoProfil;
             ReadFileLine(&nama, fUser);
             ReadFileLine(&password, fUser);
             ReadFileLine(&bio, fUser);
+            ReadFileLine(&noHP, fUser);
+            ReadFileLine(&weton, fUser);
+            ReadFileLine(&jenisAkun, fUser);
+            ReadFileNLine(&fotoProfil, fUser, 5);
+            Matriks mFotoProfil;
+            MatriksFromWord(&mFotoProfil, fotoProfil);
+            Pengguna p;
+            CreatePenggunaFullInfo(&p, nama, password, bio, noHP, weton, jenisAkun, mFotoProfil);
+            insertLastListPengguna(listUser, p);
+        }
+        Word pertemanan;
+        ReadFileNLine(&pertemanan, fUser, IntFromWord(jumlahUser));
+        PrintWord(pertemanan);
+        GraphFromWord(networkPertemanan, pertemanan);
+        Word jumlahPermintaanTeman;
+        ReadFileLine(&jumlahPermintaanTeman, fUser);
+        for (int i = 0; i < IntFromWord(jumlahPermintaanTeman); i++) {
+            Word line, from, to, _;
+            ReadFileLine(&line, fUser);
+            ParseWord(&line, ' ', &from, &to, &_);
+            Pengguna *friend;
+            Pengguna currentUser;
+            GetMutableUserById(listUser, &friend, IntFromWord(from));
+            GetUserById(*listUser, &currentUser, IntFromWord(to));
+            TambahTeman(*networkPertemanan, currentUser, friend);
+            sendRequest(networkPertemanan, IntFromWord(from), IntFromWord(to));
         }
     }
     fclose(fUser);

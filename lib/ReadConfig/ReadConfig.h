@@ -10,6 +10,6 @@
 #include "../utility/boolean.h"
 
 boolean MuatUtas(char *namafolder, ListLinearUtas *l1);
-boolean MuatPengguna(char *namafolder, ListStatik* listUser);
+boolean MuatPengguna(char *namafolder, ListStatik* listUser, Graph* networkPertemanan);
 
 #endif
