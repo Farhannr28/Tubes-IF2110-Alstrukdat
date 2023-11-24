@@ -10,6 +10,7 @@
 #include "../UndirectedGraph/graph.h"
 #include "../Kicauan/kicauan.h"
 #include "../Kicauan/kicauan_methods.h"
+#include "../Stack/stack.h"
 #include "../MaxHeap/maxheap.h"
 #include "string.h"
 // #include "../Sederhana/datetime.h"
@@ -209,4 +210,66 @@ boolean MuatKicau(char *namafolder, ListDin* ListKicauan, ListStatik ListUser, M
 
 boolean MuatBalas(char *namafolder, ListDin* listKicauan){
 
+}
+
+boolean MuatDraf(char *namaFolder, ListStatik *listUser) {
+    FILE *fDraf = fopen(namaFolder, "r");
+    if (fDraf == NULL) {
+        printf("Tidak ada file konfigurasi Draf.\n");
+        return false;
+    } else {
+        Word jumlahDraf;
+        ReadFileLine(&jumlahDraf, fDraf);
+        for (int i=0; i<IntFromWord(jumlahDraf); i++) {
+            Word info;
+            ReadFileLine(&info, fDraf);
+            Word nama, banyakDraf, parse1, parse2, parse3, parse4;
+            ParseWord(&info, ' ', &parse1, &parse2, &parse3, &parse4); // Asumsi nama tidak ada yang > 3 kata
+            if (isWordNumeric(parse2)) {
+                AssignWordFromWord(parse1, &nama);
+                AssignWordFromWord(parse2, &banyakDraf);
+            } else if (isWordNumeric(parse3)) {
+                ConcatWordWithSpace(&parse1, parse2);
+                AssignWordFromWord(parse1, &nama);
+                AssignWordFromWord(parse3, &banyakDraf);
+            } else {
+                ConcatWordWithSpace(&parse1, parse2);
+                ConcatWordWithSpace(&parse1, parse3);
+                AssignWordFromWord(parse1, &nama);
+                AssignWordFromWord(parse4, &banyakDraf);
+            }
+            int j=0;
+            boolean done=false;
+            Word textDraf, dateTimeDraf;
+            while (j<ListStatikLength(*listUser) && !done) {
+                if (WordCmpWord(ELMTPengguna(*listUser, i).Nama, nama)) {
+                    Stack S;
+                    CreateStack(&S);
+                    for (int k=0; k<IntFromWord(banyakDraf); k++) {
+                        DATETIME D;
+                        DrafKicau draf;
+                        ReadFileLine(&textDraf, fDraf);
+                        ReadFileLine(&dateTimeDraf, fDraf);
+                        Word wDay, wMonth, wYear, wHour, wMinute, wSecond, wDate, wTime;
+                        int dd, mm, yy, hh, min, ss;
+                        ParseWord(&dateTimeDraf, ' ', &wDate, &wTime);
+                        ParseWord(&wDate, '/', &wDay, &wMonth, &wYear);
+                        ParseWord(&wTime, ':', &wHour, &wMinute, &wSecond);
+                        dd = IntFromWord(wDay);
+                        mm = IntFromWord(wMonth);
+                        yy = IntFromWord(wYear);
+                        hh = IntFromWord(wHour);
+                        min = IntFromWord(wMinute);
+                        ss = IntFromWord(wSecond);
+                        CreateDateTime(&D, dd, mm, yy, hh, min, ss);
+                        CreateDrafKicau(&draf, textDraf, D);
+                        S.T[IntFromWord(banyakDraf)-1] = draf;
+                    }
+                    Top(S) = IntFromWord(banyakDraf)-1;
+                }
+                i++;
+            }
+        }
+    }
+    fclose(fDraf);
 }

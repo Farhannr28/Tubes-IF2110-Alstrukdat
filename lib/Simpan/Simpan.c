@@ -1,8 +1,10 @@
 #include "../ListLinier/listlinier.h"
 #include "../MesinKarakter/charmachine.h"
 #include "../MesinKata/wordmachine.h"
+#include "../Pengguna/pengguna_methods.h"
 #include "../Sederhana/ctime.h"
 #include "../Sederhana/datetime.h"
+#include "../Stack/stack.h"
 #include "../utility/boolean.h"
 #include "../Utasan/Utasan.h"
 
@@ -91,4 +93,51 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
 }
 
 void simpanPengguna(char *namafolder, ListStatik listUser, Graph networkPertemanan) {
+}
+
+void SimpanDraf (ListStatik listUser, const char *folderName) {
+    char dirPath[1024];
+    str_copy(dirPath, folderName, sizeof(dirPath));
+    struct stat st = {0};
+    if (stat(dirPath, &st) == -1) {
+        if (mkdir(dirPath) != 0) {
+            fprintf(stderr, "Failed to create directory: %s\n", dirPath);
+            return;
+        }
+    }
+
+    char filePath[1024];
+    str_copy(filePath, dirPath, sizeof(filePath));
+    str_concat(filePath, "/draf.config", sizeof(filePath));
+    printf("%s\n",filePath);
+    FILE *file = fopen(filePath, "w");
+    if (file == NULL) {
+        fprintf(stderr, "Unable to open file %s for writing.\n", filePath);
+        return;
+    }
+    int countUserWithDraf = 0, i, j;
+    int lengthListUser = ListStatikLength(listUser);
+    for (i=0; i<lengthListUser; i++) {
+        if (!IsEmptyStack(ELMTPengguna(listUser, i).Draf)) {
+            countUserWithDraf++;
+        }
+    }
+    fprintf(file, "%d\n", countUserWithDraf);
+    
+    char namaPengguna[50], drafDateTime[20], drafText[250];
+    int lengthDrafUser;
+    for (i=0; i<lengthListUser; i++) {
+        if (!IsEmptyStack(ELMTPengguna(listUser, i).Draf)) {
+            GetCharsFromWord(ELMTPengguna(listUser, i).Nama, namaPengguna);
+            lengthDrafUser = Top(ELMTPengguna(listUser, i).Draf)+1;
+            fprintf(file, "%s %d\n", namaPengguna, lengthDrafUser);
+
+            for (j=lengthDrafUser; j>1; j--) {
+                GetCharsFromWord(ELMTPengguna(listUser, i).Draf.T[j-1].text, drafText);
+                format_datetime(&ELMTPengguna(listUser, i).Draf.T[j-1].waktu, drafDateTime, sizeof(drafDateTime));
+                fprintf(file, "%s\n%s\n", drafText, drafDateTime);
+            }
+        }
+    }
+    fclose(file);
 }
