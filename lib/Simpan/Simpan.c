@@ -7,6 +7,7 @@
 #include "../Stack/stack.h"
 #include "../utility/boolean.h"
 #include "../Utasan/Utasan.h"
+#include "../Pengguna/pengguna_methods.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,6 +33,33 @@ void str_concat(char *dest, const char *src, size_t dest_size) {
         }
         dest[i + j] = '\0'; 
     }
+}
+
+FILE* createAndOpenFile(const char* folderName, const char* fileName) {
+    char dirPath[1024];
+    str_copy(dirPath, folderName, sizeof(dirPath));
+    struct stat st = {0};
+    if (stat(dirPath, &st) == -1) {
+        #ifdef _WIN64
+        if (mkdir(dirPath) != 0) {
+        #endif
+        #ifdef unix
+        if (mkdir(dirPath, 777) != 0) {
+        #endif
+            fprintf(stderr, "Failed to create directory: %s\n", dirPath);
+            return;
+        }
+    }
+
+    char filePath[1024];
+    str_copy(filePath, dirPath, sizeof(filePath));
+    str_concat(filePath, fileName, sizeof(filePath));
+    FILE *file = fopen(filePath, "w");
+    if (file == NULL) {
+        fprintf(stderr, "Unable to open file %s for writing.\n", filePath);
+        return NULL;
+    }
+    return file;
 }
 
 
@@ -92,7 +120,47 @@ void SIMPANUTAS(ListLinearUtas ListUtas, const char *folderName) {
     fclose(file);
 }
 
-void simpanPengguna(char *namafolder, ListStatik listUser, Graph networkPertemanan) {
+void simpanPengguna(char *namaFolder, ListStatik listUser, Graph networkPertemanan) {
+    FILE *fUser = createAndOpenFile(namaFolder, "/pengguna2.config");
+    if (fUser == NULL) {
+        printf("Simpan gagal: file tidak dapat dibuat.\n");
+    } else {
+        Word jumlahUser = WordFromInt(ListStatikLength(listUser));
+        WriteToFile(jumlahUser, fUser);fprintf(fUser, "\n");
+        for (int i = 0; i < IntFromWord(jumlahUser); i++) {
+            Pengguna p = ELMTPengguna(listUser, i);
+            printf("INI NAMA DI SIMPAN:");
+            PrintWord(p.Nama);printf("\n");
+            WriteToFile(p.Nama, fUser);
+            WriteToFile(p.KataSandi, fUser);
+            WriteToFile(p.BioAkun, fUser);
+            WriteToFile(p.NoHP, fUser);
+            WriteToFile(p.Weton, fUser);
+            WriteToFile(p.JenisAkun, fUser);
+            Word fotoProfil;
+            WordFromMatriksProfil(&fotoProfil, p.FotoProfil);
+            PrintWord(fotoProfil);
+            /* WriteToFile(fotoProfil, fUser); */
+        }
+        /* Word pertemanan; */
+        /* ReadFileNLine(&pertemanan, fUser, IntFromWord(jumlahUser)); */
+        /* PrintWord(pertemanan); */
+        /* GraphFromWord(networkPertemanan, pertemanan); */
+        /* Word jumlahPermintaanTeman; */
+        /* ReadFileLine(&jumlahPermintaanTeman, fUser); */
+        /* for (int i = 0; i < IntFromWord(jumlahPermintaanTeman); i++) { */
+        /*     Word line, from, to, _; */
+        /*     ReadFileLine(&line, fUser); */
+        /*     ParseWord(&line, ' ', &from, &to, &_); */
+        /*     Pengguna *friend; */
+        /*     Pengguna currentUser; */
+        /*     GetMutableUserById(listUser, &friend, IntFromWord(from)); */
+        /*     GetUserById(*listUser, &currentUser, IntFromWord(to)); */
+        /*     TambahTeman(*networkPertemanan, currentUser, friend); */
+        /*     sendRequest(networkPertemanan, IntFromWord(from), IntFromWord(to)); */
+        /* } */
+    }
+    fclose(fUser);
 }
 
 void SimpanDraf (ListStatik listUser, const char *folderName) {
