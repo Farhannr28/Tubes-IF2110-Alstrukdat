@@ -8,6 +8,9 @@
 #include "../Sederhana/datetime.h"
 #include "../Pengguna/pengguna_methods.h"
 #include "../UndirectedGraph/graph.h"
+#include "../Kicauan/kicauan.h"
+#include "../Kicauan/kicauan_methods.h"
+#include "../MaxHeap/maxheap.h"
 #include "string.h"
 // #include "../Sederhana/datetime.h"
 #include "ReadConfig.h"
@@ -152,4 +155,58 @@ boolean MuatPengguna(char *namafolder, ListStatik* listUser, Graph* networkPerte
         }
     }
     fclose(fUser);
+}
+
+boolean MuatKicau(char *namafolder, ListDin* ListKicauan, ListStatik ListUser, MaxHeap* fyb){
+    FILE *fUser = fopen(namafolder, "r");
+    if (fUser == NULL) {
+        printf("Tidak ada file konfigurasi kicauan.\n");
+        return false;
+    } else {
+        Word banyakKicauWord;
+        ReadFileLine(&banyakKicauWord, fUser);
+        int banyakKicau;
+        banyakKicau = IntFromWord(banyakKicauWord);
+        int i;
+        Kicauan k;
+        Pengguna Author;
+        Word idKicau, text, like, author, dateTime;
+        Word DateText, TimeText;
+        Word Date,Month,Year,Hour,Minute,Second,DateText,TimeText;
+        DATETIME D;
+        Word Blank;
+        for (i = 0; i < banyakKicau; i++) {
+            ReadFileLine(&idKicau, fUser);
+            ReadFileLine(&text, fUser);
+            ReadFileLine(&like, fUser);
+            ReadFileLine(&author, fUser);
+            ReadFileLine(&dateTime, fUser);
+            GetUserByName(ListUser, &Author, author);
+            int dd,mm,yy,hh,minn,ss;
+            ParseWord(&dateTime,' ',&DateText,&TimeText);
+            ParseWord(&DateText,'/',&Date,&Month,&Year);
+            ParseWord(&TimeText,':',&Hour,&Minute,&Second);
+            dd = IntFromWord(Date);
+            mm = IntFromWord(Month);
+            yy = IntFromWord(Year);
+            hh = IntFromWord(Hour);
+            minn = IntFromWord(Minute);
+            ss = IntFromWord(Second);
+            CreateDateTime(&D,dd,mm,yy,hh,minn,ss);
+            k.id = IntFromWord(idKicau);
+            k.text = text;
+            k.idPembuat = Author.id;
+            k.like = IntFromWord(like);
+            k.waktu = D;
+            k.treeBalasan = NULL;
+            k.tagar = Blank;
+            insertKicauanLast(&ListKicauan, k);
+            insertKicauanToHeap(&fyb, k);
+        }
+    }
+    fclose(fUser);
+}
+
+boolean MuatBalas(char *namafolder, ListDin* listKicauan){
+
 }
